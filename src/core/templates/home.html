@@ -1,0 +1,14 @@
+{% extends "root.html" %}
+{% load staticfiles %}
+
+{% block body %}
+{{block.super}}
+<div class="content">
+	<ul>
+	{% for game in content.games %}
+		<li><a href="{{game.slug}}">{{game}}</a></li>
+	{% endfor %}
+	</ul>
+</div>
+
+{% endblock %}
