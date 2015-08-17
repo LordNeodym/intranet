@@ -1,5 +1,16 @@
 from django.db import models
-from datetime import date, time
+from datetime import date, datetime
+from django.contrib.auth.models import User
+
+
+class Team(models.Model):
+	description = models.CharField(verbose_name="Teamname", max_length=50, blank=True, null=True)
+	user = models.ManyToManyField(User, verbose_name="Spieler")
+
+	class Meta:
+		verbose_name = "Team"
+		verbose_name_plural = "Teams"
+
 
 class Game(models.Model):
 	name = models.CharField(verbose_name="Name", max_length=50, unique=True, blank=False, null=False)
@@ -33,20 +44,29 @@ class Match(models.Model):
 
 
 class Round(models.Model):
-	match = models.ForeignKey(Match, verbose_name="Match", blank=False, null=False)
 	round_number = models.IntegerField(verbose_name="Rundennummer", blank=True, null=True)
-	pts_home = models.IntegerField(verbose_name="Punkte Heim", blank=False, null=False)
-	pts_away = models.IntegerField(verbose_name="Punkte Gast", blank=False, null=False)
 	date = models.DateField(verbose_name="Datum", blank=True, null=True)
 	time = models.TimeField(verbose_name="Uhrzeit", blank=True, null=True)
 
 	def save(self):
 		if not self.id:
 			self.date = date.today()
-			self.time = time.now()
+			self.time = datetime.now().time()
 		super(Round, self).save()
 
 	class Meta:
 		verbose_name = "Runde"
 		verbose_name_plural = "Runden"
-		ordering = ['match', 'round_number']
+		ordering = ['round_number']
+
+
+class TeamRound(models.Model):
+	match = models.ForeignKey(Match, verbose_name="Match", blank=False, null=False)
+	round = models.ForeignKey(Round, verbose_name="Runde", blank=False, null=False)
+	team = models.ForeignKey(Team, verbose_name="Team", blank=False, null=False)
+	pts = models.IntegerField(verbose_name="Punkte", blank=True, null=True)
+
+	class Meta:
+		verbose_name = "TeamRunde"
+		verbose_name_plural = "TeamRunden"
+		ordering = ['match', 'round', 'pts']
