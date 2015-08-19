@@ -2,11 +2,13 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+from django.conf import settings
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
@@ -28,10 +30,11 @@ class Migration(migrations.Migration):
             name='Match',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('game_mode', models.CharField(max_length=50, null=True, verbose_name=b'Gamemode', blank=True)),
+                ('game_mode', models.CharField(max_length=50, null=True, verbose_name=b'Modus', blank=True)),
                 ('player_per_team', models.IntegerField(verbose_name=b'Spieler pro Team')),
                 ('description', models.CharField(max_length=255, null=True, verbose_name=b'Beschreibung', blank=True)),
-                ('game', models.ForeignKey(verbose_name=b'Spiel', to='core.Game')),
+                ('game', models.ForeignKey(related_name='match_game', verbose_name=b'Spiel', to='core.Game')),
+                ('user', models.ForeignKey(related_name='match_user', verbose_name=b'Spieler', to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'ordering': ['game', 'player_per_team'],
@@ -44,14 +47,38 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('round_number', models.IntegerField(null=True, verbose_name=b'Rundennummer', blank=True)),
-                ('pts_home', models.IntegerField(verbose_name=b'Punkte Heim')),
-                ('pts_away', models.IntegerField(verbose_name=b'Punkte Gast')),
-                ('match', models.ForeignKey(verbose_name=b'Match', to='core.Match')),
+                ('pkt1', models.IntegerField(verbose_name=b'Punkte Heim')),
+                ('pkt2', models.IntegerField(verbose_name=b'Punkte Gast')),
+                ('date', models.DateField(null=True, verbose_name=b'Datum', blank=True)),
+                ('time', models.TimeField(null=True, verbose_name=b'Uhrzeit', blank=True)),
             ],
             options={
-                'ordering': ['match', 'round_number'],
+                'ordering': ['round_number'],
                 'verbose_name': 'Runde',
                 'verbose_name_plural': 'Runden',
             },
+        ),
+        migrations.CreateModel(
+            name='Team',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('description', models.CharField(max_length=50, null=True, verbose_name=b'Teamname', blank=True)),
+                ('match', models.ForeignKey(related_name='team_match', verbose_name=b'Match', to='core.Match')),
+                ('user', models.ForeignKey(related_name='team_user', verbose_name=b'Spieler', to=settings.AUTH_USER_MODEL)),
+            ],
+            options={
+                'verbose_name': 'Team',
+                'verbose_name_plural': 'Teams',
+            },
+        ),
+        migrations.AddField(
+            model_name='round',
+            name='team1',
+            field=models.ForeignKey(related_name='round_team1', verbose_name=b'Team Heim', to='core.Team'),
+        ),
+        migrations.AddField(
+            model_name='round',
+            name='team2',
+            field=models.ForeignKey(related_name='round_team2', verbose_name=b'Team Gast', to='core.Team'),
         ),
     ]
