@@ -26,7 +26,7 @@ class Match(models.Model):
 
 	def __unicode__(self):
 		if self.game_mode:
-			return u"%s (%svs.%s) - %s" % (self.game, self.game_mode, self.player_per_team, self.player_per_team)
+			return u"%s (%svs.%s) - %s" % (self.game, self.player_per_team, self.player_per_team, self.game_mode)
 		return u"%s (%svs.%s)" % (self.game, self.player_per_team, self.player_per_team)
 
 	class Meta:

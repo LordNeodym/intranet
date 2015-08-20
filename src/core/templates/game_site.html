@@ -2,7 +2,9 @@
 {% load staticfiles %}
 
 {% block body %}
+{{block.super}}
 <a href="/">Zurück</a>
+
 {% if content.msg %}
 	{{content.msg}}
 {% else %}
