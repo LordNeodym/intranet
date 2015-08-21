@@ -18,6 +18,7 @@ class TeamAdmin(admin.ModelAdmin):
 class MatchAdmin(admin.ModelAdmin):
     list_display = ('game', 'game_mode', 'player_per_team')
     list_filter = ('game',)
+    filter_horizontal = ('user',)
 
 
 admin.site.register(Team, TeamAdmin)
