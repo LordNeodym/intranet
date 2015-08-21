@@ -8,6 +8,30 @@
 {% if content.msg %}
 	{{content.msg}}
 {% else %}
-
 {% endif %}
+
+<div class="headline">{{ content.game }}</div>
+{% for match in content.match %}
+<div class="match">
+	<div class="game_mode">{{ match.game_mode }}</div>
+	<div class="description">{{ match.description }}</div>
+	<div class="player">{{ match.player_per_team }} vs. {{ match.player_per_team }}</div>
+	<div class="user">Angemeldete Benutzer: 
+	<ul>
+	{% for user in match.user.all %}
+ 		<li>{{ user }}</li>
+	{% endfor %}
+	</ul>
+	</div>
+	<div class="teams">
+	{% for team in match.team_match.all %}
+		<div class="team">
+		{% for user in team.user.all %}
+			{{ user }}
+		{% endfor %}
+		</div>
+	{% endfor %}
+	</div>
+</div>
+{% endfor %}
 {% endblock %}

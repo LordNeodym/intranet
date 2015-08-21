@@ -13,7 +13,7 @@ class RoundInline(admin.TabularInline):
 
 class TeamAdmin(admin.ModelAdmin):
 	inlines = [RoundInline,]
-	#list_display = ('getTeam',)
+	filter_horizontal = ('user',)
 
 class MatchAdmin(admin.ModelAdmin):
     list_display = ('game', 'game_mode', 'player_per_team')

@@ -41,7 +41,6 @@ class Team(models.Model):
 	user = models.ManyToManyField(User, verbose_name="Spieler", related_name="team_user")
 
 	def __unicode__(self):
-		#print self.user()
 		user_list = []
 		for u in self.user.all():
 			user_list.append(str(u.username))
@@ -49,6 +48,7 @@ class Team(models.Model):
 			return u"%s (%s)" % (self.user, self.description)
 		return u"%s - %s" % (self.match, user_list)
 
+	@property	
 	def getTeam(self):
 		return self.__unicode__()
 

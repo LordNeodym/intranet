@@ -1,7 +1,7 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-from core.models import Game
+from core.models import Game, Match, Team
 
 def home(request):
 	context = RequestContext(request)
@@ -22,6 +22,8 @@ def game_site(request, slug):
 			content['game'] = Game.objects.get(slug=slug)
 		except:
 			content['msg'] = "Seite nicht gefunden!"
+			return render_to_response('game_site.html', {'content': content}, context_instance=context)
+		content['match'] = Match.objects.filter(game=content['game'])
 	else:
 		content['msg'] = "Bitte zuerst einloggen!"
 
