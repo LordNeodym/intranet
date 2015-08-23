@@ -6,7 +6,9 @@
 <div class="content">
 	<ul>
 	{% for game in content.games %}
-		<li><a href="{{game.slug}}">{{game}}</a></li>
+		<li><a class="game" href="{{game.slug}}">{{game}}</a></li>
+	{% empty %}
+		<li class="no_game">Es wurde noch kein Turnier erstellt.</li>
 	{% endfor %}
 	</ul>
 </div>

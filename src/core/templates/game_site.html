@@ -3,35 +3,70 @@
 
 {% block body %}
 {{block.super}}
-<a href="/">Zurück</a>
+<div class="content">
+	<a href="/">Zurück</a>
 
-{% if content.msg %}
-	{{content.msg}}
-{% else %}
-{% endif %}
+	{% if content.msg %}
+		{{content.msg}}
+	{% else %}
+	{% endif %}
 
-<div class="headline">{{ content.game }}</div>
-{% for match in content.match %}
-<div class="match">
-	<div class="game_mode">{{ match.game_mode }}</div>
-	<div class="description">{{ match.description }}</div>
-	<div class="player">{{ match.player_per_team }} vs. {{ match.player_per_team }}</div>
-	<div class="user">Angemeldete Benutzer: 
-	<ul>
-	{% for user in match.user.all %}
- 		<li>{{ user }}</li>
-	{% endfor %}
-	</ul>
+	<div class="headline">
+		<h1 class="game_headline">{{ content.game }}</h1>
 	</div>
-	<div class="teams">
-	{% for team in match.team_match.all %}
-		<div class="team">
-		{% for user in team.user.all %}
-			{{ user }}
-		{% endfor %}
+
+	{% for match in content.match %}
+	<div class="match_info">
+		{% if match.game_mode %}
+		<div class="game_mode">
+			<h5 class="row_info">Spielmodus</h5>
+			<h2 class="game_info">{{ match.game_mode }}</h2>
 		</div>
-	{% endfor %}
+		{% endif %}
+		{% if match.description %}
+		<div class="description">
+			<h5 class="row_info">Beschreibung</h5>
+			<h2 class="game_info">{{ match.description }}</h2>
+		</div>
+		{% endif %}
+		<div class="player">
+			<h5 class="row_info">Spieler pro Team</h5>
+			<h2 class="game_info">{{ match.player_per_team }}</h2>
+		</div>
+		<div class="user">
+			<h5 class="row_info">Angemeldete Benutzer</h5>
+			<ul>
+			{% for user in match.user.all %}
+	 		<li class="player_name">{{ user }}</li>
+			{% endfor %}
+			</ul>
+		</div>
 	</div>
+
+	<div class="teams">
+		<table>
+			<thead>
+			<tr>
+				{% for team in match.team_match.all %}
+				<th>Team {{team.description}}</th>
+				{% endfor %}
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+				{% for team in match.team_match.all %}
+				<td>
+				<ul>
+				{% for user in team.user.all %}
+				<li>{{ user }}<li>
+				{% endfor %}
+				</ul>
+				</td>
+				{% endfor %}
+			</tr>
+			</tbody>
+		</table>
+	</div>
+	{% endfor %}
 </div>
-{% endfor %}
 {% endblock %}

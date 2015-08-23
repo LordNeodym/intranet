@@ -45,7 +45,7 @@ class Team(models.Model):
 		for u in self.user.all():
 			user_list.append(str(u.username))
 		if self.description:
-			return u"%s (%s)" % (self.user, self.description)
+			return u"%s - (Team %s) - %s" % (self.match, self.description, user_list)
 		return u"%s - %s" % (self.match, user_list)
 
 	@property	
@@ -55,7 +55,8 @@ class Team(models.Model):
 	class Meta:
 		verbose_name = "Team"
 		verbose_name_plural = "Teams"
-
+		unique_together = (("match", "description"),)
+		ordering = ['description']
 
 class Round(models.Model):
 	round_number = models.IntegerField(verbose_name="Rundennummer", blank=True, null=True)
