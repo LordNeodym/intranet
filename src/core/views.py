@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 
 from core.models import Game, Match, Team
+from core.forms import UserForm
 
 
 def home(request):
@@ -17,6 +18,38 @@ def home(request):
 	else:
 		content['msg'] = "Bitte zuerst einloggen!"
 	return render_to_response('home.html', {'content': content}, context_instance=context)
+
+
+def register(request):
+    context = RequestContext(request)
+
+    registered = False
+
+    if request.method == 'POST':
+        user_form = UserForm(data=request.POST)
+        profile_form = UserProfileForm(data=request.POST)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user = user_form.save()
+
+            user.set_password(user.password)
+            user.save()
+
+            profile = profile_form.save(commit=False)
+            profile.user = user
+
+            if 'picture' in request.FILES:
+                profile.picture = request.FILES['picture']
+            profile.save()
+            registered = True
+        else:
+            print user_form.errors, profile_form.errors
+    else:
+        user_form = UserForm()
+        profile_form = UserProfileForm()
+
+    return render_to_response(
+            'rango/register.html', {'user_form': user_form, 'profile_form': profile_form, 'registered': registered}, context)
 
 
 @never_cache
@@ -39,7 +72,7 @@ def login(request):
         else:
             # Return an 'invalid login' error message.
             msg.append(_("Invalid username or password."))
-    return render_to_response('login.html', {'errors': msg}, context)
+    return render_to_response('login.html', {'errors': msg}, context_instance=context)
 
 
 def game_site(request, slug):    
@@ -62,4 +95,4 @@ def game_site(request, slug):
 @login_required(login_url="/login/")
 def logout(request):
     auth_logout(request)
-    return redirect('/home/')
+    return redirect('/')

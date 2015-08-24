@@ -1,12 +1,11 @@
-{% extends "root.html" %}
+{% extends "base.html" %}
 {% load staticfiles %}
 
 {% block body %}
 {{block.super}}
 <div class="content">
 	{% if content.msg %}
-		{{content.msg}}
-		<p><a href="/login">Hier anmelden</a></p>
+		<span>{{content.msg}}</span>
 	{% else %}
 	<ul>
 		{% for game in content.games %}

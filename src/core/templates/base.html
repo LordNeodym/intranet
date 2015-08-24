@@ -14,8 +14,20 @@
     <body>
         {% block body %}
         <div class="header_banner">
-            <h1>Intranet</h1>
+            <h1>cüŞ LAN #5</h1>
         </div>
+        {% if user.is_authenticated %}
+            <div class="username_header">
+                <h5>Angemeldet als:</h5>
+                <h4>{{ user.username }}</h4>
+                <a href="/logout">Logout</a>
+            </div>
+        {% else %}
+            <div class="username_header">
+                <a href="/register">Registrieren</a>
+                <a href="/login">Login</a>
+            </div>
+        {% endif %}
         {% endblock %}
         <footer>
             <div class="left">&copy; {% now "Y" %} Carlo Völker</div>
