@@ -1,4 +1,4 @@
-{% extends "root.html" %}
+{% extends "base.html" %}
 {% load staticfiles %}
 
 {% block body %}
@@ -8,7 +8,6 @@
 
 	{% if content.msg %}
 		{{content.msg}}
-	{% else %}
 	{% endif %}
 
 	<div class="headline">

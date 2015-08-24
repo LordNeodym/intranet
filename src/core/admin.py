@@ -6,13 +6,10 @@ class GameAdmin(admin.ModelAdmin):
     list_display = ('name',)
     prepopulated_fields = {'slug': ['name']}
 
-class RoundInline(admin.TabularInline):
-    model = Round
-    fk_name = 'team1'
-    extra = 0
+class RoundAdmin(admin.ModelAdmin):
+    pass
 
 class TeamAdmin(admin.ModelAdmin):
-	inlines = [RoundInline,]
 	filter_horizontal = ('user',)
 
 class MatchAdmin(admin.ModelAdmin):
@@ -24,3 +21,4 @@ class MatchAdmin(admin.ModelAdmin):
 admin.site.register(Team, TeamAdmin)
 admin.site.register(Game, GameAdmin)
 admin.site.register(Match, MatchAdmin)
+admin.site.register(Round, RoundAdmin)

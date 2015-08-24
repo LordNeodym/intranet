@@ -4,13 +4,18 @@
 {% block body %}
 {{block.super}}
 <div class="content">
+	{% if content.msg %}
+		{{content.msg}}
+		<p><a href="/login">Hier anmelden</a></p>
+	{% else %}
 	<ul>
-	{% for game in content.games %}
+		{% for game in content.games %}
 		<li><a class="game" href="{{game.slug}}">{{game}}</a></li>
-	{% empty %}
+		{% empty %}
 		<li class="no_game">Es wurde noch kein Turnier erstellt.</li>
-	{% endfor %}
+		{% endfor %}
 	</ul>
+	{% endif %}
 </div>
 
 {% endblock %}
