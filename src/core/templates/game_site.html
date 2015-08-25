@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load helper %}
 
 {% block body %}
 {{block.super}}
@@ -43,6 +44,31 @@
 	</div>
 
 	<div class="teams">
+		{% for team in match.team_match.all %}
+			{% ifequal forloop.counter0|modulo:3 0 %}
+			<div class="team_row">
+			{% endifequal %}
+			<div class="team">
+				<h3>Team {{team.description}}</h3>
+				<ul>
+					{% for user in team.user.all %}
+					<li>{{ user }}</li>
+					{% endfor %}
+				</ul>
+			</div>
+			{% ifequal forloop.counter0|modulo:3 2 %}
+			</div>
+			{% endifequal %}
+		{% endfor %}
+	</div>
+	{% endfor %}
+
+
+
+
+
+	<!--
+		{% for team in match.team_match.all %}
 		<table>
 			<thead>
 			<tr>
@@ -57,7 +83,7 @@
 				<td>
 				<ul>
 				{% for user in team.user.all %}
-				<li>{{ user }}<li>
+				<li>{{ user }}</li>
 				{% endfor %}
 				</ul>
 				</td>
@@ -66,6 +92,6 @@
 			</tbody>
 		</table>
 	</div>
-	{% endfor %}
+	{% endfor %}-->
 </div>
 {% endblock %}

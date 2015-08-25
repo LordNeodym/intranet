@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.contrib.auth import login as auth_login
@@ -23,30 +25,25 @@ def home(request):
 def register(request):
     context = RequestContext(request)
     registered = False
+    msg = []
 
     if request.method == 'POST':
         user_form = UserForm(data=request.POST)
-
-        if user_form.is_valid() and profile_form.is_valid():
-            user = user_form.save()
-
-            user.set_password(user.password)
-            user.save()
-
-            profile = profile_form.save(commit=False)
-            profile.user = user
-
-            if 'picture' in request.FILES:
-                profile.picture = request.FILES['picture']
-            profile.save()
-            registered = True
+        if user_form.is_valid():
+            password = request.POST['password']
+            password_repeat = request.POST['password_repeat']
+            if password == password_repeat:
+                user = user_form.save()
+                user.set_password(user.password)
+                user.save()
+                registered = True
+            else:
+                msg.append("Passwörter sind verschieden!")
         else:
-            print user_form.errors, profile_form.errors
+            msg.append("Benutzername enthält ungültige Zeichen oder ist schon vergeben!")
     else:
         user_form = UserForm()
-
-    return render_to_response(
-            'register.html', {'user_form': user_form, 'registered': registered}, context_instance=context)
+    return render_to_response('register.html', {'errors': msg, 'user_form': user_form, 'registered': registered}, context_instance=context)
 
 
 @never_cache

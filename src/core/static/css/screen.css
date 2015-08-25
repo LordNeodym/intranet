@@ -28,7 +28,7 @@ ul {
 	margin: 10px 0 20px 0;
 }
 
-.register_field {
+.register_field, .back_link {
 	display: block;
 	margin-bottom: 10px;
 }
@@ -50,6 +50,7 @@ ul {
 	text-align: center;
 	width: 50%;
 	left: 25%;
+	margin-top: 20px;
 }
 
 .match_info>div {
