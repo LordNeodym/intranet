@@ -2,30 +2,36 @@
 {% load staticfiles %}
 
 {% block body %}
-{{block.super}}
-<div class="content">
-
-{% if registered %}
-    Rango says: <strong>thank you for registering!</strong>
-    <a href="/rango/">Return to the homepage.</a><br />
+    <div class="header_banner">
+        <h1>cüŞ LAN #5</h1>
+    </div>
+    
+    <div class="content">
+    {% if registered %}
+        <strong>Erfolgreich registriert!</strong>
+        <a href="/">Zurück zur Startseite</a>
     {% else %}
-    Rango says: <strong>register here!</strong><br />
+        <div class="register_headline">
+            <h1>Registrierung</h1>
+        </div>
+        <form id="user_form" method="post" action="/register/" enctype="multipart/form-data">
+            {% csrf_token %}
+            <span class="register_field">Username: {{ user_form.username }}</span>
+            <span class="register_field">Passwort: {{ user_form.password }}</span>
+            <span class="register_field">Passwort: {{ user_form.password_repeat }}</span>
+            
+            {% if errors %}
+            <ul>
+                {% for error in errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
 
-    <form id="user_form" method="post" action="/rango/register/"
-            enctype="multipart/form-data">
+            <input type="submit" value="Register" />
+            <input type="hidden" name="next" value="../" />
+        </form>
+    {% endif %}
+    </div>
 
-        {% csrf_token %}
-
-        <!-- Display each form. The as_p method wraps each element in a paragraph
-             (<p>) element. This ensures each element appears on a new line,
-             making everything look neater. -->
-        {{ user_form.as_p }}
-        {{ profile_form.as_p }}
-
-        <!-- Provide a button to click to submit the form. -->
-        <input type="submit" name="submit" value="Register" />
-    </form>
-{% endif %}
-
-</div>
 {% endblock %}
