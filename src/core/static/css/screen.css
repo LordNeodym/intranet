@@ -53,7 +53,28 @@ ul {
 	margin-top: 20px;
 }
 
+.match_info {
+	margin-top: 10px;
+}
+
 .match_info>div {
+	border: 1px solid #000000;
+}
+
+.teams {
+	margin-bottom: 100px;
+}
+
+.team_row {
+	display: table;
+	width: 100%;
+	margin-top: 5px;
+	table-layout: fixed;
+}
+
+.team {
+	display: table-cell;
+	width: 100%;
 	border: 1px solid #000000;
 }
 

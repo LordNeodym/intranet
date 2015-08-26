@@ -37,9 +37,13 @@
 			<h5 class="row_info">Angemeldete Benutzer</h5>
 			<ul>
 			{% for user in match.user.all %}
-	 		<li class="player_name">{{ user }}</li>
+	 		<li class="player_name match_id_{{match.id}}" id="user_id_{{user.id}}">{{ user }}</li>
 			{% endfor %}
 			</ul>
+			<form method="post" action="">
+				{% csrf_token %}
+				<input type="submit" class="match_register" data-match-id="{{match.id}}" data-user-id="{{user.id}}" type="submit" value="Anmelden" />
+			</form>
 		</div>
 	</div>
 
@@ -48,7 +52,7 @@
 			{% ifequal forloop.counter0|modulo:3 0 %}
 			<div class="team_row">
 			{% endifequal %}
-			<div class="team">
+			<div class="team" id="team_id_{{team.id}}">
 				<h3>Team {{team.description}}</h3>
 				<ul>
 					{% for user in team.user.all %}
@@ -56,42 +60,11 @@
 					{% endfor %}
 				</ul>
 			</div>
-			{% ifequal forloop.counter0|modulo:3 2 %}
+			{% if forloop.counter0|modulo:3 == 2 or forloop.last %}
 			</div>
-			{% endifequal %}
+			{% endif %}
 		{% endfor %}
 	</div>
 	{% endfor %}
-
-
-
-
-
-	<!--
-		{% for team in match.team_match.all %}
-		<table>
-			<thead>
-			<tr>
-				{% for team in match.team_match.all %}
-				<th>Team {{team.description}}</th>
-				{% endfor %}
-			</tr>
-			</thead>
-			<tbody>
-			<tr>
-				{% for team in match.team_match.all %}
-				<td>
-				<ul>
-				{% for user in team.user.all %}
-				<li>{{ user }}</li>
-				{% endfor %}
-				</ul>
-				</td>
-				{% endfor %}
-			</tr>
-			</tbody>
-		</table>
-	</div>
-	{% endfor %}-->
 </div>
 {% endblock %}
