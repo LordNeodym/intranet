@@ -1,6 +1,54 @@
+# -*- coding: utf-8 -*-
+
 from django.db import models
 from datetime import date, datetime
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+
+
+def validate_only_one_instance(obj):
+	model = obj.__class__
+	if (model.objects.count() > 0 and obj.id != model.objects.get().id):
+		raise ValidationError("Nur eine Instanz von %s erlaubt!" % model.__name__)
+
+
+class IntranetMeta(models.Model):
+	name = models.CharField(verbose_name="LAN Name", max_length=50, default="Intranet", null=False, blank=False)
+	title = models.CharField(verbose_name="Begrüßungstext", max_length=128, default="Herzlich Willkommen im Intranet", null=True, blank=True)
+	description = models.TextField(verbose_name="Beschreibung", max_length=1024, null=True, blank=True)
+
+	def clean(self):
+		validate_only_one_instance(self)
+
+	def __unicode__(self):
+		return u"%s" % (self.name)
+
+	class Meta:
+		verbose_name = "Intranet Metadaten"
+		verbose_name_plural = "Intranet Metadaten"
+
+
+class Rules(models.Model):
+	name = models.CharField(verbose_name="Regelgruppe", max_length=30, null=False, unique=True, blank=False, default="Allgemeine Regeln")
+
+	def __unicode__(self):
+		return u"%s" % (self.name)
+
+	class Meta:
+		verbose_name = "Regel"
+		verbose_name_plural = "Regeln"
+
+
+class RulesInline(models.Model):
+	rules = models.ForeignKey(Rules)
+	information = models.CharField(verbose_name="Regel", max_length=512, null=True, blank=True)
+
+	def __unicode__(self):
+		return u"%s" % (self.information)
+
+	class Meta:
+		verbose_name = "Regel"
+		verbose_name_plural = "Regeln"
 
 
 class Game(models.Model):
@@ -59,7 +107,6 @@ class Team(models.Model):
 	class Meta:
 		verbose_name = "Team"
 		verbose_name_plural = "Teams"
-		unique_together = (("match", "description"),)
 		ordering = ['description']
 
 class Round(models.Model):

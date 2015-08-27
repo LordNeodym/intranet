@@ -1,6 +1,16 @@
 from django.contrib import admin
-from core.models import Game, Match, Round, Team
+from core.models import IntranetMeta, Game, Match, Round, Team, Rules, RulesInline
 
+
+class IntranetMetaAdmin(admin.ModelAdmin):
+	pass
+
+class RulesInlineAdmin(admin.StackedInline):	
+	model = RulesInline
+	extra = 0
+
+class RulesAdmin(admin.ModelAdmin):
+	inlines = [RulesInlineAdmin,]
 
 class GameAdmin(admin.ModelAdmin):
     list_display = ('name',)
@@ -18,6 +28,8 @@ class MatchAdmin(admin.ModelAdmin):
     filter_horizontal = ('user',)
 
 
+admin.site.register(IntranetMeta, IntranetMetaAdmin)
+admin.site.register(Rules, RulesAdmin)
 admin.site.register(Team, TeamAdmin)
 admin.site.register(Game, GameAdmin)
 admin.site.register(Match, MatchAdmin)

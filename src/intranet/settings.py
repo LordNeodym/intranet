@@ -72,13 +72,13 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
+                'core.context_processors.intranet_processor',
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'intranet.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
