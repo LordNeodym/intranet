@@ -13,8 +13,8 @@ class RulesAdmin(admin.ModelAdmin):
 	inlines = [RulesInlineAdmin,]
 
 class GameAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-    prepopulated_fields = {'slug': ['name']}
+	list_display = ('name',)
+	prepopulated_fields = {'slug': ['name']}
 
 class RoundAdmin(admin.ModelAdmin):
     pass

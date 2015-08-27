@@ -1,6 +1,15 @@
 $(document).ready(function() {
 	disable_register();
+	dropdown_style();
 });
+
+function dropdown_style() {
+	$( "ul.menu > li" ).each(function( index ) {
+		if ($(this).children().length > 1) {
+			$(this).addClass("top_menu");
+		}
+	});
+}
 
 function disable_register() {
 	$( "input" ).each(function( index ) {

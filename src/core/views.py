@@ -74,6 +74,11 @@ def movies(request):
 	return render_to_response('movies.html', context_instance=context)
 
 
+def pictures(request):
+    context = RequestContext(request)
+    return render_to_response('pictures.html', context_instance=context)
+
+
 def rules(request):
 	context = RequestContext(request)
 	return render_to_response('rules.html', context_instance=context)

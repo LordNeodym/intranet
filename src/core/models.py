@@ -4,6 +4,7 @@ from django.db import models
 from datetime import date, datetime
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.template.defaultfilters import slugify
 
 
 def validate_only_one_instance(obj):
@@ -30,18 +31,23 @@ class IntranetMeta(models.Model):
 
 class Rules(models.Model):
 	name = models.CharField(verbose_name="Regelgruppe", max_length=30, null=False, unique=True, blank=False, default="Allgemeine Regeln")
+	slug = models.SlugField(verbose_name="Slug", blank=True, unique=True, editable=False)
 
 	def __unicode__(self):
 		return u"%s" % (self.name)
 
+	def save(self):
+		self.slug = slugify(self.name)
+		super(Rules,self).save()
+
 	class Meta:
-		verbose_name = "Regel"
-		verbose_name_plural = "Regeln"
+		verbose_name = "Regelgruppe"
+		verbose_name_plural = "Regelgruppen"
 
 
 class RulesInline(models.Model):
-	rules = models.ForeignKey(Rules)
-	information = models.CharField(verbose_name="Regel", max_length=512, null=True, blank=True)
+	rules = models.ForeignKey(Rules, verbose_name="Regelgruppe", blank=True, null=True, related_name="inline_rules")
+	information = models.TextField(verbose_name="Regel", max_length=512, null=True, blank=True)
 
 	def __unicode__(self):
 		return u"%s" % (self.information)
@@ -53,11 +59,15 @@ class RulesInline(models.Model):
 
 class Game(models.Model):
 	name = models.CharField(verbose_name="Name", max_length=50, unique=True, blank=False, null=False)
-	slug = models.SlugField(verbose_name="Slug", unique=True)
+	slug = models.SlugField(verbose_name="Slug", blank=True, unique=True, editable=False)
 	img = models.ImageField(verbose_name="Icon", upload_to="game_icon", blank=True, null=True)
 
 	def __unicode__(self):
 		return u"%s" % (self.name)
+
+	def save(self):
+		self.slug = slugify(self.name)
+		super(Game,self).save()
 
 	class Meta:
 		verbose_name = "Spiel"

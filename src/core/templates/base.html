@@ -7,9 +7,10 @@
         <title>{% block title %}Intranet{% endblock %}</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width,initial-scale=1">
-        <link rel="stylesheet" href="{% static 'css/screen.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css'%}">
         <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-theme.min.css'%}">
+        <link rel="stylesheet" href="{% static 'css/screen.css' %}">
+        <link rel="stylesheet" href="{% static 'css/drop_down_menu.css' %}">
     </head>
     <body>
         {% block body %}
@@ -20,28 +21,29 @@
         </div>
 
         <!-- Drop Down Menu -->
-        <!--<ul class="menu">
-            <li><a href="#">My dashboard</a></li>
-            <li><a href="#">Likes</a></li>
-            <li><a href="#">Views</a>
+        <ul class="menu">
+            <li><a href="/">Startseite</a></li>
+            <li><a href="#">Regeln</a>
                 <ul>
-                    <li><a href="#" class="documents">Documents</a></li>
-                    <li><a href="#" class="messages">Messages</a></li>
-                    <li><a href="#" class="signout">Sign Out</a></li>
+                    {% for rule in rules %}
+                        <li><a href="/rules/{{ rule.slug }}" class="documents">{{ rule.name }}</a></li>
+                    {% endfor %}
                 </ul>
             </li>
-            <li><a href="#">Uploads</a></li>
-            <li><a href="#">Videos</a></li>
-            <li><a href="#">Documents</a></li> 
-        </ul>-->
-
-        <div class="header_url">
-            <a href="/">Startseite</a> 
-            <span>|</span>
-            <a href="/rules">Allgemeine Regeln</a>
-            <span>|</span>
-            <a href="/movies">Videos</a>
-        </div>
+            <li><a href="#">Spiele</a>
+                <ul>
+                    {% for game in games %}
+                        <li><a href="/games/{{game.slug}}" class="documents">{{game.name}}</a></li>
+                    {% endfor %}
+                </ul>
+            </li>
+            <li><a href="#">Offtopic</a>
+                <ul>
+                    <li><a href="/pictures" class="documents">Bilder</a></li>
+                    <li><a href="/video" class="messages">Videos</a></li>
+                </ul>
+            </li>
+        </ul>
 
         <!-- User Info Field -->
         {% if user.is_authenticated %}
@@ -62,8 +64,8 @@
             <div class="left">&copy; {% now "Y" %} Carlo Völker</div>
         </footer>
         <script type="text/javascript" src="{% static 'js/jquery-1.10.2.min.js'%}"></script>
-        <script type="text/javascript" src="{% static 'js/main.js'%}"></script>
         <script type="text/javascript" src="{% static 'js/bootstrap.min.js'%}"></script>
-        <script type="text/javascript" src="{% static 'js/video.js'%}"></script>
+        <script type="text/javascript" src="{% static 'js/main.js'%}"></script>
+        <!--<script type="text/javascript" src="{% static 'js/video.js'%}"></script>-->
     </body>
 </html>

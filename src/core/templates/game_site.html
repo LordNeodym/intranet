@@ -64,8 +64,8 @@
 				</div>
 				{% endif %}
 			{% endfor %}
-		{% elif request.user|has_group:"admin" %}
-				<form method="post" action="/calc_teams">
+		{% elif user|has_group:"Admin" %}
+			<form method="post" action="/calc_teams">
 				{% csrf_token %}
 				<input type="submit" class="create_teams" type="submit" value="Teams erstellen" />
 				<input type="hidden" name="match_id" value="{{match.id}}" />

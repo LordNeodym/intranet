@@ -13,7 +13,7 @@ ul {
 
 .header_banner {
 	text-align: center;
-	color: #FFA500;
+	color: #8fde62;
 	background: rgb(61,61,61); /* Old browsers */
 	background: -moz-linear-gradient(-45deg,  rgba(61,61,61,1) 0%, rgba(1,1,1,1) 50%, rgba(61,61,61,1) 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(61,61,61,1)), color-stop(50%,rgba(1,1,1,1)), color-stop(100%,rgba(61,61,61,1))); /* Chrome,Safari4+ */
@@ -31,6 +31,10 @@ ul {
 
 .header_url > a, .header_url > span {
 	margin-left: 20px;
+}
+
+.top_menu>a {
+	cursor: default;
 }
 
 .register_headline {
