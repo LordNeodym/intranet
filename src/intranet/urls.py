@@ -9,5 +9,7 @@ urlpatterns = [
 	url(r'^login/$', views.login, name='login'),
 	url(r'^register/$', views.register, name='register'),
     url(r'^logout/$', views.logout, name='logout'),
+    url(r'^rules/$', views.rules, name='rules'),
+    url(r'^movies/$', views.movies, name='movies'),
     url(r'^(?P<slug>[-\w\d]+)/$', 'core.views.game_site'),
 ]

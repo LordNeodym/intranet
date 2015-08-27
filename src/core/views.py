@@ -69,10 +69,23 @@ def login(request):
     return render_to_response('login.html', {'errors': msg}, context_instance=context)
 
 
+def movies(request):
+	context = RequestContext(request)
+	return render_to_response('movies.html', context_instance=context)
+
+
+def rules(request):
+	context = RequestContext(request)
+	return render_to_response('rules.html', context_instance=context)
+
+
 def game_site(request, slug):    
 	context = RequestContext(request)
 	content = {}
 	if request.user.is_authenticated():
+		if request.method == 'POST':
+			match = Match.objects.get(id=request.POST['match_id'])
+			match.save_new_user(request.user.id)
 		slug = request.path.split("/")[-2]
 		try:
 			content['game'] = Game.objects.get(slug=slug)

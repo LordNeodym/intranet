@@ -29,6 +29,10 @@ class Match(models.Model):
 			return u"%s (%svs.%s) - %s" % (self.game, self.player_per_team, self.player_per_team, self.game_mode)
 		return u"%s (%svs.%s)" % (self.game, self.player_per_team, self.player_per_team)
 
+	def save_new_user(self, user_id):
+		self.user.add(User.objects.get(id=user_id))
+		self.save()
+
 	class Meta:
 		verbose_name = "Match"
 		verbose_name_plural = "Matches"
