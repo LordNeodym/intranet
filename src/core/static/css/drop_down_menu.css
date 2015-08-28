@@ -42,7 +42,7 @@
 
 .menu > li > ul > li {
     width: 100%;
-    display: table;
+    display: block;
     table-layout: fixed;
 }
 
@@ -125,6 +125,9 @@
  
 .menu ul li:last-child a { border: none; }
 
+.menu > li > ul {
+    width: 100%;
+}
 
 /* Icons */
 /*.menu a.documents { background: url(../img/docs.png) no-repeat 6px center; }
