@@ -5,32 +5,52 @@
 {% block body %}
 {{block.super}}
 <div class="content">
-	{% if content.msg %}
-		<span>{{content.msg}}</span>
+	{% if msg %}
+		<span class="message">{{msg}}</span>
 	{% endif %}
 
 	<div class="headline">
-		<h1 class="game_headline">{{ content.game }}</h1>
+		<h1 class="game_headline">{{ game }}</h1>
 	</div>
 
-	{% for match in content.match %}
+	{% for match in match %}
 	<div class="match_info">
-		{% if match.game_mode %}
 		<div class="game_mode">
 			<h5 class="row_info">Spielmodus</h5>
-			<h2 class="game_info">{{ match.game_mode }}</h2>
+			{% if match.game_mode %}
+				<h2 class="game_info">{{ match.game_mode }}</h2>
+			{% else %}
+				<h2 class="game_info">-</h2>
+			{% endif %}
 		</div>
-		{% endif %}
-		{% if match.description %}
+		
 		<div class="description">
 			<h5 class="row_info">Beschreibung</h5>
-			<h2 class="game_info">{{ match.description }}</h2>
+			{% if match.description %}
+				<h2 class="game_info">{{ match.description }}</h2>
+			{% else %}
+				<h2 class="game_info">-</h2>
+			{% endif %}
 		</div>
-		{% endif %}
+		
 		<div class="player">
 			<h5 class="row_info">Spieler pro Team</h5>
 			<h2 class="game_info">{{ match.player_per_team }}</h2>
 		</div>
+
+		<div class="rules">
+			<h5 class="row_info">Regeln</h5>
+			{% if match.inline_rules.all %}
+				<ul>
+					{% for rule in match.inline_rules.all %}
+					<li><h2 class="game_info">{{ rule }}</h2></li>
+					{% endfor %}
+				</ul>
+			{% else %}
+				<h2 class="game_info">-</h2>
+			{% endif %}
+		</div>
+
 		<div class="user">
 			<h5 class="row_info">Angemeldete Benutzer</h5>
 			<ul>
@@ -38,9 +58,9 @@
 	 		<li class="player_name match_id_{{match.id}}" id="user_id_{{user.id}}">{{ user }}</li>
 			{% endfor %}
 			</ul>
-			<form method="post" action="">
+			<form method="post" action="register_user/">
 				{% csrf_token %}
-				<input type="submit" class="match_register" data-match-id="{{match.id}}" data-user-id="{{user.id}}" type="submit" value="Anmelden" />
+				<input type="submit" class="match_register" type="submit" value="{{ match|button_label:user }}" />
 				<input type="hidden" name="match_id" value="{{match.id}}" />
 			</form>
 		</div>
@@ -65,7 +85,7 @@
 				{% endif %}
 			{% endfor %}
 		{% elif user|has_group:"Admin" %}
-			<form method="post" action="/calc_teams">
+			<form method="post" action="create_teams/">
 				{% csrf_token %}
 				<input type="submit" class="create_teams" type="submit" value="Teams erstellen" />
 				<input type="hidden" name="match_id" value="{{match.id}}" />

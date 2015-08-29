@@ -79,8 +79,9 @@ class Match(models.Model):
 	game = models.ForeignKey(Game, verbose_name="Spiel", blank=False, null=False, related_name="match_game")
 	game_mode = models.CharField(verbose_name="Modus", max_length=50, blank=True, null=True)
 	player_per_team = models.IntegerField(verbose_name="Spieler pro Team", blank=False, null=False)
-	description = models.CharField(verbose_name="Beschreibung", max_length=255, blank=True, null=True)
+	description = models.TextField(verbose_name="Beschreibung", max_length=255, blank=True, null=True)
 	user = models.ManyToManyField(User, verbose_name="Spieler", related_name="match_user")
+	datetime = models.DateTimeField(verbose_name="Datum/Uhrzeit", blank=True, null=True)
 
 	def __unicode__(self):
 		if self.game_mode:
@@ -91,10 +92,32 @@ class Match(models.Model):
 		self.user.add(User.objects.get(id=user_id))
 		self.save()
 
+	def rem_new_user(self, user_id):
+		self.user.remove(User.objects.get(id=user_id))
+		self.save()	
+
+	def button_label(self, user_id):
+		user = User.objects.get(id=user_id)
+		if user in self.user.all():
+			return "Abmelden"
+		return "Anmelden"
+		
 	class Meta:
 		verbose_name = "Match"
 		verbose_name_plural = "Matches"
 		ordering = ['game', 'player_per_team']
+
+
+class MatchRulesInline(models.Model):
+	match = models.ForeignKey(Match, verbose_name="Spielregeln", blank=True, null=True, related_name="inline_rules")
+	information = models.TextField(verbose_name="Regel", max_length=512, null=True, blank=True)
+
+	def __unicode__(self):
+		return u"%s" % (self.information)
+
+	class Meta:
+		verbose_name = "Spielregel"
+		verbose_name_plural = "Spielregeln"
 
 
 class Team(models.Model):

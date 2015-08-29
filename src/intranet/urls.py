@@ -12,5 +12,6 @@ urlpatterns = [
     url(r'^rules/(?P<slug>[-\w\d]+)/$', views.rules, name='rules'),
     url(r'^pictures/$', views.pictures, name='pictures'),
     url(r'^movies/$', views.movies, name='movies'),
-    url(r'^games/(?P<slug>[-\w\d]+)/$', 'core.views.game_site'),
+    url(r'^games/(?P<slug>[-\w\d]+)/$', views.game_site, name='games'),
+    url(r'^games/(?P<slug>[-\w\d]+)/(?P<command>[-_a-z]+)/$', views.game_site),
 ]

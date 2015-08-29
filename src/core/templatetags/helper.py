@@ -13,3 +13,11 @@ def has_group(user, group_name):
 	group = Group.objects.get(name=group_name) 
 	print user
 	return True if group in user.groups.all() else False
+
+
+@register.filter
+def button_label(match, user):
+	print user, match
+	if user in match.user.all():
+		return "Abmelden"
+	return "Anmelden"

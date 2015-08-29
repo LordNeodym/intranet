@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render_to_response, redirect, HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
@@ -8,7 +9,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 
-from core.models import Game, Match, Team
+from core.models import Game, Match, Team, Rules
 from core.forms import UserForm
 
 
@@ -79,19 +80,24 @@ def pictures(request):
     return render_to_response('pictures.html', context_instance=context)
 
 
-def rules(request):
+def rules(request, slug):
 	context = RequestContext(request)
-	return render_to_response('rules.html', context_instance=context)
+	content = {}
+
+	content['rule'] = Rules.objects.get(slug=slug)
+	return render_to_response('rules.html', content, context_instance=context)
 
 
-def game_site(request, slug):    
+def game_site(request, slug, command=None):    
 	context = RequestContext(request)
 	content = {}
 	if request.user.is_authenticated():
 		if request.method == 'POST':
-			match = Match.objects.get(id=request.POST['match_id'])
-			match.save_new_user(request.user.id)
-		slug = request.path.split("/")[-2]
+			if command == "register_user":
+				register_user_in_match(request)
+			if command == "create_teams":
+				create_teams(request)
+			return HttpResponseRedirect(reverse('games', args=[slug]))
 		try:
 			content['game'] = Game.objects.get(slug=slug)
 		except:
@@ -100,7 +106,7 @@ def game_site(request, slug):
 		content['match'] = Match.objects.filter(game=content['game'])
 	else:
 		content['msg'] = "Bitte zuerst einloggen!"
-	return render_to_response('game_site.html', {'content': content}, context_instance=context)
+	return render_to_response('game_site.html', content, context_instance=context)
 
 
 @never_cache
@@ -108,3 +114,19 @@ def game_site(request, slug):
 def logout(request):
     auth_logout(request)
     return redirect('/')
+
+
+
+"""
+Helper Functions
+"""
+def register_user_in_match(request):
+	match = Match.objects.get(id=request.POST['match_id'])
+	if request.user in match.user.all():
+		match.rem_new_user(request.user.id)
+	else:
+		match.save_new_user(request.user.id)
+
+
+def create_teams(request):
+	pass
