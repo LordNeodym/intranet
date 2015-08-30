@@ -129,4 +129,11 @@ def register_user_in_match(request):
 
 
 def create_teams(request):
-	pass
+	create_team_type = request.POST['create_team_type']
+	match = Match.objects.get(id=request.POST['match_id'])
+	if create_team_type == "random":
+		match.randomTeams()
+	elif create_team_type == "self":
+		pass
+	elif create_team_type == "admin":
+		pass

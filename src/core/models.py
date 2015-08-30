@@ -6,6 +6,8 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.template.defaultfilters import slugify
 
+from random import shuffle
+
 
 def validate_only_one_instance(obj):
 	model = obj.__class__
@@ -102,6 +104,22 @@ class Match(models.Model):
 			return "Abmelden"
 		return "Anmelden"
 		
+	def randomTeams(self):
+		""" delete all teams """
+		teams = self.team_match.all()
+		teams.delete()
+
+		""" create random teams """
+		users = list(self.user.all())
+		shuffle(users)
+		counter = 0
+		for index, user in enumerate(users):
+			if index % self.player_per_team == 0:
+				counter += 1
+				team = Team.objects.create(match=self, description=counter)
+				team.save()
+			team.user.add(user)
+
 	class Meta:
 		verbose_name = "Match"
 		verbose_name_plural = "Matches"
