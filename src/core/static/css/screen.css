@@ -71,7 +71,17 @@ ul {
 }
 
 .match_info>div {
-	border: 1px solid #000000;
+	border: 1px solid #000;
+}
+
+.datetime {
+	border: 0 !important;
+}
+
+.datetime > div {
+	width: 50%;
+	float: left;
+	border: 1px solid #000;
 }
 
 .teams {

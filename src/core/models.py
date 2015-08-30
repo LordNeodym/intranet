@@ -123,7 +123,7 @@ class Match(models.Model):
 	class Meta:
 		verbose_name = "Match"
 		verbose_name_plural = "Matches"
-		ordering = ['game', 'player_per_team']
+		ordering = ['game', 'datetime']
 
 
 class MatchRulesInline(models.Model):

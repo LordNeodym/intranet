@@ -15,6 +15,25 @@
 
 	{% for match in match %}
 	<div class="match_info">
+		<div class="datetime">
+			<div class="game_info_time">
+				<h5 class="row_info">Datum</h5>
+				{% if match.datetime.date %}
+					<h2 class="game_info">{{ match.datetime.date }}</h2>
+				{% else %}
+					<h2 class="game_info">-</h2>
+				{% endif %}
+			</div>
+			<div class="game_info_time">
+				<h5 class="row_info">Uhrzeit</h5>
+				{% if match.datetime.time %}
+					<h2 class="game_info">{{ match.datetime.time }}</h2>
+				{% else %}
+					<h2 class="game_info">-</h2>
+				{% endif %}
+			</div>
+		</div>
+
 		<div class="game_mode">
 			<h5 class="row_info">Spielmodus</h5>
 			{% if match.game_mode %}
