@@ -22,7 +22,7 @@ class GameAdmin(admin.ModelAdmin):
 	list_display = ('name',)
 
 class RoundAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('round_number', 'team1', 'team2')
 
 class TeamAdmin(admin.ModelAdmin):
 	filter_horizontal = ('user',)

@@ -164,23 +164,16 @@ class Round(models.Model):
 	round_number = models.IntegerField(verbose_name="Rundennummer", blank=True, null=True)
 	team1 = models.ForeignKey(Team, verbose_name="Team Heim", blank=False, null=False, related_name="round_team1")
 	team2 = models.ForeignKey(Team, verbose_name="Team Gast", blank=False, null=False, related_name="round_team2")
-	pkt1 = models.IntegerField(verbose_name="Punkte Heim", blank=False, null=False)
-	pkt2 = models.IntegerField(verbose_name="Punkte Gast", blank=False, null=False)
-	date = models.DateField(verbose_name="Datum", blank=True, null=True)
-	time = models.TimeField(verbose_name="Uhrzeit", blank=True, null=True)
-
-	def save(self):
-		if not self.id:
-			self.date = date.today()
-			self.time = datetime.now().time()
-		super(Round, self).save()
+	pkt1 = models.IntegerField(verbose_name="Punkte Heim", blank=True, null=True)
+	pkt2 = models.IntegerField(verbose_name="Punkte Gast", blank=True, null=True)
+	datetime = models.DateTimeField(verbose_name="Datum/Uhrzeit", blank=True, null=True)
 
 	def __unicode__(self):
 		if self.round_number:
-			return u"Runde %s - %s vs. %s" % (self.round_number, team1, team2)
-		return u"%s vs. %s" % (team1, team2)
+			return u"Runde %s - %s vs. %s" % (self.round_number, self.team1, self.team2)
+		return u"%s vs. %s" % (self.team1, self.team2)
 
 	class Meta:
 		verbose_name = "Runde"
 		verbose_name_plural = "Runden"
-		ordering = ['round_number']
+		ordering = ['round_number', 'datetime']

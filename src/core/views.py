@@ -9,7 +9,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 
-from core.models import Game, Match, Team, Rules
+from core.models import Game, Match, Team, Rules, Round
 from core.forms import UserForm
 
 
@@ -97,6 +97,10 @@ def game_site(request, slug, command=None):
 				register_user_in_match(request)
 			if command == "create_teams":
 				create_teams(request)
+			if command == "delete_team":
+				delete_team(request)
+			if command == "create_tournament":
+				create_tournament(request)
 			return HttpResponseRedirect(reverse('games', args=[slug]))
 		try:
 			content['game'] = Game.objects.get(slug=slug)
@@ -137,3 +141,39 @@ def create_teams(request):
 		pass
 	elif create_team_type == "admin":
 		pass
+
+
+def delete_team(request):
+	team_id = request.POST['team_id']
+	Team.objects.get(id=team_id).delete()
+
+
+def create_tournament(request):
+	teams = Team.objects.filter(match__id=request.POST['match_id'])
+	team_ids = [team.id for team in teams]
+	for index, pairings in enumerate(roundRobin(team_ids)):
+		for pairing in pairings:
+			if not None in pairing:
+				team1 = Team.objects.get(id=pairing[0])
+				Round.objects.create(
+								round_number = index+1,
+								team1 = Team.objects.get(id=pairing[0]), 
+								team2 = Team.objects.get(id=pairing[1])
+								)
+
+
+def roundRobin(units, sets=None):
+    """ Generates a schedule of "fair" pairings from a list of units """
+    if len(units) % 2:
+        units.append(None)
+    count    = len(units)
+    sets     = sets or (count - 1)
+    half     = count / 2
+    schedule = []
+    for turn in range(sets):
+        pairings = []
+        for i in range(half):
+            pairings.append((units[i], units[count-i-1]))
+        units.insert(1, units.pop())
+        schedule.append(pairings)
+    return schedule

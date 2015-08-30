@@ -77,11 +77,14 @@
 	 		<li class="player_name match_id_{{match.id}}" id="user_id_{{user.id}}">{{ user }}</li>
 			{% endfor %}
 			</ul>
-			<form method="post" action="register_user/">
-				{% csrf_token %}
-				<input type="submit" class="match_register" type="submit" value="{{ match|button_label:user }}" />
-				<input type="hidden" name="match_id" value="{{match.id}}" />
-			</form>
+
+			{% if not match.team_match.all %}
+				<form method="post" action="register_user/">
+					{% csrf_token %}
+					<input type="submit" class="match_register" type="submit" value="{{ match|button_label:user }}" />
+					<input type="hidden" name="match_id" value="{{match.id}}" />
+				</form>
+			{% endif %}
 		</div>
 	</div>
 
@@ -91,16 +94,21 @@
 				{% ifequal forloop.counter0|modulo:3 0 %}
 				<div class="team_row">
 				{% endifequal %}
-				<div class="team" id="team_id_{{team.id}}">
-					<h3>Team {{team.description}}</h3>
-					<ul>
-						{% for user in team.user.all %}
-						<li>{{ user }}</li>
-						{% endfor %}
-					</ul>
-				</div>
+					<div class="team" id="team_id_{{team.id}}">
+						<h3>Team {{team.description}}</h3>
+						<ul>
+							{% for user in team.user.all %}
+							<li>{{ user }}</li>
+							{% endfor %}
+						</ul>
+						<form method="post" class="delete_team" action="delete_team/">
+							{% csrf_token %}
+							<input type="submit" type="submit" value="X" />
+							<input type="hidden" name="team_id" value="{{team.id}}" />
+						</form>
+					</div>
 				{% if forloop.counter0|modulo:3 == 2 or forloop.last %}
-				</div>
+					</div>
 				{% endif %}
 			{% endfor %}
 		{% endif %}
@@ -114,6 +122,16 @@
 				<input type="radio" id="create_team_admin" name="create_team_type" value="admin" />
 				<label for="create_team_admin">Admin Wahl</label>
 				<input type="submit" type="submit" value="Teams erstellen" />
+				<input type="hidden" name="match_id" value="{{match.id}}" />
+			</form>
+
+			<form method="post" class="create_tournament" action="create_tournament/">
+				{% csrf_token %}
+				<input type="radio" id="create_tour_vs" name="create_tour" value="vs" checked/>
+				<label for="create_tour_vs">Jeder gegen Jeden</label>
+				<input type="radio" id="create_tour_tree" name="create_tour" value="tree" />
+				<label for="create_tour_tree">Turnierbaum</label>
+				<input type="submit" type="submit" value="Turnier erstellen" />
 				<input type="hidden" name="match_id" value="{{match.id}}" />
 			</form>
 		{% endif %}
