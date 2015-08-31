@@ -150,6 +150,7 @@ def delete_team(request):
 
 def create_tournament(request):
 	teams = Team.objects.filter(match__id=request.POST['match_id'])
+	match = Match.objects.get(id=request.POST['match_id'])
 	team_ids = [team.id for team in teams]
 	for index, pairings in enumerate(roundRobin(team_ids)):
 		for pairing in pairings:
@@ -157,6 +158,7 @@ def create_tournament(request):
 				team1 = Team.objects.get(id=pairing[0])
 				Round.objects.create(
 								round_number = index+1,
+								match = match,
 								team1 = Team.objects.get(id=pairing[0]), 
 								team2 = Team.objects.get(id=pairing[1])
 								)

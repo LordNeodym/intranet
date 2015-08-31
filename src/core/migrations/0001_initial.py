@@ -43,22 +43,6 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='Round',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('round_number', models.IntegerField(null=True, verbose_name=b'Rundennummer', blank=True)),
-                ('pkt1', models.IntegerField(verbose_name=b'Punkte Heim')),
-                ('pkt2', models.IntegerField(verbose_name=b'Punkte Gast')),
-                ('date', models.DateField(null=True, verbose_name=b'Datum', blank=True)),
-                ('time', models.TimeField(null=True, verbose_name=b'Uhrzeit', blank=True)),
-            ],
-            options={
-                'ordering': ['round_number'],
-                'verbose_name': 'Runde',
-                'verbose_name_plural': 'Runden',
-            },
-        ),
-        migrations.CreateModel(
             name='Team',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -70,15 +54,5 @@ class Migration(migrations.Migration):
                 'verbose_name': 'Team',
                 'verbose_name_plural': 'Teams',
             },
-        ),
-        migrations.AddField(
-            model_name='round',
-            name='team1',
-            field=models.ForeignKey(related_name='round_team1', verbose_name=b'Team Heim', to='core.Team'),
-        ),
-        migrations.AddField(
-            model_name='round',
-            name='team2',
-            field=models.ForeignKey(related_name='round_team2', verbose_name=b'Team Gast', to='core.Team'),
         ),
     ]

@@ -153,7 +153,7 @@ class Team(models.Model):
 
 	@property	
 	def getTeam(self):
-		return self.__unicode__()
+		return u"Team {0}".format(self.description)
 
 	class Meta:
 		verbose_name = "Team"
@@ -161,6 +161,7 @@ class Team(models.Model):
 		ordering = ['description']
 
 class Round(models.Model):
+	match = models.ForeignKey(Match, verbose_name="Match", blank=False, null=False, related_name="round_match")
 	round_number = models.IntegerField(verbose_name="Rundennummer", blank=True, null=True)
 	team1 = models.ForeignKey(Team, verbose_name="Team Heim", blank=False, null=False, related_name="round_team1")
 	team2 = models.ForeignKey(Team, verbose_name="Team Gast", blank=False, null=False, related_name="round_team2")
@@ -172,6 +173,12 @@ class Round(models.Model):
 		if self.round_number:
 			return u"Runde %s - %s vs. %s" % (self.round_number, self.team1, self.team2)
 		return u"%s vs. %s" % (self.team1, self.team2)
+
+	@property
+	def getDatetime(self):
+	    if self.datetime:
+	    	return self.datetime
+	    return "-"
 
 	class Meta:
 		verbose_name = "Runde"

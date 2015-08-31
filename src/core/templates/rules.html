@@ -10,8 +10,11 @@
 
 	<ul class="list_rule">
 	{% for rule in rule.inline_rules.all %}
-		<h4>Regel {{forloop.counter}}:</h4>
-		<li>{{ rule }}</li>
+		<div class="single_rule">
+			<h4>Regel {{ forloop.counter }}:</h4>
+			<p>{{ rule }}</p>
+		</div>
+		<br/>
 	{% endfor %}
 	</ul>
 </div>

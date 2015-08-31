@@ -66,6 +66,27 @@ ul {
 	margin-top: 20px;
 }
 
+.headline {
+	margin-bottom: 20px;
+}
+
+.single_rule {
+	text-align: left;
+	width: 50%;
+	position: relative;
+	left: 25%;
+}
+
+.single_rule > h4 {
+	width: 80px;
+	float: left;
+}
+
+.single_rule > p {
+	float: left;
+	margin: 0;
+}
+
 .match_info {
 	margin-top: 10px;
 }
@@ -84,8 +105,9 @@ ul {
 	border: 1px solid #000;
 }
 
-.teams {
-	margin-bottom: 100px;
+.rounds, .admin_interface {
+	margin-top: 100px;
+	margin-bottom: 40px;
 }
 
 .team_row {

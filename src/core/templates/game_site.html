@@ -112,30 +112,71 @@
 				{% endif %}
 			{% endfor %}
 		{% endif %}
-		{% if user|has_group:"Admin" %}
-			<form method="post" class="create_team" action="create_teams/">
-				{% csrf_token %}
-				<input type="radio" id="create_team_random" name="create_team_type" value="random" checked/>
-				<label for="create_team_random">Zufall</label>
-				<input type="radio" id="create_team_self" name="create_team_type" value="self" />
-				<label for="create_team_self">Eigene Wahl</label>
-				<input type="radio" id="create_team_admin" name="create_team_type" value="admin" />
-				<label for="create_team_admin">Admin Wahl</label>
-				<input type="submit" type="submit" value="Teams erstellen" />
-				<input type="hidden" name="match_id" value="{{match.id}}" />
-			</form>
-
-			<form method="post" class="create_tournament" action="create_tournament/">
-				{% csrf_token %}
-				<input type="radio" id="create_tour_vs" name="create_tour" value="vs" checked/>
-				<label for="create_tour_vs">Jeder gegen Jeden</label>
-				<input type="radio" id="create_tour_tree" name="create_tour" value="tree" />
-				<label for="create_tour_tree">Turnierbaum</label>
-				<input type="submit" type="submit" value="Turnier erstellen" />
-				<input type="hidden" name="match_id" value="{{match.id}}" />
-			</form>
-		{% endif %}
 	</div>
+
+	<div class="tournament_rounds">
+	{% for round in match.round_match.all %}
+		<table class"single_round">
+			<tr>
+				<th>Runde</th>
+				<th>Uhrzeit</th>
+				<th>Team (Home)</th>
+				<th>Punkte (Home)</th>
+				<th>Punkte (Away)</th>
+				<th>Team (Away)</th>
+			</tr>
+			<tr>
+				<th rowspan="2">{{ round.round_number }}</th>
+				<td>{{ round.getDatetime }}</td>
+				<td>{{ round.team1.getTeam }}</td>
+				<td>{{ round.pkt1 }}</td>
+				<td>{{ round.pkt2 }}</td>
+				<td>{{ round.team2.getTeam }}</td>
+				<td>
+					<form method="post" class="single_round_form" action="entry_/">
+						<input type="submit" type="submit" value="Okay" />
+						<input type="hidden" name="round_id" value="{{ round.id }}" />
+					</form>
+				</td>
+			</tr>
+
+			<tr>
+				<td>{{ round.getDatetime }}</td>
+				<td>{{ round.team1.getTeam }}</td>
+				<td>{{ round.pkt1 }}</td>
+				<td>{{ round.pkt2 }}</td>
+				<td>{{ round.team2.getTeam }}</td>
+			</tr>
+		</table>
+	{% endfor %}
+	</div>
+
+	{% if user|has_group:"Admin" %}
+	<div class="admin_interface">
+		<form method="post" class="create_team" action="create_teams/">
+			{% csrf_token %}
+			<input type="radio" id="create_team_random" name="create_team_type" value="random" checked/>
+			<label for="create_team_random">Zufall</label>
+			<input type="radio" id="create_team_self" name="create_team_type" value="self" />
+			<label for="create_team_self">Eigene Wahl</label>
+			<input type="radio" id="create_team_admin" name="create_team_type" value="admin" />
+			<label for="create_team_admin">Admin Wahl</label>
+			<input type="submit" type="submit" value="Teams erstellen" />
+			<input type="hidden" name="match_id" value="{{match.id}}" />
+		</form>
+
+		<form method="post" class="create_tournament" action="create_tournament/">
+			{% csrf_token %}
+			<input type="radio" id="create_tour_vs" name="create_tour" value="vs" checked/>
+			<label for="create_tour_vs">Jeder gegen Jeden</label>
+			<input type="radio" id="create_tour_tree" name="create_tour" value="tree" />
+			<label for="create_tour_tree">Turnierbaum</label>
+			<input type="submit" type="submit" value="Turnier erstellen" />
+			<input type="hidden" name="match_id" value="{{ match.id }}" />
+		</form>
+	</div>
+	{% endif %}
+	
 	{% endfor %}
 </div>
 {% endblock %}
