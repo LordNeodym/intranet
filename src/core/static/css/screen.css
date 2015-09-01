@@ -135,7 +135,7 @@ ul {
 table {
 	width: 100%;
 	margin-top: 5px;
-	margin-bottom: 100px;
+	/*margin-bottom: 100px;*/
 	table-layout: fixed;
 }
 

@@ -115,7 +115,6 @@
 	</div>
 
 	<div class="tournament_rounds">
-	{% for round in match.round_match.all %}
 		<table class"single_round">
 			<tr>
 				<th>Runde</th>
@@ -125,8 +124,9 @@
 				<th>Punkte (Away)</th>
 				<th>Team (Away)</th>
 			</tr>
+			{% for round in match.round_match.all %}
 			<tr>
-				<th rowspan="2">{{ round.round_number }}</th>
+				<th>{{ round.round_number }}</th>
 				<td>{{ round.getDatetime }}</td>
 				<td>{{ round.team1.getTeam }}</td>
 				<td>{{ round.pkt1 }}</td>
@@ -139,16 +139,34 @@
 					</form>
 				</td>
 			</tr>
+			{% endfor %}
 
-			<tr>
-				<td>{{ round.getDatetime }}</td>
-				<td>{{ round.team1.getTeam }}</td>
-				<td>{{ round.pkt1 }}</td>
-				<td>{{ round.pkt2 }}</td>
-				<td>{{ round.team2.getTeam }}</td>
-			</tr>
+
+
+			{% comment %}
+			{% for i in round.getNumberOfSameRounds|get_range %}
+				<tr>
+					{% if forloop.counter == 1 %}
+						<th rowspan="2">{{ round.round_number }}</th>
+					{% endif %}
+					<td>{{ round.getDatetime }}</td>
+					<td>{{ round.team1.getTeam }}</td>
+					<td>{{ round.pkt1 }}</td>
+					<td>{{ round.pkt2 }}</td>
+					<td>{{ round.team2.getTeam }}</td>
+					<td>
+						<form method="post" class="single_round_form" action="entry_/">
+							<input type="submit" type="submit" value="Okay" />
+							<input type="hidden" name="round_id" value="{{ round.id }}" />
+						</form>
+					</td>
+				</tr>
+			{% endfor %}
+			{% endcomment %}
+
+
+
 		</table>
-	{% endfor %}
 	</div>
 
 	{% if user|has_group:"Admin" %}

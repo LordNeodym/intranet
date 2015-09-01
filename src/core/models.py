@@ -174,6 +174,9 @@ class Round(models.Model):
 			return u"Runde %s - %s vs. %s" % (self.round_number, self.team1, self.team2)
 		return u"%s vs. %s" % (self.team1, self.team2)
 
+	def getNumberOfSameRounds(self):
+		return len(Round.objects.filter(match = self.match, round_number = self.round_number))
+
 	@property
 	def getDatetime(self):
 	    if self.datetime:
