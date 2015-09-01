@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 
 from core.models import Game, Match, Team, Rules, Round
-from core.forms import UserForm
+from core.forms import UserForm, RoundForm
 
 
 def home(request):
@@ -95,12 +95,14 @@ def game_site(request, slug, command=None):
 		if request.method == 'POST':
 			if command == "register_user":
 				register_user_in_match(request)
-			if command == "create_teams":
+			elif command == "create_teams":
 				create_teams(request)
-			if command == "delete_team":
+			elif command == "delete_team":
 				delete_team(request)
-			if command == "create_tournament":
+			elif command == "create_tournament":
 				create_tournament(request)
+			elif command == "entry_round_result":
+				entry_round_result(request)
 			return HttpResponseRedirect(reverse('games', args=[slug]))
 		try:
 			content['game'] = Game.objects.get(slug=slug)
@@ -118,6 +120,7 @@ def game_site(request, slug, command=None):
 def logout(request):
     auth_logout(request)
     return redirect('/')
+
 
 
 
@@ -179,3 +182,14 @@ def roundRobin(units, sets=None):
         units.insert(1, units.pop())
         schedule.append(pairings)
     return schedule
+
+
+def entry_round_result(request):
+	form = RoundForm(data=request.POST)
+	if form.is_valid():
+		round = Round.objects.get(id=request.POST['round_id'])
+		round.pkt1 = request.POST['pkt1']
+		round.pkt2 = request.POST['pkt2']
+		round.save()
+	else:
+		print form.errors

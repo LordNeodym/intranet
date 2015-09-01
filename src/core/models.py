@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from datetime import date, datetime
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.template.defaultfilters import slugify
+from django.core import validators
 
 from random import shuffle
+from datetime import date, datetime
 
+from core.validators import integer_only
 
 def validate_only_one_instance(obj):
 	model = obj.__class__
@@ -165,8 +167,8 @@ class Round(models.Model):
 	round_number = models.IntegerField(verbose_name="Rundennummer", blank=True, null=True)
 	team1 = models.ForeignKey(Team, verbose_name="Team Heim", blank=False, null=False, related_name="round_team1")
 	team2 = models.ForeignKey(Team, verbose_name="Team Gast", blank=False, null=False, related_name="round_team2")
-	pkt1 = models.IntegerField(verbose_name="Punkte Heim", blank=True, null=True)
-	pkt2 = models.IntegerField(verbose_name="Punkte Gast", blank=True, null=True)
+	pkt1 = models.IntegerField(verbose_name="Punkte Heim", blank=True, null=True, validators=[integer_only])
+	pkt2 = models.IntegerField(verbose_name="Punkte Gast", blank=True, null=True, validators=[integer_only])
 	datetime = models.DateTimeField(verbose_name="Datum/Uhrzeit", blank=True, null=True)
 
 	def __unicode__(self):
@@ -176,6 +178,18 @@ class Round(models.Model):
 
 	def getNumberOfSameRounds(self):
 		return len(Round.objects.filter(match = self.match, round_number = self.round_number))
+
+	@property
+	def getPkt1(self):
+		if self.pkt1:
+		    return self.pkt1
+		return ""
+
+	@property
+	def getPkt2(self):
+		if self.pkt2:
+		    return self.pkt2
+		return ""
 
 	@property
 	def getDatetime(self):
