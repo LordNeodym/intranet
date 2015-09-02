@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.template.defaultfilters import slugify
 from django.core import validators
+from django.db.models import Q
+from django.db.models import Sum
 
 from random import shuffle
 from datetime import date, datetime
@@ -157,6 +159,28 @@ class Team(models.Model):
 	def getTeam(self):
 		return u"Team {0}".format(self.description)
 
+	@property
+	def num_wins(self):
+		num_wins = Round.objects.filter(winner=self).count()
+		return num_wins
+
+	@property
+	def num_pts(self):
+		num_pts_t1 = Round.objects.filter(team1=self)\
+				.aggregate(Sum('pkt1'))
+		num_pts_t2 = Round.objects.filter(team2=self)\
+				.aggregate(Sum('pkt2'))
+		sum = 0
+		try:
+			sum += int(num_pts_t1['pkt1__sum'])
+		except TypeError:
+			pass
+		try:
+			sum += int(num_pts_t2['pkt2__sum'])
+		except TypeError:
+			pass
+		return sum
+
 	class Meta:
 		verbose_name = "Team"
 		verbose_name_plural = "Teams"
@@ -170,6 +194,7 @@ class Round(models.Model):
 	pkt1 = models.IntegerField(verbose_name="Punkte Heim", blank=True, null=True, validators=[integer_only])
 	pkt2 = models.IntegerField(verbose_name="Punkte Gast", blank=True, null=True, validators=[integer_only])
 	datetime = models.DateTimeField(verbose_name="Datum/Uhrzeit", blank=True, null=True)
+	winner = models.ForeignKey(Team, editable=False, null=True, related_name="round_win")
 
 	def __unicode__(self):
 		if self.round_number:
@@ -178,6 +203,15 @@ class Round(models.Model):
 
 	def getNumberOfSameRounds(self):
 		return len(Round.objects.filter(match = self.match, round_number = self.round_number))
+
+	def calcWinner(self):
+		if int(self.pkt1) > int(self.pkt2):
+			self.winner = self.team1
+		elif int(self.pkt2) > int(self.pkt1):
+			self.winner = self.team2
+		else:
+			self.winner = None
+		self.save()
 
 	@property
 	def getPkt1(self):

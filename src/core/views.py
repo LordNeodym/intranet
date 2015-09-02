@@ -109,7 +109,8 @@ def game_site(request, slug, command=None):
 		except:
 			content['msg'] = "Seite nicht gefunden!"
 			return render_to_response('game_site.html', {'content': content}, context_instance=context)
-		content['match'] = Match.objects.filter(game=content['game'])
+		content['matches'] = Match.objects.filter(game=content['game'])
+
 	else:
 		content['msg'] = "Bitte zuerst einloggen!"
 	return render_to_response('game_site.html', content, context_instance=context)
@@ -191,5 +192,6 @@ def entry_round_result(request):
 		round.pkt1 = request.POST['pkt1']
 		round.pkt2 = request.POST['pkt2']
 		round.save()
+		round.calcWinner()
 	else:
 		print form.errors

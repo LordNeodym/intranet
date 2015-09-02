@@ -1,5 +1,10 @@
 from django.template import Library
 from django.contrib.auth.models import Group
+from django.db.models import Count
+
+import operator
+
+from core.models import Team
 
 register = Library()
 
@@ -40,3 +45,10 @@ def get_range( value ):
     Instead of 3 one may use the variable set in the views
   """
   return range( value )
+
+@register.filter
+def sortTeam(teams):
+  team_dic = {}
+  for team in teams:
+    team_dic[team] = {'wins': team.num_wins, 'pts': team.num_pts}
+  return sorted(team_dic.items(), key=operator.itemgetter(1), reverse=True)

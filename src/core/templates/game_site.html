@@ -13,7 +13,7 @@
 		<h1 class="game_headline">{{ game }}</h1>
 	</div>
 
-	{% for match in match %}
+	{% for match in matches %}
 	<div class="match_info">
 		<div class="datetime">
 			<div class="game_info_time">
@@ -142,8 +142,6 @@
 			</tr>
 			{% endfor %}
 
-
-
 			{% comment %}
 			{% for i in round.getNumberOfSameRounds|get_range %}
 				<tr>
@@ -165,10 +163,25 @@
 			{% endfor %}
 			{% endcomment %}
 
-
-
 		</table>
 	</div>
+
+	<div class="ranking">
+		<table>
+			<tr>
+				<th>Team</th>
+				<th>Siege</th>
+				<th>Punkte</th>
+			</tr>
+			{% for team in match.team_match.all|sortTeam %}
+			<tr>
+				<td>Team {{ team.0.description }}</td>
+				<td>{{ team.1.wins }}</td>
+				<td>{{ team.1.pts }}</td>
+			</tr>
+			{% endfor %}
+		</table>
+	<div>
 
 	{% if user|has_group:"Admin" %}
 	<div class="admin_interface">
