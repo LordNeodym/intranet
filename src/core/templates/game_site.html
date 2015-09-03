@@ -101,11 +101,13 @@
 							<li>{{ user }}</li>
 							{% endfor %}
 						</ul>
+						{% if not match.round_match %}
 						<form method="post" class="delete_team" action="delete_team/">
 							{% csrf_token %}
 							<input type="submit" type="submit" value="X" />
 							<input type="hidden" name="team_id" value="{{team.id}}" />
 						</form>
+						{% endif %}
 					</div>
 				{% if forloop.counter0|modulo:3 == 2 or forloop.last %}
 					</div>
@@ -114,8 +116,10 @@
 		{% endif %}
 	</div>
 
+	{% if match.round_match.all %}
 	<div class="tournament_rounds">
-		<table class"single_round">
+		<h2>Begegnungen</h2>
+		<table class"rounds">
 			<tr>
 				<th>Runde</th>
 				<th>Uhrzeit</th>
@@ -141,35 +145,14 @@
 				</form>
 			</tr>
 			{% endfor %}
-
-			{% comment %}
-			{% for i in round.getNumberOfSameRounds|get_range %}
-				<tr>
-					{% if forloop.counter == 1 %}
-						<th rowspan="2">{{ round.round_number }}</th>
-					{% endif %}
-					<td>{{ round.getDatetime }}</td>
-					<td>{{ round.team1.getTeam }}</td>
-					<td>{{ round.pkt1 }}</td>
-					<td>{{ round.pkt2 }}</td>
-					<td>{{ round.team2.getTeam }}</td>
-					<td>
-						<form method="post" class="single_round_form" action="entry_/">
-							<input type="submit" type="submit" value="Okay" />
-							<input type="hidden" name="round_id" value="{{ round.id }}" />
-						</form>
-					</td>
-				</tr>
-			{% endfor %}
-			{% endcomment %}
-
 		</table>
 	</div>
 
 	<div class="ranking">
+		<h2>Ranking</h2>
 		<table>
 			<tr>
-				<th>Team</th>
+				<th>Teams</th>
 				<th>Siege</th>
 				<th>Punkte</th>
 			</tr>
@@ -182,6 +165,7 @@
 			{% endfor %}
 		</table>
 	<div>
+	{% endif %}
 
 	{% if user|has_group:"Admin" %}
 	<div class="admin_interface">
@@ -204,6 +188,12 @@
 			<input type="radio" id="create_tour_tree" name="create_tour" value="tree" />
 			<label for="create_tour_tree">Turnierbaum</label>
 			<input type="submit" type="submit" value="Turnier erstellen" />
+			<input type="hidden" name="match_id" value="{{ match.id }}" />
+		</form>
+
+		<form method="post" class="delete_tournament" action="delete_tournament/">
+			{% csrf_token %}
+			<input type="submit" type="submit" value="Turnier löschen" />
 			<input type="hidden" name="match_id" value="{{ match.id }}" />
 		</form>
 	</div>

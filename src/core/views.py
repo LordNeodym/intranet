@@ -103,6 +103,8 @@ def game_site(request, slug, command=None):
 				create_tournament(request)
 			elif command == "entry_round_result":
 				entry_round_result(request)
+			elif command == "delete_tournament":
+				delete_tournament(request)
 			return HttpResponseRedirect(reverse('games', args=[slug]))
 		try:
 			content['game'] = Game.objects.get(slug=slug)
@@ -155,6 +157,8 @@ def delete_team(request):
 def create_tournament(request):
 	teams = Team.objects.filter(match__id=request.POST['match_id'])
 	match = Match.objects.get(id=request.POST['match_id'])
+	old_rounds = Round.objects.filter(match=match)
+	old_rounds.delete()
 	team_ids = [team.id for team in teams]
 	for index, pairings in enumerate(roundRobin(team_ids)):
 		for pairing in pairings:
@@ -195,3 +199,8 @@ def entry_round_result(request):
 		round.calcWinner()
 	else:
 		print form.errors
+
+
+def delete_tournament(request):
+	match = Match.objects.get(id=request.POST['match_id'])
+	match.deleteTournament()

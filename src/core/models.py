@@ -124,6 +124,16 @@ class Match(models.Model):
 				team.save()
 			team.user.add(user)
 
+	def deleteTournament(self):
+		""" delete all rounds """
+		rounds = self.round_match.all()
+		rounds.delete()
+
+		""" delete all teams """
+		teams = self.team_match.all()
+		teams.delete()
+
+
 	class Meta:
 		verbose_name = "Match"
 		verbose_name_plural = "Matches"
