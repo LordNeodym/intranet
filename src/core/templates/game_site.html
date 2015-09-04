@@ -101,7 +101,7 @@
 							<li>{{ user }}</li>
 							{% endfor %}
 						</ul>
-						{% if not match.round_match %}
+						{% if not match.round_match.all and user|has_group:"Admin" %}
 						<form method="post" class="delete_team" action="delete_team/">
 							{% csrf_token %}
 							<input type="submit" type="submit" value="X" />
@@ -187,6 +187,8 @@
 			<label for="create_tour_vs">Jeder gegen Jeden</label>
 			<input type="radio" id="create_tour_tree" name="create_tour" value="tree" />
 			<label for="create_tour_tree">Turnierbaum</label>
+			<input type="checkbox" id="create_tour_tree_loserbracket" name="create_tour_tree_loserbracket" disabled/>
+			<label for="create_tour_tree_loserbracket">Loserbracket</label>
 			<input type="submit" type="submit" value="Turnier erstellen" />
 			<input type="hidden" name="match_id" value="{{ match.id }}" />
 		</form>
