@@ -88,14 +88,18 @@
 		</div>
 	</div>
 
-	{% if match.team_choose_type == "self" and match.playerWithoutTeam %}
+	{% if match.team_choose_type == "self" and match.playerWithoutTeam and user in match.playerWithoutTeam %}
 	<div class="choose_team">
 		<div class="player_pool">
 			<form method="post" class="create_self_team" action="create_self_team/">
 				{% csrf_token %}
-				{% for user in match.playerWithoutTeam %}
-					<input type="checkbox" id="user_{{user.id}}" name="create_self_team" value="{{user.id}}" />
-					<label for="user_{{user.id}}">{{ user }}</label>
+				{% for player in match.playerWithoutTeam %}
+					<input type="checkbox" id="user_{{player.id}}" name="create_self_team" value="{{player.id}}" 
+					{% if user == player %}
+					checked disabled
+					{% endif %}
+					 />
+					<label for="user_{{player.id}}">{{ player }}</label>
 				{% endfor %}
 				<input type="submit" type="submit" value="Team erstellen" />
 				<input type="hidden" name="match_id" value="{{match.id}}" />

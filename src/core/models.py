@@ -117,10 +117,15 @@ class Match(models.Model):
 		for team in teams:
 			exclude_list.append(team.user.all())
 		exclude_list = [item for sublist in exclude_list for item in sublist]
-		print exclude_list
 		for user in self.user.all():
 			if not user in exclude_list:
 				player_list.append(user)
+		return player_list
+
+	def playerWithoutTeamIds(self):
+		player_list = []
+		for user in self.playerWithoutTeam():
+			player_list.append(user.id)
 		return player_list
 
 	def save_new_user(self, user_id):
