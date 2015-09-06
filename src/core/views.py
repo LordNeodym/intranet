@@ -97,6 +97,8 @@ def game_site(request, slug, command=None):
 				register_user_in_match(request)
 			elif command == "create_teams":
 				create_teams(request)
+			elif command == "create_admin_team":
+				create_admin_team(request)
 			elif command == "delete_team":
 				delete_team(request)
 			elif command == "create_tournament":
@@ -141,12 +143,31 @@ def register_user_in_match(request):
 def create_teams(request):
 	create_team_type = request.POST['create_team_type']
 	match = Match.objects.get(id=request.POST['match_id'])
+	match.deleteTournament()
 	if create_team_type == "random":
+		match.team_choose_type = "rand"
+		match.save()
 		match.randomTeams()
 	elif create_team_type == "self":
-		pass
+		match.team_choose_type = "self"
+		match.save()
 	elif create_team_type == "admin":
-		pass
+		match.team_choose_type = "admin"
+		match.save()
+
+
+def create_admin_team(request):
+	teamlist = request.POST.getlist('create_admin_team')
+	if not teamlist:
+		return
+	match = Match.objects.get(id=request.POST['match_id'])
+	number = match.getNewTeamNumber()
+	team = Team.objects.create(
+							description = number,
+							match = match,
+							)
+	team.user.add(*teamlist)
+	team.save()
 
 
 def delete_team(request):

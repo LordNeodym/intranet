@@ -74,7 +74,7 @@
 			<h5 class="row_info">Angemeldete Benutzer</h5>
 			<ul>
 			{% for user in match.user.all %}
-	 		<li class="player_name match_id_{{match.id}}" id="user_id_{{user.id}}">{{ user }}</li>
+	 		<li class="user_list">{{ user }}</li>
 			{% endfor %}
 			</ul>
 
@@ -87,6 +87,40 @@
 			{% endif %}
 		</div>
 	</div>
+
+	{% if match.team_choose_type == "self" and match.playerWithoutTeam %}
+	<div class="choose_team">
+		<div class="player_pool">
+			<form method="post" class="create_self_team" action="create_self_team/">
+				{% csrf_token %}
+				{% for user in match.playerWithoutTeam %}
+					<input type="checkbox" id="user_{{user.id}}" name="create_self_team" value="{{user.id}}" />
+					<label for="user_{{user.id}}">{{ user }}</label>
+				{% endfor %}
+				<input type="submit" type="submit" value="Team erstellen" />
+				<input type="hidden" name="match_id" value="{{match.id}}" />
+			</form>
+		</div>
+	</div>
+	{% endif %}
+
+	{% if match.team_choose_type == "admin" and match.playerWithoutTeam %}
+	{% if user|has_group:"Admin" %}
+	<div class="choose_team">
+		<div class="player_pool">
+			<form method="post" class="create_admin_team" action="create_admin_team/">
+				{% csrf_token %}
+				{% for user in match.playerWithoutTeam %}
+					<input type="checkbox" id="user_{{user.id}}" name="create_admin_team" value="{{user.id}}" />
+					<label for="user_{{user.id}}">{{ user }}</label>
+				{% endfor %}
+				<input type="submit" type="submit" value="Team erstellen" />
+				<input type="hidden" name="match_id" value="{{match.id}}" />
+			</form>
+		</div>
+	</div>
+	{% endif %}
+	{% endif %}
 
 	<div class="teams">
 		{% if match.team_match.all %}
@@ -171,11 +205,11 @@
 	<div class="admin_interface">
 		<form method="post" class="create_team" action="create_teams/">
 			{% csrf_token %}
-			<input type="radio" id="create_team_random" name="create_team_type" value="random" checked/>
+			<input type="radio" id="create_team_random" name="create_team_type" value="random" {{ match|radioChecked:"rand" }} />
 			<label for="create_team_random">Zufall</label>
-			<input type="radio" id="create_team_self" name="create_team_type" value="self" />
+			<input type="radio" id="create_team_self" name="create_team_type" value="self" {{ match|radioChecked:"self" }} />
 			<label for="create_team_self">Eigene Wahl</label>
-			<input type="radio" id="create_team_admin" name="create_team_type" value="admin" />
+			<input type="radio" id="create_team_admin" name="create_team_type" value="admin" {{ match|radioChecked:"admin" }} />
 			<label for="create_team_admin">Admin Wahl</label>
 			<input type="submit" type="submit" value="Teams erstellen" />
 			<input type="hidden" name="match_id" value="{{match.id}}" />

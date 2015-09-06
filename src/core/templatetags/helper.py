@@ -52,3 +52,8 @@ def sortTeam(teams):
   for team in teams:
     team_dic[team] = {'wins': team.num_wins, 'pts': team.num_pts}
   return sorted(team_dic.items(), key=operator.itemgetter(1), reverse=True)
+
+@register.filter
+def radioChecked(match, button_label):
+  if match.team_choose_type == button_label:
+    return "checked"

@@ -13,6 +13,7 @@ from datetime import date, datetime
 
 from core.validators import integer_only
 
+
 def validate_only_one_instance(obj):
 	model = obj.__class__
 	if (model.objects.count() > 0 and obj.id != model.objects.get().id):
@@ -82,17 +83,45 @@ class Game(models.Model):
 
 
 class Match(models.Model):
+	TEAM_CHOOSE_TYPE = (
+		('None', 'Bitte wählen'),
+	    ('rand', 'Zufalls Wahl'),
+	    ('self', 'Eigene Wahl'),
+	    ('admin', 'Admin Wahl'),
+	)
+
 	game = models.ForeignKey(Game, verbose_name="Spiel", blank=False, null=False, related_name="match_game")
 	game_mode = models.CharField(verbose_name="Modus", max_length=50, blank=True, null=True)
 	player_per_team = models.IntegerField(verbose_name="Spieler pro Team", blank=False, null=False)
 	description = models.TextField(verbose_name="Beschreibung", max_length=255, blank=True, null=True)
 	user = models.ManyToManyField(User, verbose_name="Spieler", related_name="match_user")
 	datetime = models.DateTimeField(verbose_name="Datum/Uhrzeit", blank=True, null=True)
+	team_choose_type = models.CharField(verbose_name="Team Wahl", max_length=5, choices=TEAM_CHOOSE_TYPE, default="None")
 
 	def __unicode__(self):
 		if self.game_mode:
 			return u"%s (%svs.%s) - %s" % (self.game, self.player_per_team, self.player_per_team, self.game_mode)
 		return u"%s (%svs.%s)" % (self.game, self.player_per_team, self.player_per_team)
+
+	def getNewTeamNumber(self):
+		teams = self.team_match.all().order_by('-description')
+		try:
+			return int(teams[0].description) + 1
+		except IndexError:
+			return 1
+
+	def playerWithoutTeam(self):
+		player_list = []
+		exclude_list = []
+		teams = self.team_match.all()
+		for team in teams:
+			exclude_list.append(team.user.all())
+		exclude_list = [item for sublist in exclude_list for item in sublist]
+		print exclude_list
+		for user in self.user.all():
+			if not user in exclude_list:
+				player_list.append(user)
+		return player_list
 
 	def save_new_user(self, user_id):
 		self.user.add(User.objects.get(id=user_id))
