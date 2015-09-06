@@ -38,6 +38,9 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
+    'filer',
+    'mptt',
+    'easy_thumbnails',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -112,3 +115,10 @@ MEDIA_URL = '/media/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'core/static')
 STATIC_URL = '/static/'
+
+THUMBNAIL_ALIASES = {
+    '': {
+        'game_icon': {'size': (40, 40), 'crop': True},
+        'game_site': {'size': (256, 256), 'crop': False},
+    },
+}

@@ -8,6 +8,9 @@ from django.core import validators
 from django.db.models import Q
 from django.db.models import Sum
 
+from filer.fields.file import FilerFileField
+from filer.fields.image import FilerImageField
+
 from random import shuffle
 from datetime import date, datetime
 
@@ -67,7 +70,7 @@ class RulesInline(models.Model):
 class Game(models.Model):
 	name = models.CharField(verbose_name="Name", max_length=50, unique=True, blank=False, null=False)
 	slug = models.SlugField(verbose_name="Slug", blank=True, unique=True, editable=False)
-	img = models.ImageField(verbose_name="Icon", upload_to="game_icon", blank=True, null=True)
+	icon = FilerImageField(verbose_name="Icon", related_name="game_icon", blank=True, null=True)
 
 	def __unicode__(self):
 		return u"%s" % (self.name)

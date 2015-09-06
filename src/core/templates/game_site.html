@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load thumbnail %}
 {% load helper %}
 
 {% block body %}
@@ -9,14 +10,14 @@
 		<span class="message">{{msg}}</span>
 	{% endif %}
 
-	<!--
-	<div class="headline">
-		<h1 class="game_headline">{{ game }}</h1>
-	</div>
-	-->
-
 	{% for match in matches %}
-	<img src={{MEDIA_URL}}{{ match.game.img }} />
+	<div class="headline">
+		{% if match.game.icon %}
+		<img src="{{ match.game.icon|thumbnail_url:'game_site' }}" />
+		{% else %}
+		<h1 class="game_headline">{{ match.game.name }}</h1>
+		{% endif %}
+	</div>
 	<div class="match_info">
 		<div class="datetime">
 			<div class="game_info_time">

@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load thumbnail %}
 
 <!DOCTYPE html>
     <head>
@@ -33,7 +34,8 @@
             <li><a href="#">Spiele</a>
                 <ul>
                     {% for game in games %}
-                        <li><a href="/games/{{ game.slug }}" class="documents" style="background: url({{ MEDIA_URL }}{{game.img}}) no-repeat 6px center;">{{game.name}}</a></li>
+                        <li><a href="/games/{{ game.slug }}" class="documents" style="background: url(
+{{ game.icon|thumbnail_url:'game_icon' }}) no-repeat 6px center;">{{game.name}}</a></li>
                     {% endfor %}
                 </ul>
             </li>
