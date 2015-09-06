@@ -133,3 +133,8 @@
 /*.menu a.documents { background: url(../img/docs.png) no-repeat 6px center; }
 .menu a.messages { background: url(../img/bubble.png) no-repeat 6px center; }
 .menu a.signout { background: url(../img/arrow.png) no-repeat 6px center; }*/
+
+.menu a {
+    background-size: 40px 40px !important;
+    background-repeat: no-repeat;
+}

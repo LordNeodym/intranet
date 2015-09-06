@@ -64,6 +64,7 @@ ul {
 	width: 60%;
 	left: 20%;
 	margin-top: 20px;
+    margin-bottom: 30px;
 }
 
 .headline {
@@ -162,4 +163,5 @@ footer {
     width: 100%;
     bottom: 0;
     position: fixed;
+    padding-left: 5px;
 }

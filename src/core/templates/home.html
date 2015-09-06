@@ -8,21 +8,14 @@
 		<span class="message">{{content.msg}}</span>
 	{% else %}
 
-	<div class="headline">
-		<h1 class="game_headline">{{ lan_name.title }}</h1>
-	</div>
+		<div class="headline">
+			<h1 class="game_headline">{{ lan_name.title }}</h1>
+		</div>
 
-	<div class="home_description">
-		<p>{{ lan_name.description }}</p>
-	</div>
+		<div class="home_description">
+			<p>{{ lan_name.description }}</p>
+		</div>
 
-	<ul>
-		{% for game in content.games %}
-		<li><a class="game" href="{{game.slug}}">{{game}}</a></li>
-		{% empty %}
-		<li class="no_game">Es wurde noch kein Turnier erstellt.</li>
-		{% endfor %}
-	</ul>
 	{% endif %}
 </div>
 

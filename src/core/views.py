@@ -63,10 +63,10 @@ def login(request):
                 return redirect('/%s' % next)
             else:
                 # Return a 'disabled account' error message
-                msg.append(_("User account is disabled."))
+                msg.append("Benutzeraccount für {0} gesperrt.".format(user))
         else:
             # Return an 'invalid login' error message.
-            msg.append(_("Invalid username or password."))
+            msg.append("Benutzername oder Passwort falsch.")
     return render_to_response('login.html', {'errors': msg}, context_instance=context)
 
 
@@ -98,9 +98,11 @@ def game_site(request, slug, command=None):
 			elif command == "create_teams":
 				create_teams(request)
 			elif command == "create_self_team":
-				create_self_team(request)
+				content['msg'] = create_self_team(request)
+			elif command == "update_self_team":
+				content['msg'] = update_self_team(request)
 			elif command == "create_admin_team":
-				create_admin_team(request)
+				content['msg'] = create_admin_team(request)
 			elif command == "delete_team":
 				delete_team(request)
 			elif command == "create_tournament":
@@ -173,20 +175,35 @@ def create_self_team(request):
 								)
 		team.user.add(*teamlist)
 		team.save()
+	else:
+		return "Spieler zur Teamerstellung nicht mehr verfügbar."
+
+
+def update_self_team(request):
+	teamlist = [int(x) for x in request.POST.getlist('create_self_team')]
+	if set(teamlist).issubset(match.playerWithoutTeamIds()):
+		team = Team.objects.get(match__id=request.POST['match_id'], user=request.user.id)
+		team.user.add(*teamlist)
+		team.save()
+	else:
+		return "Spieler zur Teamerstellung nicht mehr verfügbar."
 
 
 def create_admin_team(request):
-	teamlist = request.POST.getlist('create_admin_team')
+	teamlist = [int(x) for x in request.POST.getlist('create_admin_team')]
 	if not teamlist:
 		return
 	match = Match.objects.get(id=request.POST['match_id'])
-	number = match.getNewTeamNumber()
-	team = Team.objects.create(
-							description = number,
-							match = match,
-							)
-	team.user.add(*teamlist)
-	team.save()
+	if set(teamlist).issubset(match.playerWithoutTeamIds()):
+		number = match.getNewTeamNumber()
+		team = Team.objects.create(
+								description = number,
+								match = match,
+								)
+		team.user.add(*teamlist)
+		team.save()
+	else:
+		return "Spieler zur Teamerstellung nicht mehr verfügbar."
 
 
 def delete_team(request):

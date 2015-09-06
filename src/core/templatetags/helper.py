@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.template import Library
 from django.contrib.auth.models import Group
 from django.db.models import Count
@@ -24,6 +26,12 @@ def button_label(match, user):
 	if user in match.user.all():
 		return "Abmelden"
 	return "Anmelden"
+
+@register.filter
+def button_label_self_team(match, user):
+  if user in match.playerWithoutTeam():
+    return "Team erstellen"
+  return "Zum Team hinzufügen"
 
 @register.filter
 def get_range( value ):

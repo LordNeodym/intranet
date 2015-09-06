@@ -9,11 +9,14 @@
 		<span class="message">{{msg}}</span>
 	{% endif %}
 
+	<!--
 	<div class="headline">
 		<h1 class="game_headline">{{ game }}</h1>
 	</div>
+	-->
 
 	{% for match in matches %}
+	<img src={{MEDIA_URL}}{{ match.game.img }} />
 	<div class="match_info">
 		<div class="datetime">
 			<div class="game_info_time">
@@ -88,10 +91,14 @@
 		</div>
 	</div>
 
-	{% if match.team_choose_type == "self" and match.playerWithoutTeam and user in match.playerWithoutTeam %}
+	{% if match.team_choose_type == "self" and match.playerWithoutTeam %}
 	<div class="choose_team">
 		<div class="player_pool">
+			{% if user in match.playerWithoutTeam %}
 			<form method="post" class="create_self_team" action="create_self_team/">
+			{% else %}
+			<form method="post" class="create_self_team" action="update_self_team/">
+			{% endif %}
 				{% csrf_token %}
 				{% for player in match.playerWithoutTeam %}
 					<input type="checkbox" id="user_{{player.id}}" name="create_self_team" value="{{player.id}}" 
@@ -101,7 +108,7 @@
 					 />
 					<label for="user_{{player.id}}">{{ player }}</label>
 				{% endfor %}
-				<input type="submit" type="submit" value="Team erstellen" />
+				<input type="submit" type="submit" value="{{ match|button_label_self_team:user }}" />
 				<input type="hidden" name="match_id" value="{{match.id}}" />
 			</form>
 		</div>
@@ -128,6 +135,7 @@
 
 	<div class="teams">
 		{% if match.team_match.all %}
+			<h2>Teams</h2>
 			{% for team in match.team_match.all %}
 				{% ifequal forloop.counter0|modulo:3 0 %}
 				<div class="team_row">
@@ -202,7 +210,7 @@
 			</tr>
 			{% endfor %}
 		</table>
-	<div>
+	</div>
 	{% endif %}
 
 	{% if user|has_group:"Admin" %}

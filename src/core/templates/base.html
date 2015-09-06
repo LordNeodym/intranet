@@ -33,7 +33,7 @@
             <li><a href="#">Spiele</a>
                 <ul>
                     {% for game in games %}
-                        <li><a href="/games/{{ game.slug }}" class="documents">{{game.name}}</a></li>
+                        <li><a href="/games/{{ game.slug }}" class="documents" style="background: url({{ MEDIA_URL }}{{game.img}}) no-repeat 6px center;">{{game.name}}</a></li>
                     {% endfor %}
                 </ul>
             </li>

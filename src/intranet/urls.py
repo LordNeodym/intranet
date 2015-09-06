@@ -1,6 +1,7 @@
-from django.conf.urls import include, url
+from django.conf.urls import include, url, patterns
 from django.contrib import admin
 from core import views
+from django.conf import settings
 
 
 urlpatterns = [
@@ -15,3 +16,14 @@ urlpatterns = [
     url(r'^games/(?P<slug>[-\w\d]+)/$', views.game_site, name='games'),
     url(r'^games/(?P<slug>[-\w\d]+)/(?P<command>[-_a-z]+)/$', views.game_site),
 ]
+
+
+if settings.DEBUG:
+    urlpatterns += patterns('',
+        url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
+            'document_root': settings.MEDIA_ROOT,
+        }),
+        url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {
+            'document_root': settings.STATIC_ROOT,
+        }),
+)
