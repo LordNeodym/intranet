@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load thumbnail %}
+
+{% block body %}
+{{block.super}}
+<div class="content">
+	<div class="headline">
+		<h1 class="game_headline">Bilder</h1>
+	</div>
+	{% for category in categories %}
+		<h2>{{category.description}}</h2>
+		{% for image in category.image_imagecategory.all %}
+			<image src="{{ image.image.url }}" />
+		{% endfor %}
+	{% endfor %}
+</div>
+{% endblock %}

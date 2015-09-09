@@ -9,7 +9,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 
-from core.models import Game, Match, Team, Rules, Round
+from core.models import Game, Match, Team, Rules, Round, ImageCategory
 from core.forms import UserForm, RoundForm
 
 
@@ -75,9 +75,12 @@ def movies(request):
 	return render_to_response('movies.html', context_instance=context)
 
 
-def pictures(request):
+def images(request):
     context = RequestContext(request)
-    return render_to_response('pictures.html', context_instance=context)
+    content = {}
+
+    content['categories'] = ImageCategory.objects.all()
+    return render_to_response('images.html', content, context_instance=context)
 
 
 def rules(request, slug):

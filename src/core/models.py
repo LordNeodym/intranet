@@ -233,6 +233,7 @@ class Team(models.Model):
 		verbose_name_plural = "Teams"
 		ordering = ['description']
 
+
 class Round(models.Model):
 	match = models.ForeignKey(Match, verbose_name="Match", blank=False, null=False, related_name="round_match")
 	round_number = models.IntegerField(verbose_name="Rundennummer", blank=True, null=True)
@@ -282,3 +283,49 @@ class Round(models.Model):
 		verbose_name = "Runde"
 		verbose_name_plural = "Runden"
 		ordering = ['round_number', 'datetime']
+
+
+class VideoCategory(models.Model):
+	description = models.CharField(verbose_name="Kategorie", max_length=50, blank=False, null=False)
+
+	def __unicode__(self):
+		return u"%s" % (self.description)
+
+	class Meta:
+		verbose_name = "Videokategorie"
+		verbose_name_plural = "Videokategorien"
+
+
+class SingleVideo(models.Model):
+	category = models.ForeignKey(VideoCategory, null=False, related_name="video_videocategory")
+	video = FilerFileField(verbose_name="Video", related_name="video", blank=False, null=False)
+
+	def __unicode__(self):
+		return u"%s" % (self.video)
+
+	class Meta:
+		verbose_name = "Video"
+		verbose_name_plural = "Videos"
+
+
+class ImageCategory(models.Model):
+	description = models.CharField(verbose_name="Kategorie", max_length=50, blank=False, null=False)
+
+	def __unicode__(self):
+		return u"%s" % (self.description)
+
+	class Meta:
+		verbose_name = "Bilderkategorie"
+		verbose_name_plural = "Bilderkategorien"
+
+
+class SingleImage(models.Model):
+	category = models.ForeignKey(ImageCategory, null=False, related_name="image_imagecategory")
+	image = FilerImageField(verbose_name="Image", related_name="image", blank=False, null=False)
+
+	def __unicode__(self):
+		return u"%s" % (self.image)
+
+	class Meta:
+		verbose_name = "Bild"
+		verbose_name_plural = "Bilder"

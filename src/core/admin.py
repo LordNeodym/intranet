@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.db import models
 from django.forms import TextInput, Textarea
 
-from core.models import IntranetMeta, Game, Match, Round, Team, Rules, RulesInline, MatchRulesInline
+from core.models import IntranetMeta, Game, Match, Round, Team, Rules, RulesInline, MatchRulesInline, VideoCategory, SingleVideo, ImageCategory, SingleImage
 
 
 class IntranetMetaAdmin(admin.ModelAdmin):
@@ -43,6 +43,21 @@ class MatchAdmin(admin.ModelAdmin):
     	models.TextField: {'widget': Textarea(attrs={'rows':3, 'cols':40})},
     }
 
+class VideoInlineAdmin(admin.TabularInline):
+    model = SingleVideo
+    extra = 0
+
+class VideoCategoryAdmin(admin.ModelAdmin):
+    inlines = [VideoInlineAdmin,]
+    ordering = ['description']
+
+class ImageInlineAdmin(admin.TabularInline):
+    model = SingleImage
+    extra = 0
+
+class ImageCategoryAdmin(admin.ModelAdmin):
+    inlines = [ImageInlineAdmin,]
+    ordering = ['description']
 
 admin.site.register(IntranetMeta, IntranetMetaAdmin)
 admin.site.register(Rules, RulesAdmin)
@@ -50,3 +65,5 @@ admin.site.register(Team, TeamAdmin)
 admin.site.register(Game, GameAdmin)
 admin.site.register(Match, MatchAdmin)
 admin.site.register(Round, RoundAdmin)
+admin.site.register(VideoCategory, VideoCategoryAdmin)
+admin.site.register(ImageCategory, ImageCategoryAdmin)
