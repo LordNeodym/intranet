@@ -11,8 +11,9 @@ urlpatterns = [
 	url(r'^register/$', views.register, name='register'),
     url(r'^logout/$', views.logout, name='logout'),
     url(r'^rules/(?P<slug>[-\w\d]+)/$', views.rules, name='rules'),
+    url(r'^off-topic/menu/$', views.menu, name='menu'),
     url(r'^off-topic/images/$', views.images, name='images'),
-    url(r'^off-topic/videos/$', views.movies, name='movies'),
+    url(r'^off-topic/videos/$', views.videos, name='videos'),
     url(r'^games/(?P<slug>[-\w\d]+)/$', views.game_site, name='games'),
     url(r'^games/(?P<slug>[-\w\d]+)/(?P<command>[-_a-z]+)/$', views.game_site),
 ]

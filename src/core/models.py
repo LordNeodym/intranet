@@ -286,7 +286,7 @@ class Round(models.Model):
 
 
 class VideoCategory(models.Model):
-	description = models.CharField(verbose_name="Kategorie", max_length=50, blank=False, null=False)
+	description = models.CharField(verbose_name="Kategorie", max_length=50, blank=False, null=False, unique=True)
 
 	def __unicode__(self):
 		return u"%s" % (self.description)
@@ -309,7 +309,7 @@ class SingleVideo(models.Model):
 
 
 class ImageCategory(models.Model):
-	description = models.CharField(verbose_name="Kategorie", max_length=50, blank=False, null=False)
+	description = models.CharField(verbose_name="Kategorie", max_length=50, blank=False, null=False, unique=True)
 
 	def __unicode__(self):
 		return u"%s" % (self.description)
