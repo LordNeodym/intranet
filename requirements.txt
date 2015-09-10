@@ -7,3 +7,5 @@ django-mptt==0.7.4
 django-polymorphic==0.7.1
 easy-thumbnails==2.2
 wsgiref==0.1.2
+
+#sudo apt-get install python-imaging python-dev libjpeg8 libjpeg8-dev libfreetype6 libfreetype6-dev

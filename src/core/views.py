@@ -90,7 +90,7 @@ def images(request):
     context = RequestContext(request)
     content = {}
 
-    content['categories'] = ImageCategory.objects.all()
+    content['categories'] = ImageCategory.objects.all().exclude(description="Speisekarte")
     return render_to_response('images.html', content, context_instance=context)
 
 

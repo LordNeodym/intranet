@@ -22,7 +22,9 @@
 		{% for category in categories %}
 			<h2>{{category.description}}</h2>
 			{% for image in category.image_imagecategory.all %}
-				<image src="{{ image.image.url }}" />
+				<div class="{% if forloop.counter|divisibleby:2 %}even{% else %}odd{% endif %}">
+					<a id="single_image" href="{{image.image.url}}"><img src="{{ image.image|thumbnail_url:'image_preview' }}" /></a>
+				</div>
 			{% endfor %}
 		{% endfor %}
 	{% endif %}

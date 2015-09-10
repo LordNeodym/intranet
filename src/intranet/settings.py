@@ -121,5 +121,6 @@ THUMBNAIL_ALIASES = {
     '': {
         'game_icon': {'size': (40, 40), 'crop': True},
         'game_site': {'size': (256, 256), 'crop': False},
+        'image_preview': {'size': (300, 300), 'crop': True},
     },
 }
