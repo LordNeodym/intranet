@@ -20,10 +20,10 @@
 		</div>
 	
 		{% for category in categories %}
-			<h2>{{category.description}}</h2>
+			<h2 class="category_headline">{{category.description}}</h2>
 			{% for image in category.image_imagecategory.all %}
 				<div class="{% if forloop.counter|divisibleby:2 %}even{% else %}odd{% endif %}">
-					<a id="single_image" href="{{image.image.url}}"><img src="{{ image.image|thumbnail_url:'image_preview' }}" /></a>
+					<a id="single_image" href="{{image.image.url}}"><img src="{{ image.image|thumbnail_url:'game_site' }}" /></a>
 				</div>
 			{% endfor %}
 		{% endfor %}

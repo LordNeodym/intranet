@@ -85,7 +85,7 @@ def videos(request):
     content['categories'] = VideoCategory.objects.all()
     return render_to_response('videos.html', content, context_instance=context)
 
-
+@login_required(login_url="/login/")
 def images(request):
     context = RequestContext(request)
     content = {}

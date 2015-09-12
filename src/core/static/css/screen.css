@@ -173,6 +173,26 @@ table.login td {
 	padding: 0;
 }
 
+.category_headline {
+	margin-top: 20px !important;
+	margin-bottom: 20px !important;
+    float: left;
+    width: 100%;
+}
+
+.odd > a {
+	float: left;
+}
+
+.even > a {
+    margin-right: -17%;
+}
+
+.odd img,
+.even img {
+	margin-bottom: 50px;
+}
+
 footer {
     background-color: #4C4E5A;
     color: #FFF;
