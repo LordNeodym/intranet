@@ -8,9 +8,8 @@
 <div class="content">
 	{% if msg %}
 		<span class="message">{{msg}}</span>
-	{% endif %}
+	{% else %}
 
-	{% for match in matches %}
 	<div class="headline">
 		{% if match.game.icon %}
 		<img src="{{ match.game.icon|thumbnail_url:'game_site' }}" />
@@ -23,17 +22,17 @@
 			<div class="game_info_time">
 				<h5 class="row_info">Datum</h5>
 				{% if match.datetime.date %}
-					<h2 class="game_info">{{ match.datetime.date }}</h2>
+					<h4 class="game_info">{{ match.datetime.date }}</h4>
 				{% else %}
-					<h2 class="game_info">-</h2>
+					<h4 class="game_info">-</h4>
 				{% endif %}
 			</div>
 			<div class="game_info_time">
 				<h5 class="row_info">Uhrzeit</h5>
 				{% if match.datetime.time %}
-					<h2 class="game_info">{{ match.datetime.time }}</h2>
+					<h4 class="game_info">{{ match.datetime.time }}</h4>
 				{% else %}
-					<h2 class="game_info">-</h2>
+					<h4 class="game_info">-</h4>
 				{% endif %}
 			</div>
 		</div>
@@ -41,36 +40,34 @@
 		<div class="game_mode">
 			<h5 class="row_info">Spielmodus</h5>
 			{% if match.game_mode %}
-				<h2 class="game_info">{{ match.game_mode }}</h2>
+				<h4 class="game_info">{{ match.game_mode }}</h4>
 			{% else %}
-				<h2 class="game_info">-</h2>
+				<h4 class="game_info">-</h4>
 			{% endif %}
 		</div>
 		
 		<div class="description">
 			<h5 class="row_info">Beschreibung</h5>
 			{% if match.description %}
-				<h2 class="game_info">{{ match.description }}</h2>
+				<h4 class="game_info">{{ match.description }}</h4>
 			{% else %}
-				<h2 class="game_info">-</h2>
+				<h4 class="game_info">-</h4>
 			{% endif %}
 		</div>
 		
 		<div class="player">
 			<h5 class="row_info">Spieler pro Team</h5>
-			<h2 class="game_info">{{ match.player_per_team }}</h2>
+			<h4 class="game_info">{{ match.player_per_team }}</h4>
 		</div>
 
 		<div class="rules">
 			<h5 class="row_info">Regeln</h5>
-			{% if match.inline_rules.all %}
-				<ul>
-					{% for rule in match.inline_rules.all %}
-					<li><h2 class="game_info">{{ rule }}</h2></li>
-					{% endfor %}
-				</ul>
+			{% if match.rules %}
+				{% for rule in match.rules.splitlines %}
+					<h4 class="game_info">{{ rule }}</h4>
+				{% endfor %}
 			{% else %}
-				<h2 class="game_info">-</h2>
+				<h4 class="game_info">-</h4>
 			{% endif %}
 		</div>
 
@@ -142,7 +139,7 @@
 				<div class="team_row">
 				{% endifequal %}
 					<div class="team" id="team_id_{{team.id}}">
-						<h3>Team {{team.description}}</h3>
+						<h4>Team {{team.description}}</h4>
 						<ul>
 							{% for user in team.user.all %}
 							<li>{{ user }}</li>
@@ -248,6 +245,6 @@
 	</div>
 	{% endif %}
 	
-	{% endfor %}
+	{% endif %}
 </div>
 {% endblock %}

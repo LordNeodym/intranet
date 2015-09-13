@@ -68,7 +68,8 @@ class RulesInline(models.Model):
 
 
 class Game(models.Model):
-	name = models.CharField(verbose_name="Name", max_length=50, unique=True, blank=False, null=False)
+	name = models.CharField(verbose_name="Name", max_length=30, unique=True, blank=False, null=False)
+	description = models.TextField(verbose_name="Beschreibung / Installationsanleitung", max_length=1024, blank=True, null=True)
 	slug = models.SlugField(verbose_name="Slug", blank=True, unique=True, editable=False)
 	icon = FilerImageField(verbose_name="Icon", related_name="game_icon", blank=True, null=True)
 
@@ -99,12 +100,18 @@ class Match(models.Model):
 	description = models.TextField(verbose_name="Beschreibung", max_length=255, blank=True, null=True)
 	user = models.ManyToManyField(User, verbose_name="Spieler", related_name="match_user")
 	datetime = models.DateTimeField(verbose_name="Datum/Uhrzeit", blank=True, null=True)
-	team_choose_type = models.CharField(verbose_name="Team Wahl", max_length=5, choices=TEAM_CHOOSE_TYPE, default="None")
+	team_choose_type = models.CharField(verbose_name="Team Wahl", max_length=5, choices=TEAM_CHOOSE_TYPE, default="None", blank=True)
+	rules = models.TextField(verbose_name="Spielregeln", max_length=1024, null=True, blank=True)
 
 	def __unicode__(self):
 		if self.game_mode:
-			return u"%s (%svs.%s) - %s" % (self.game, self.player_per_team, self.player_per_team, self.game_mode)
-		return u"%s (%svs.%s)" % (self.game, self.player_per_team, self.player_per_team)
+			return u"%s (%svs%s) - %s" % (self.game, self.player_per_team, self.player_per_team, self.game_mode)
+		return u"%s (%svs%s)" % (self.game, self.player_per_team, self.player_per_team)
+
+	def matchDesciption(self):
+		if self.game_mode:
+			return u"%svs%s (%s)" % (self.player_per_team, self.player_per_team, self.game_mode)
+		return u"%svs%s" % (self.player_per_team, self.player_per_team)
 
 	def getNewTeamNumber(self):
 		teams = self.team_match.all().order_by('-description')
@@ -177,16 +184,16 @@ class Match(models.Model):
 		ordering = ['game', 'datetime']
 
 
-class MatchRulesInline(models.Model):
-	match = models.ForeignKey(Match, verbose_name="Spielregeln", blank=True, null=True, related_name="inline_rules")
-	information = models.TextField(verbose_name="Regel", max_length=512, null=True, blank=True)
-
-	def __unicode__(self):
-		return u"%s" % (self.information)
-
-	class Meta:
-		verbose_name = "Spielregel"
-		verbose_name_plural = "Spielregeln"
+#class MatchRulesInline(models.Model):
+#	match = models.ForeignKey(Match, verbose_name="Spielregeln", blank=True, null=True, related_name="inline_rules")
+#	information = models.TextField(verbose_name="Regel", max_length=512, null=True, blank=True)
+#
+#	def __unicode__(self):
+#		return u"%s" % (self.information)
+#
+#	class Meta:
+#		verbose_name = "Spielregel"
+#		verbose_name_plural = "Spielregeln"
 
 
 class Team(models.Model):

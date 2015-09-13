@@ -10,7 +10,7 @@ def intranet_processor(request):
 	rules = Rules.objects.all()
 	content['rules'] = rules
 
-	games = Game.objects.exclude(match_game=None)
+	games = Game.objects.all#.exclude(match_game=None)
 	content['games'] = games
 
 	return content

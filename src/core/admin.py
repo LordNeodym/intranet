@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.db import models
 from django.forms import TextInput, Textarea
 
-from core.models import IntranetMeta, Game, Match, Round, Team, Rules, RulesInline, MatchRulesInline, VideoCategory, SingleVideo, ImageCategory, SingleImage
+from core.models import IntranetMeta, Game, Match, Round, Team, Rules, RulesInline, VideoCategory, SingleVideo, ImageCategory, SingleImage
 
 
 class IntranetMetaAdmin(admin.ModelAdmin):
@@ -27,21 +27,10 @@ class RoundAdmin(admin.ModelAdmin):
 class TeamAdmin(admin.ModelAdmin):
 	filter_horizontal = ('user',)
 
-class MatchRuleInlineAdmin(admin.TabularInline):
-	model = MatchRulesInline
-	extra = 0
-	formfield_overrides = {
-    	models.TextField: {'widget': Textarea(attrs={'rows':2, 'cols':60})},
-    }
-
 class MatchAdmin(admin.ModelAdmin):
     list_display = ('game', 'game_mode', 'player_per_team')
     list_filter = ('game',)
     filter_horizontal = ('user',)
-    inlines = [MatchRuleInlineAdmin,]
-    formfield_overrides = {
-    	models.TextField: {'widget': Textarea(attrs={'rows':3, 'cols':40})},
-    }
 
 class VideoInlineAdmin(admin.TabularInline):
     model = SingleVideo

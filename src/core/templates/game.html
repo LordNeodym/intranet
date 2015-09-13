@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% load helper %}
+
+{% block body %}
+{{block.super}}
+<div class="content">
+	{% if msg %}
+		<span class="message">{{msg}}</span>
+	{% endif %}
+
+	<div class="headline">
+		{% if game.icon %}
+		<img src="{{ game.icon|thumbnail_url:'game_site' }}" />
+		{% else %}
+		<h1 class="game_headline">{{ game.name }}</h1>
+		{% endif %}
+	</div>
+	<div class="game_info_overview">
+		{% for line in game.description.splitlines %}
+			<span>{{ line }}</span><br/>
+		{% endfor %}
+	</div>
+
+	<div class="match_list">
+		{% for match in game.match_game.all %}
+			<a href="{% url 'match' match.game.slug match.id %}">{{ match.matchDesciption }}</a>
+			<br/>
+		{% endfor %}
+	</div>
+</div>
+{% endblock %}

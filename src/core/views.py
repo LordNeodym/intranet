@@ -102,7 +102,15 @@ def rules(request, slug):
 	return render_to_response('rules.html', content, context_instance=context)
 
 
-def game_site(request, slug, command=None):    
+def game(request, slug):
+	context = RequestContext(request)
+	content = {}
+	content['game'] = Game.objects.get(slug=slug)
+	return render_to_response('game.html', content, context_instance=context) 
+
+
+def match(request, slug, match_id, command=None):    
+	print "in match"
 	context = RequestContext(request)
 	content = {}
 	if request.user.is_authenticated():
@@ -127,15 +135,12 @@ def game_site(request, slug, command=None):
 				delete_tournament(request)
 			return HttpResponseRedirect(reverse('games', args=[slug]))
 		try:
-			content['game'] = Game.objects.get(slug=slug)
-		except:
+			content['match'] = Match.objects.get(game__slug=slug, id=match_id)
+		except Exception:
 			content['msg'] = "Seite nicht gefunden!"
-			return render_to_response('game_site.html', {'content': content}, context_instance=context)
-		content['matches'] = Match.objects.filter(game=content['game'])
-
 	else:
 		content['msg'] = "Bitte zuerst einloggen!"
-	return render_to_response('game_site.html', content, context_instance=context)
+	return render_to_response('match.html', content, context_instance=context)
 
 
 @never_cache
@@ -231,6 +236,14 @@ def create_tournament(request):
 	old_rounds = Round.objects.filter(match=match)
 	old_rounds.delete()
 	team_ids = [team.id for team in teams]
+	
+	if request.POST['create_tour'] == "vs":
+		create_tournament_vs(match, team_ids)
+	elif request.POST['create_tour'] == "tree":
+		create_tournament_tree(match, team_ids)
+
+
+def create_tournament_vs(match, team_ids):
 	for index, pairings in enumerate(roundRobin(team_ids)):
 		for pairing in pairings:
 			if not None in pairing:
@@ -260,6 +273,19 @@ def roundRobin(units, sets=None):
     return schedule
 
 
+def create_tournament_tree(request):
+	for index, pairings in enumerate(roundRobin(team_ids)):
+		for pairing in pairings:
+			if not None in pairing:
+				team1 = Team.objects.get(id=pairing[0])
+				Round.objects.create(
+								round_number = index+1,
+								match = match,
+								team1 = Team.objects.get(id=pairing[0]), 
+								team2 = Team.objects.get(id=pairing[1])
+								)
+
+
 def entry_round_result(request):
 	form = RoundForm(data=request.POST)
 	if form.is_valid():
@@ -275,3 +301,5 @@ def entry_round_result(request):
 def delete_tournament(request):
 	match = Match.objects.get(id=request.POST['match_id'])
 	match.deleteTournament()
+
+
