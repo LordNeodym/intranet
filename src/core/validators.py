@@ -5,5 +5,6 @@ import re
 
 def integer_only(value):
     pattern = "^[0-9]+$"
-    if not (re.match(pattern, str(value)) or value == ""):
+    print "blalbla", value
+    if not value or not re.match(pattern, str(value)):
         raise ValidationError(u'%s ist keine Zahl!' % value)

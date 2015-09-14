@@ -250,7 +250,7 @@ class Round(models.Model):
 	pkt2 = models.IntegerField(verbose_name="Punkte Gast", blank=True, null=True, validators=[integer_only])
 	datetime = models.DateTimeField(verbose_name="Datum/Uhrzeit", blank=True, null=True)
 	winner = models.ForeignKey(Team, editable=False, null=True, related_name="round_win")
-
+	
 	def __unicode__(self):
 		if self.round_number:
 			return u"Runde %s - %s vs. %s" % (self.round_number, self.team1, self.team2)

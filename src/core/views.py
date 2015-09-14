@@ -110,7 +110,6 @@ def game(request, slug):
 
 
 def match(request, slug, match_id, command=None):    
-	print "in match"
 	context = RequestContext(request)
 	content = {}
 	if request.user.is_authenticated():
@@ -133,7 +132,7 @@ def match(request, slug, match_id, command=None):
 				entry_round_result(request)
 			elif command == "delete_tournament":
 				delete_tournament(request)
-			return HttpResponseRedirect(reverse('games', args=[slug]))
+			return HttpResponseRedirect(reverse('match', args=[slug, match_id]))
 		try:
 			content['match'] = Match.objects.get(game__slug=slug, id=match_id)
 		except Exception:
@@ -200,6 +199,7 @@ def create_self_team(request):
 
 def update_self_team(request):
 	teamlist = [int(x) for x in request.POST.getlist('create_self_team')]
+	match = Match.objects.get(id=request.POST['match_id'])
 	if set(teamlist).issubset(match.playerWithoutTeamIds()):
 		team = Team.objects.get(match__id=request.POST['match_id'], user=request.user.id)
 		team.user.add(*teamlist)
@@ -287,6 +287,8 @@ def create_tournament_tree(request):
 
 
 def entry_round_result(request):
+	if not (request.POST['pkt1'] or request.POST['pkt2']):
+		return
 	form = RoundForm(data=request.POST)
 	if form.is_valid():
 		round = Round.objects.get(id=request.POST['round_id'])
