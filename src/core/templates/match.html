@@ -131,85 +131,88 @@
 	{% endif %}
 	{% endif %}
 
-	<div class="teams">
-		{% if match.team_match.all %}
-			<h2>Teams</h2>
-			{% for team in match.team_match.all %}
-				{% ifequal forloop.counter0|modulo:3 0 %}
-				<div class="team_row">
-				{% endifequal %}
-					<div class="team" id="team_id_{{team.id}}">
-						<h4>Team {{team.description}}</h4>
-						<ul>
-							{% for user in team.user.all %}
-							<li>{{ user }}</li>
-							{% endfor %}
-						</ul>
-						{% if not match.round_match.all and user|has_group:"Admin" %}
-						<form method="post" class="delete_team" action="delete_team/">
-							{% csrf_token %}
-							<input type="submit" type="submit" value="X" />
-							<input type="hidden" name="team_id" value="{{team.id}}" />
-						</form>
-						{% endif %}
-					</div>
-				{% if forloop.counter0|modulo:3 == 2 or forloop.last %}
-					</div>
-				{% endif %}
-			{% endfor %}
+	{% if match.tour_choose_type == "vs" %}
+		<div class="teams">
+			{% if match.team_match.all %}
+				<h2>Teams</h2>
+				{% for team in match.team_match.all %}
+					{% ifequal forloop.counter0|modulo:3 0 %}
+					<div class="team_row">
+					{% endifequal %}
+						<div class="team" id="team_id_{{team.id}}">
+							<h4>Team {{team.description}}</h4>
+							<ul>
+								{% for user in team.user.all %}
+								<li>{{ user }}</li>
+								{% endfor %}
+							</ul>
+							{% if not match.round_match.all and user|has_group:"Admin" %}
+							<form method="post" class="delete_team" action="delete_team/">
+								{% csrf_token %}
+								<input type="submit" type="submit" value="X" />
+								<input type="hidden" name="team_id" value="{{team.id}}" />
+							</form>
+							{% endif %}
+						</div>
+					{% if forloop.counter0|modulo:3 == 2 or forloop.last %}
+						</div>
+					{% endif %}
+				{% endfor %}
+			{% endif %}
+		</div>
+
+		{% if match.round_match.all %}
+		<div class="tournament_rounds">
+			<h2>Begegnungen</h2>
+			<table class"rounds">
+				<tr>
+					<th>Runde</th>
+					<th>Uhrzeit</th>
+					<th>Team (Home)</th>
+					<th>Punkte (Home)</th>
+					<th>Punkte (Away)</th>
+					<th>Team (Away)</th>
+				</tr>
+				{% for round in match.round_match.all %}
+				<tr>
+					<form method="post" class="single_round_form" action="entry_round_result/">
+						{% csrf_token %}
+						<th>{{ round.round_number }}</th>
+						<td>{{ round.getDatetime }}</td>
+						<td>{{ round.team1.getTeam }}</td>
+						<td><input type="text" maxlength="3" size="3" name="pkt1" value="{{ round.getPkt1 }}" autocomplete="off" /></td>
+						<td><input type="text" maxlength="3" size="3" name="pkt2" value="{{ round.getPkt2 }}" autocomplete="off" /></td>
+						<td>{{ round.team2.getTeam }}</td>
+						<td>
+							<input type="submit" type="submit" value="Okay" />
+							<input type="hidden" name="round_id" value="{{ round.id }}" />
+						</td>
+					</form>
+				</tr>
+				{% endfor %}
+			</table>
+		</div>
+
+		<div class="ranking">
+			<h2>Ranking</h2>
+			<table>
+				<tr>
+					<th>Teams</th>
+					<th>Siege</th>
+					<th>Punkte</th>
+				</tr>
+				{% for team in match.team_match.all|sortTeam %}
+				<tr>
+					<td>Team {{ team.0.description }}</td>
+					<td>{{ team.1.wins }}</td>
+					<td>{{ team.1.pts }}</td>
+				</tr>
+				{% endfor %}
+			</table>
+		</div>
 		{% endif %}
-	</div>
-
-	{% if match.round_match.all %}
-	<div class="tournament_rounds">
-		<h2>Begegnungen</h2>
-		<table class"rounds">
-			<tr>
-				<th>Runde</th>
-				<th>Uhrzeit</th>
-				<th>Team (Home)</th>
-				<th>Punkte (Home)</th>
-				<th>Punkte (Away)</th>
-				<th>Team (Away)</th>
-			</tr>
-			{% for round in match.round_match.all %}
-			<tr>
-				<form method="post" class="single_round_form" action="entry_round_result/">
-					{% csrf_token %}
-					<th>{{ round.round_number }}</th>
-					<td>{{ round.getDatetime }}</td>
-					<td>{{ round.team1.getTeam }}</td>
-					<td><input type="text" maxlength="3" size="3" name="pkt1" value="{{ round.getPkt1 }}" autocomplete="off" /></td>
-					<td><input type="text" maxlength="3" size="3" name="pkt2" value="{{ round.getPkt2 }}" autocomplete="off" /></td>
-					<td>{{ round.team2.getTeam }}</td>
-					<td>
-						<input type="submit" type="submit" value="Okay" />
-						<input type="hidden" name="round_id" value="{{ round.id }}" />
-					</td>
-				</form>
-			</tr>
-			{% endfor %}
-		</table>
-	</div>
-
-	<div class="ranking">
-		<h2>Ranking</h2>
-		<table>
-			<tr>
-				<th>Teams</th>
-				<th>Siege</th>
-				<th>Punkte</th>
-			</tr>
-			{% for team in match.team_match.all|sortTeam %}
-			<tr>
-				<td>Team {{ team.0.description }}</td>
-				<td>{{ team.1.wins }}</td>
-				<td>{{ team.1.pts }}</td>
-			</tr>
-			{% endfor %}
-		</table>
-	</div>
 	{% endif %}
+
 
 	{% if user|has_group:"Admin" %}
 	<div class="admin_interface">

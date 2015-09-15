@@ -124,3 +124,7 @@ THUMBNAIL_ALIASES = {
         'image_preview': {'size': (300, 300), 'crop': True},
     },
 }
+
+ALLOWED_TOURNAMENT_TREE_TEAMS = [
+    4, 8, 16, 32, 64
+]

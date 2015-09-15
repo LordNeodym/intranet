@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.db.models import Q
+from django.db.models import Sum
+from django.conf import settings
+from django.core import validators
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.template.defaultfilters import slugify
-from django.core import validators
-from django.db.models import Q
-from django.db.models import Sum
 
 from filer.fields.file import FilerFileField
 from filer.fields.image import FilerImageField
@@ -93,6 +94,12 @@ class Match(models.Model):
 	    ('self', 'Eigene Wahl'),
 	    ('admin', 'Admin Wahl'),
 	)
+	TOUR_CHOOSE_TYPE = (
+		('None', 'Bitte wählen'),
+	    ('vs', 'Jeder gegen Jeden'),
+	    ('tree', 'Turnierbaum'),
+	    ('tree_loser', 'Turnierbaum mit Loserbracket'),
+	)
 
 	game = models.ForeignKey(Game, verbose_name="Spiel", blank=False, null=False, related_name="match_game")
 	game_mode = models.CharField(verbose_name="Modus", max_length=50, blank=True, null=True)
@@ -100,7 +107,8 @@ class Match(models.Model):
 	description = models.TextField(verbose_name="Beschreibung", max_length=255, blank=True, null=True)
 	user = models.ManyToManyField(User, verbose_name="Spieler", related_name="match_user")
 	datetime = models.DateTimeField(verbose_name="Datum/Uhrzeit", blank=True, null=True)
-	team_choose_type = models.CharField(verbose_name="Team Wahl", max_length=5, choices=TEAM_CHOOSE_TYPE, default="None", blank=True)
+	team_choose_type = models.CharField(verbose_name="Team Wahl", editable=False, max_length=5, choices=TEAM_CHOOSE_TYPE, default="None", blank=True)
+	tour_choose_type = models.CharField(verbose_name="Turnier Wahl", editable=False, max_length=10, choices=TOUR_CHOOSE_TYPE, default="None", blank=True)
 	rules = models.TextField(verbose_name="Spielregeln", max_length=1024, null=True, blank=True)
 
 	def __unicode__(self):
@@ -244,13 +252,13 @@ class Team(models.Model):
 class Round(models.Model):
 	match = models.ForeignKey(Match, verbose_name="Match", blank=False, null=False, related_name="round_match")
 	round_number = models.IntegerField(verbose_name="Rundennummer", blank=True, null=True)
-	team1 = models.ForeignKey(Team, verbose_name="Team Heim", blank=False, null=False, related_name="round_team1")
-	team2 = models.ForeignKey(Team, verbose_name="Team Gast", blank=False, null=False, related_name="round_team2")
+	team1 = models.ForeignKey(Team, verbose_name="Team Heim", blank=True, null=True, related_name="round_team1")
+	team2 = models.ForeignKey(Team, verbose_name="Team Gast", blank=True, null=True, related_name="round_team2")
 	pkt1 = models.IntegerField(verbose_name="Punkte Heim", blank=True, null=True, validators=[integer_only])
 	pkt2 = models.IntegerField(verbose_name="Punkte Gast", blank=True, null=True, validators=[integer_only])
 	datetime = models.DateTimeField(verbose_name="Datum/Uhrzeit", blank=True, null=True)
 	winner = models.ForeignKey(Team, editable=False, null=True, related_name="round_win")
-	
+
 	def __unicode__(self):
 		if self.round_number:
 			return u"Runde %s - %s vs. %s" % (self.round_number, self.team1, self.team2)

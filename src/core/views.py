@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.shortcuts import render_to_response, redirect, HttpResponseRedirect
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from django.contrib.auth import login as auth_login
@@ -8,6 +9,8 @@ from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
+
+from random import shuffle
 
 from core.models import Game, Match, Team, Rules, Round, ImageCategory, VideoCategory
 from core.forms import UserForm, RoundForm
@@ -241,9 +244,16 @@ def create_tournament(request):
 		create_tournament_vs(match, team_ids)
 	elif request.POST['create_tour'] == "tree":
 		create_tournament_tree(match, team_ids)
+		if "create_tour_tree_loserbracket" in request.POST:
+			match.tour_choose_type = "tree_loser"
+		else:
+			match.tour_choose_type = "tree"
+		match.save()
 
 
 def create_tournament_vs(match, team_ids):
+	match.tour_choose_type = "vs"
+	match.save()
 	for index, pairings in enumerate(roundRobin(team_ids)):
 		for pairing in pairings:
 			if not None in pairing:
@@ -273,17 +283,31 @@ def roundRobin(units, sets=None):
     return schedule
 
 
-def create_tournament_tree(request):
-	for index, pairings in enumerate(roundRobin(team_ids)):
-		for pairing in pairings:
-			if not None in pairing:
-				team1 = Team.objects.get(id=pairing[0])
-				Round.objects.create(
-								round_number = index+1,
-								match = match,
-								team1 = Team.objects.get(id=pairing[0]), 
-								team2 = Team.objects.get(id=pairing[1])
-								)
+def create_tournament_tree(match, team_ids):
+	if not len(team_ids) in settings.ALLOWED_TOURNAMENT_TREE_TEAMS:
+		return "Aus der Anzahl der Teams lässt sich kein Turnierbaum bauen."
+
+
+
+	teams = shuffle(team_ids)
+	for team in teams:
+		pass
+
+#	num_rounds = math.log( num, 2 )
+#    if num_rounds != math.trunc( num_rounds ):
+#        raise ValueError( "Number of teams must be a power of 2" )
+
+
+#	for index, pairings in enumerate(roundRobin(team_ids)):
+#		for pairing in pairings:
+#			if not None in pairing:
+#				team1 = Team.objects.get(id=pairing[0])
+#				Round.objects.create(
+#								round_number = index+1,
+#								match = match,
+#								team1 = Team.objects.get(id=pairing[0]), 
+#								team2 = Team.objects.get(id=pairing[1])
+#								)
 
 
 def entry_round_result(request):
