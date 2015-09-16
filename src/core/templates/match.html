@@ -211,8 +211,12 @@
 			</table>
 		</div>
 		{% endif %}
+	{% else %}
+		<div id="tournamen_tree">
+			<h2>Turnierbaum</h2>
+			<div id="tournamen_tree_content"></div>
+		</div>
 	{% endif %}
-
 
 	{% if user|has_group:"Admin" %}
 	<div class="admin_interface">
