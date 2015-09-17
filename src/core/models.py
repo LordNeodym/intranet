@@ -259,6 +259,10 @@ class Round(models.Model):
 	datetime = models.DateTimeField(verbose_name="Datum/Uhrzeit", blank=True, null=True)
 	winner = models.ForeignKey(Team, editable=False, null=True, related_name="round_win")
 
+	def save(self, *args, **kwargs):
+		self.calcWinner()
+		super(Round).save(*args, **kwargs)
+
 	def __unicode__(self):
 		if self.round_number:
 			return u"Runde %s - %s vs. %s" % (self.round_number, self.team1, self.team2)

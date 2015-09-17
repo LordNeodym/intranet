@@ -4,6 +4,7 @@ $(document).ready(function() {
 	fancybox();
 });
 
+
 function dropdown_style() {
 	$( "ul.menu > li" ).each(function( index ) {
 		if ($(this).children().length > 1) {
@@ -11,6 +12,7 @@ function dropdown_style() {
 		}
 	});
 }
+
 
 function listenLoserBracketCheckbox() {
 	$("#create_tour_vs").click(function() {
@@ -26,6 +28,7 @@ function listenLoserBracketCheckbox() {
 		}
 	});
 }
+
 
 function fancybox() {
 	/* This is basic - uses default settings */
@@ -50,18 +53,18 @@ function fancybox() {
 }
 
 
-var minimalData = {
-    teams : [
-      ["Team 1", "Team 2"], /* first matchup */
-      ["Team 3", "Team 4"]  /* second matchup */
-    ],
-    results : [
-      [[1,2], [3,4]],       /* first round */
-      [[4,6], [2,1]]        /* second round */
-    ]
-  }
- 
 $(function() {
+	var minimalData = {
+	    teams : [
+	      ["Team 1", "Team 2"], /* first matchup */
+	      ["Team 3", "Team 4"]  /* second matchup */
+	    ],
+	    results : [
+	      [[,], [,]],       /* first round */
+	      [[,], [,]]        /* second round */
+	    ]
+  	}
+
     $('#tournamen_tree_content').bracket({
       init: minimalData /* data to initialize the bracket with */ })
   })

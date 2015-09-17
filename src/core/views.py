@@ -2,6 +2,7 @@
 
 from django.shortcuts import render_to_response, redirect, HttpResponseRedirect
 from django.conf import settings
+from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from django.contrib.auth import login as auth_login
@@ -10,6 +11,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 
+import json
 from random import shuffle
 
 from core.models import Game, Match, Team, Rules, Round, ImageCategory, VideoCategory
@@ -144,6 +146,20 @@ def match(request, slug, match_id, command=None):
 		content['msg'] = "Bitte zuerst einloggen!"
 	return render_to_response('match.html', content, context_instance=context)
 
+
+def save_new_time(request):
+    step = int(settings.TIMETABLE_STEP)
+ 
+    uid = str(request.GET["uid"])
+
+    response_data = {
+        'success' : success,
+        'uid' : uid,
+    }
+    return HttpResponse(
+        json.dumps(response_data),
+        content_type="application/json"
+    )
 
 @never_cache
 @login_required(login_url="/login/")

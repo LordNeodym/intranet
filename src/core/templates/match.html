@@ -131,36 +131,36 @@
 	{% endif %}
 	{% endif %}
 
-	{% if match.tour_choose_type == "vs" %}
-		<div class="teams">
-			{% if match.team_match.all %}
-				<h2>Teams</h2>
-				{% for team in match.team_match.all %}
-					{% ifequal forloop.counter0|modulo:3 0 %}
-					<div class="team_row">
-					{% endifequal %}
-						<div class="team" id="team_id_{{team.id}}">
-							<h4>Team {{team.description}}</h4>
-							<ul>
-								{% for user in team.user.all %}
-								<li>{{ user }}</li>
-								{% endfor %}
-							</ul>
-							{% if not match.round_match.all and user|has_group:"Admin" %}
-							<form method="post" class="delete_team" action="delete_team/">
-								{% csrf_token %}
-								<input type="submit" type="submit" value="X" />
-								<input type="hidden" name="team_id" value="{{team.id}}" />
-							</form>
-							{% endif %}
-						</div>
-					{% if forloop.counter0|modulo:3 == 2 or forloop.last %}
-						</div>
-					{% endif %}
-				{% endfor %}
-			{% endif %}
-		</div>
+	<div class="teams">
+		{% if match.team_match.all %}
+			<h2>Teams</h2>
+			{% for team in match.team_match.all %}
+				{% ifequal forloop.counter0|modulo:3 0 %}
+				<div class="team_row">
+				{% endifequal %}
+					<div class="team" id="team_id_{{team.id}}">
+						<h4>Team {{team.description}}</h4>
+						<ul>
+							{% for user in team.user.all %}
+							<li>{{ user }}</li>
+							{% endfor %}
+						</ul>
+						{% if not match.round_match.all and user|has_group:"Admin" %}
+						<form method="post" class="delete_team" action="delete_team/">
+							{% csrf_token %}
+							<input type="submit" type="submit" value="X" />
+							<input type="hidden" name="team_id" value="{{team.id}}" />
+						</form>
+						{% endif %}
+					</div>
+				{% if forloop.counter0|modulo:3 == 2 or forloop.last %}
+					</div>
+				{% endif %}
+			{% endfor %}
+		{% endif %}
+	</div>
 
+	{% if match.tour_choose_type == "vs" %}
 		{% if match.round_match.all %}
 		<div class="tournament_rounds">
 			<h2>Begegnungen</h2>
@@ -215,6 +215,14 @@
 		<div id="tournamen_tree">
 			<h2>Turnierbaum</h2>
 			<div id="tournamen_tree_content"></div>
+			<div id="">
+				{% for round in match.round_match.all %}
+					<input type="hidden" id="tournament_tree_team_1_{{forloop.counter}}" value="{{round.team1.getTeam}}"/>
+					<input type="hidden" id="tournament_tree_team_2_{{forloop.counter}}" value="{{round.team2.getTeam}}"/>
+					<input type="hidden" id="tournament_tree_pts_1_{{forloop.counter}}" value="{{round.getPkt1}}"/>
+					<input type="hidden" id="tournament_tree_pts_2_{{forloop.counter}}" value="{{round.getPkt2}}"/>
+				{% endfor %}
+			</div>
 		</div>
 	{% endif %}
 
