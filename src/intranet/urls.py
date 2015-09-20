@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'^off-topic/menu/$', views.menu, name='menu'),
     url(r'^off-topic/images/$', views.images, name='images'),
     url(r'^off-topic/videos/$', views.videos, name='videos'),
+    url(r'^save_tournament_bracket$', views.save_tournament_bracket),
     url(r'^games/(?P<slug>[-\w\d]+)/$', views.game, name='game'),
     url(r'^games/(?P<slug>[-\w\d]+)/(?P<match_id>[\d]+)/$', views.match, name='match'),
     url(r'^games/(?P<slug>[-\w\d]+)/(?P<match_id>[\d]+)/(?P<command>[-_a-z]+)/$', views.match),

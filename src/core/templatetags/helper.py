@@ -14,6 +14,9 @@ register = Library()
 def modulo(num, val):
     return num % val
 
+@register.filter
+def devide(num, val):
+    return int(num)/int(val)
 
 @register.filter(name='has_group') 
 def has_group(user, group_name): 
@@ -62,6 +65,11 @@ def sortTeam(teams):
   return sorted(team_dic.items(), key=operator.itemgetter(1), reverse=True)
 
 @register.filter
-def radioChecked(match, button_label):
+def radioCheckedTeam(match, button_label):
   if match.team_choose_type == button_label:
+    return "checked"
+
+@register.filter
+def radioCheckedTour(match, button_label):
+  if match.tour_choose_type == button_label:
     return "checked"

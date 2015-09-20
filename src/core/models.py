@@ -185,6 +185,11 @@ class Match(models.Model):
 		teams = self.team_match.all()
 		teams.delete()
 
+		""" delete settings """
+		self.team_choose_type = "None"
+		self.tour_choose_type = "None"
+		self.save()
+
 
 	class Meta:
 		verbose_name = "Match"
@@ -219,7 +224,11 @@ class Team(models.Model):
 
 	@property	
 	def getTeam(self):
-		return u"Team {0}".format(self.description)
+		try: 
+			description = int(self.description)
+			return "Team {0}".format(description)
+		except:
+			return "{0}".format(self.description)
 
 	@property
 	def num_wins(self):
@@ -261,7 +270,7 @@ class Round(models.Model):
 
 	def save(self, *args, **kwargs):
 		self.calcWinner()
-		super(Round).save(*args, **kwargs)
+		super(Round, self).save(*args, **kwargs)
 
 	def __unicode__(self):
 		if self.round_number:
@@ -272,13 +281,24 @@ class Round(models.Model):
 		return len(Round.objects.filter(match = self.match, round_number = self.round_number))
 
 	def calcWinner(self):
-		if int(self.pkt1) > int(self.pkt2):
-			self.winner = self.team1
-		elif int(self.pkt2) > int(self.pkt1):
-			self.winner = self.team2
-		else:
-			self.winner = None
-		self.save()
+		if self.pkt1 and self.pkt2:
+			if int(self.pkt1) > int(self.pkt2):
+				self.winner = self.team1
+			elif int(self.pkt2) > int(self.pkt1):
+				self.winner = self.team2
+			else:
+				self.winner = None
+			self.save()
+
+	@property
+	def getTeams(self):
+		if self.team1 and self.team2:
+			return '["{0}", "{1}"]'.format(self.team1.getTeam, self.team2.getTeam)
+		return
+
+	@property
+	def getPoints(self):
+		return '[{0}, {1}]'.format(self.pkt1, self.pkt2)
 
 	@property
 	def getPkt1(self):

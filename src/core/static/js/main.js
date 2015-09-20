@@ -53,18 +53,49 @@ function fancybox() {
 }
 
 
-$(function() {
-	var minimalData = {
+function saveFn(data, userData) {
+	var json = JSON.stringify(data)
+	var match_id;
+	$('.tournament_tree_team').each(function() {
+		match_id = $(this).data('match');
+	});
+	saveTournamentBracket(json, match_id);
+}
+
+
+function createTeamDic() {
+	var data = {teams : [], results : []}
+	/* get all Teams from Template */
+	$('.tournament_tree_team').each(function() {
+		if ($(this).val() != "None") {
+			data.teams.push(jQuery.parseJSON($(this).val()));
+		}
+	});
+	/*$('.tournament_tree_points').each(function() {
+		data.results.push(jQuery.parseJSON($(this).val()));
+	});*/
+
+	return data;
+
+	/*{
 	    teams : [
-	      ["Team 1", "Team 2"], /* first matchup */
-	      ["Team 3", "Team 4"]  /* second matchup */
+	      ["Team 1", "Team 2"], first matchup 
+	      ["Team 3", "Team 4"]  second matchup
 	    ],
 	    results : [
-	      [[,], [,]],       /* first round */
-	      [[,], [,]]        /* second round */
+	      [[,], [,]],       first round
+	      [[,], [,]]        second round
 	    ]
-  	}
+  	}*/
+}
+
+
+$(function() {
+	var minimalData = createTeamDic();
 
     $('#tournamen_tree_content').bracket({
-      init: minimalData /* data to initialize the bracket with */ })
-  })
+		init: minimalData, 
+  		save: saveFn 
+  		/* data to initialize the bracket with */ 
+  	})
+})

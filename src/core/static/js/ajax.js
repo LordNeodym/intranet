@@ -1,40 +1,54 @@
-function saveTimeForSubject(evt, subjectInfos, cellInfos){
-    evt.preventDefault();
- 
-    var newInfos = $.ajax({
-        url : "/save_new_time",
-        type : "GET",
+// using jQuery
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+var csrftoken = getCookie('csrftoken');
+
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+
+
+function saveTournamentBracket(json, match_id){
+    $.ajax({
+        url : "/save_tournament_bracket",
+        type : "POST",
         dataType: "json",
         async: true,
         data: {
-            subjectDay: subjectInfos[0],
-            subjectID: subjectInfos[1],
-            subjectType: subjectInfos[2],
-            date: subjectInfos[3],
-            subjectTime: subjectInfos[4],
-            subjectDuration: subjectInfos[5],
-            room: subjectInfos[6],
-            lecturer: subjectInfos[7],
-            borderColor: subjectInfos[8],
-            uid: subjectInfos[9],
-            cellWidthUnits: cellInfos[0],
-            cellHeightUnits: cellInfos[1],
-            startTime: startTime
+            match_id: match_id,
+            json: json
         },
         success : function(resp) {
             if (resp.success == true) {
-                display_saveInfo("Erfolgreich gespeichert!");
-                if (!$.isEmptyObject(resp.msg)) {
-                    errorHandler(resp.msg);
-                    $(".subject-overlay[data-subject-id='"+resp.sub_id+"']").attr("data-subject-duration", resp.duration);
-                }
+
             } else {
-                display_saveInfo("Fehler");
+
             }
         },
         error : function(xhr,errmsg,err) {
-            display_saveInfo("Verbindung getrennt!");
+            console.log(err);
         }
     });
-    return newInfos
 }

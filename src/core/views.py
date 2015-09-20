@@ -10,6 +10,8 @@ from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import csrf_protect
+from django.contrib.auth.models import Group
 
 import json
 from random import shuffle
@@ -147,19 +149,32 @@ def match(request, slug, match_id, command=None):
 	return render_to_response('match.html', content, context_instance=context)
 
 
-def save_new_time(request):
-    step = int(settings.TIMETABLE_STEP)
- 
-    uid = str(request.GET["uid"])
+@csrf_protect
+def save_tournament_bracket(request): 
+    group = Group.objects.get(name="Admin")
+    success = False
 
-    response_data = {
-        'success' : success,
-        'uid' : uid,
-    }
-    return HttpResponse(
-        json.dumps(response_data),
-        content_type="application/json"
-    )
+    if group in request.user.groups.all():
+		json_data = request.POST["json"]
+		data = json.loads(json_data)
+		match_id = request.POST["match_id"]
+		match = Match.objects.get(id=match_id)    
+		success = True
+		index = 1
+
+		for match_round in data["results"][0]:
+			for single_round in match_round:
+				game_round = Round.objects.get(match=match, round_number=index)
+				if single_round[0] != "None":
+					game_round.pkt1 = single_round[0]
+				if single_round[1] != "None":
+					game_round.pkt2 = single_round[1]
+				game_round.save()
+				index += 1
+
+    response_data = {'success' : success,}
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
+
 
 @never_cache
 @login_required(login_url="/login/")
@@ -273,13 +288,13 @@ def create_tournament_vs(match, team_ids):
 	for index, pairings in enumerate(roundRobin(team_ids)):
 		for pairing in pairings:
 			if not None in pairing:
-				team1 = Team.objects.get(id=pairing[0])
+				#team1 = Team.objects.get(id=pairing[0])
 				Round.objects.create(
-								round_number = index+1,
-								match = match,
-								team1 = Team.objects.get(id=pairing[0]), 
-								team2 = Team.objects.get(id=pairing[1])
-								)
+					round_number = index+1,
+					match = match,
+					team1 = Team.objects.get(id=pairing[0]), 
+					team2 = Team.objects.get(id=pairing[1])
+				)
 
 
 def roundRobin(units, sets=None):
@@ -303,27 +318,26 @@ def create_tournament_tree(match, team_ids):
 	if not len(team_ids) in settings.ALLOWED_TOURNAMENT_TREE_TEAMS:
 		return "Aus der Anzahl der Teams lässt sich kein Turnierbaum bauen."
 
+	shuffle(team_ids)
+	current_index = 0
 
+	""" first round """
+	for index, team in enumerate(team_ids):
+		current_index = index+1
+		Round.objects.create(
+			round_number = current_index,
+			match = match,
+			team1 = Team.objects.get(id=team), 
+			team2 = Team.objects.get(id=team_ids.pop())
+		)
+		
 
-	teams = shuffle(team_ids)
-	for team in teams:
-		pass
-
-#	num_rounds = math.log( num, 2 )
-#    if num_rounds != math.trunc( num_rounds ):
-#        raise ValueError( "Number of teams must be a power of 2" )
-
-
-#	for index, pairings in enumerate(roundRobin(team_ids)):
-#		for pairing in pairings:
-#			if not None in pairing:
-#				team1 = Team.objects.get(id=pairing[0])
-#				Round.objects.create(
-#								round_number = index+1,
-#								match = match,
-#								team1 = Team.objects.get(id=pairing[0]), 
-#								team2 = Team.objects.get(id=pairing[1])
-#								)
+	""" empty teams after first round"""
+	for ele in range(len(team_ids)):
+		Round.objects.create(
+			round_number = current_index+ele+1,
+			match = match
+		) 
 
 
 def entry_round_result(request):
