@@ -58,6 +58,7 @@ function saveFn(data, userData) {
 	var match_id;
 	$('.tournament_tree_team').each(function() {
 		match_id = $(this).data('match');
+		return false;
 	});
 	saveTournamentBracket(json, match_id);
 }
@@ -71,9 +72,27 @@ function createTeamDic() {
 			data.teams.push(jQuery.parseJSON($(this).val()));
 		}
 	});
-	/*$('.tournament_tree_points').each(function() {
-		data.results.push(jQuery.parseJSON($(this).val()));
-	});*/
+
+	var pkt_list = new Array();
+	var round;
+	var counter = 1;
+	$('.tournament_tree_points').each(function() {
+		if (round == counter) {
+			counter++;
+		}
+		round = $(this).data('round');
+		pkt_list.push(jQuery.parseJSON($(this).val()));
+		if (round != counter) {
+			data.results.push(pkt_list);
+			pkt_list = new Array();
+		}
+	});
+
+	console.log(JSON.stringify(data,function(k,v){
+   if(v instanceof Array)
+      return JSON.stringify(v);
+   return v;
+},2));
 
 	return data;
 

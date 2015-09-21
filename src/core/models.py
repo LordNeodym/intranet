@@ -116,6 +116,24 @@ class Match(models.Model):
 			return u"%s (%svs%s) - %s" % (self.game, self.player_per_team, self.player_per_team, self.game_mode)
 		return u"%s (%svs%s)" % (self.game, self.player_per_team, self.player_per_team)
 
+	@property
+	def tournamentBracketRounds(self):
+		tour_bracket_list = []
+		counter = len(self.round_match.all()) 
+		n = len(self.round_match.all())/2
+		round_number = 1
+
+		while counter != 0: 
+			if counter <= n:
+				n = n/2
+				round_number += 1
+			tour_bracket_list.append(round_number)
+			counter -= 1
+
+		tour_bracket_list[-1] -= 1
+		return tour_bracket_list
+	
+
 	def matchDesciption(self):
 		if self.game_mode:
 			return u"%svs%s (%s)" % (self.player_per_team, self.player_per_team, self.game_mode)
@@ -288,7 +306,7 @@ class Round(models.Model):
 				self.winner = self.team2
 			else:
 				self.winner = None
-			self.save()
+			#self.save()
 
 	@property
 	def getTeams(self):
@@ -298,7 +316,7 @@ class Round(models.Model):
 
 	@property
 	def getPoints(self):
-		return '[{0}, {1}]'.format(self.pkt1, self.pkt2)
+		return '["{0}", "{1}"]'.format(self.pkt1, self.pkt2)
 
 	@property
 	def getPkt1(self):

@@ -23,7 +23,6 @@ def has_group(user, group_name):
 	group = Group.objects.get(name=group_name) 
 	return True if group in user.groups.all() else False
 
-
 @register.filter
 def button_label(match, user):
 	if user in match.user.all():
@@ -73,3 +72,7 @@ def radioCheckedTeam(match, button_label):
 def radioCheckedTour(match, button_label):
   if match.tour_choose_type == button_label:
     return "checked"
+
+@register.filter
+def getListElement(list, element):
+  return list[element]
