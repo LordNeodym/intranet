@@ -199,6 +199,8 @@ def register_user_in_match(request):
 
 
 def create_teams(request):
+	if not "create_team_type" in request.POST:
+		return "Erstellungstyp für Teams nicht ausgewählt."
 	create_team_type = request.POST['create_team_type']
 	match = Match.objects.get(id=request.POST['match_id'])
 	match.deleteTournament()
@@ -267,6 +269,9 @@ def delete_team(request):
 
 
 def create_tournament(request):
+	if not "create_tour" in request.POST:
+		return "Erstellungstyp für das Turnier nicht ausgewählt."
+
 	teams = Team.objects.filter(match__id=request.POST['match_id'])
 	match = Match.objects.get(id=request.POST['match_id'])
 	old_rounds = Round.objects.filter(match=match)

@@ -22,7 +22,7 @@
 			<div class="game_info_time">
 				<h5 class="row_info">Datum</h5>
 				{% if match.datetime.date %}
-					<h4 class="game_info">{{ match.datetime.date }}</h4>
+					<h4 class="game_info">{{ match.datetime.date|date:"d.m.Y" }}</h4>
 				{% else %}
 					<h4 class="game_info">-</h4>
 				{% endif %}

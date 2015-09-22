@@ -17,11 +17,13 @@
 		<h1 class="game_headline">{{ game.name }}</h1>
 		{% endif %}
 	</div>
-	<div class="game_info_overview">
-		{% for line in game.description.splitlines %}
-			<span>{{ line }}</span><br/>
-		{% endfor %}
-	</div>
+	{% if game.description %}
+		<div class="game_info_overview">
+			{% for line in game.description.splitlines %}
+				<span>{{ line }}</span><br/>
+			{% endfor %}
+		</div>
+	{% endif %}
 
 	<div class="match_list">
 		{% for match in game.match_game.all %}

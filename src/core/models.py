@@ -248,6 +248,12 @@ class Team(models.Model):
 		except:
 			return "{0}".format(self.description)
 
+	@property	
+	def sortedTeams(self):
+		return self.description
+		for ele in self.match.team_match.all:
+			return ele
+
 	@property
 	def num_wins(self):
 		num_wins = Round.objects.filter(winner=self).count()
