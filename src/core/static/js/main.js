@@ -15,6 +15,10 @@ function dropdown_style() {
 
 
 function listenLoserBracketCheckbox() {
+	if ($("#create_tour_tree").is(':checked')) {
+		$("#create_tour_tree_loserbracket").prop('disabled', false);
+	}
+
 	$("#create_tour_vs").click(function() {
 		if ($("#create_tour_vs").is(':checked')) {
 			$("#create_tour_tree_loserbracket").prop('checked', false);

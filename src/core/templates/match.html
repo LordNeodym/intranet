@@ -139,12 +139,14 @@
 				<div class="team_row">
 				{% endifequal %}
 					<div class="team" id="team_id_{{team.id}}">
-						<h4>Team {{team.description}}</h4>
-						<ul>
-							{% for user in team.user.all %}
-							<li>{{ user }}</li>
-							{% endfor %}
-						</ul>
+						<h4>{{team.getTeam}}</h4>
+						{% if match.player_per_team > 1 %}
+							<ul>
+								{% for user in team.user.all %}
+								<li>{{ user }}</li>
+								{% endfor %}
+							</ul>
+						{% endif %}
 						{% if not match.round_match.all and user|has_group:"Admin" %}
 						<form method="post" class="delete_team" action="delete_team/">
 							{% csrf_token %}
@@ -228,12 +230,16 @@
 	<div class="admin_interface">
 		<form method="post" class="create_team" action="create_teams/">
 			{% csrf_token %}
-			<input type="radio" id="create_team_random" name="create_team_type" value="random" {{ match|radioCheckedTeam:"rand" }} />
-			<label for="create_team_random">Zufall</label>
-			<input type="radio" id="create_team_self" name="create_team_type" value="self" {{ match|radioCheckedTeam:"self" }} />
-			<label for="create_team_self">Eigene Wahl</label>
-			<input type="radio" id="create_team_admin" name="create_team_type" value="admin" {{ match|radioCheckedTeam:"admin" }} />
-			<label for="create_team_admin">Admin Wahl</label>
+			{% if match.player_per_team == 1 %}
+				<input type="hidden" id="create_team_random" name="create_team_type" value="random" />
+			{% else %}
+				<input type="radio" id="create_team_random" name="create_team_type" value="random" {{ match|radioCheckedTeam:"rand" }} />
+				<label for="create_team_random">Zufall</label>
+				<input type="radio" id="create_team_self" name="create_team_type" value="self" {{ match|radioCheckedTeam:"self" }} />
+				<label for="create_team_self">Eigene Wahl</label>
+				<input type="radio" id="create_team_admin" name="create_team_type" value="admin" {{ match|radioCheckedTeam:"admin" }} />
+				<label for="create_team_admin">Admin Wahl</label>
+			{% endif %}
 			<input type="submit" type="submit" value="Teams erstellen" />
 			<input type="hidden" name="match_id" value="{{match.id}}" />
 		</form>

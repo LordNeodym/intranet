@@ -7,6 +7,7 @@ from django.conf import settings
 from django.core import validators
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.core.validators import  MinValueValidator
 from django.template.defaultfilters import slugify
 
 from filer.fields.file import FilerFileField
@@ -103,7 +104,7 @@ class Match(models.Model):
 
 	game = models.ForeignKey(Game, verbose_name="Spiel", blank=False, null=False, related_name="match_game")
 	game_mode = models.CharField(verbose_name="Modus", max_length=50, blank=True, null=True)
-	player_per_team = models.IntegerField(verbose_name="Spieler pro Team", blank=False, null=False)
+	player_per_team = models.IntegerField(verbose_name="Spieler pro Team", blank=False, null=False, validators=[MinValueValidator('1')])
 	description = models.TextField(verbose_name="Beschreibung", max_length=255, blank=True, null=True)
 	user = models.ManyToManyField(User, verbose_name="Spieler", related_name="match_user")
 	datetime = models.DateTimeField(verbose_name="Datum/Uhrzeit", blank=True, null=True)
@@ -187,12 +188,18 @@ class Match(models.Model):
 		users = list(self.user.all())
 		shuffle(users)
 		counter = 0
-		for index, user in enumerate(users):
-			if index % self.player_per_team == 0:
-				counter += 1
-				team = Team.objects.create(match=self, description=counter)
+		if self.player_per_team == 1:
+			for user in users:
+				team = Team.objects.create(match=self, description=user.username)
 				team.save()
-			team.user.add(user)
+				team.user.add(user)
+		else:
+			for index, user in enumerate(users):
+				if index % self.player_per_team == 0:
+					counter += 1
+					team = Team.objects.create(match=self, description=counter)
+					team.save()
+				team.user.add(user)
 
 	def deleteTournament(self):
 		""" delete all rounds """
@@ -248,12 +255,6 @@ class Team(models.Model):
 		except:
 			return "{0}".format(self.description)
 
-	@property	
-	def sortedTeams(self):
-		return self.description
-		for ele in self.match.team_match.all:
-			return ele
-
 	@property
 	def num_wins(self):
 		num_wins = Round.objects.filter(winner=self).count()
@@ -279,7 +280,7 @@ class Team(models.Model):
 	class Meta:
 		verbose_name = "Team"
 		verbose_name_plural = "Teams"
-		ordering = ['description']
+		ordering = ['id']
 
 
 class Round(models.Model):
