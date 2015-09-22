@@ -162,15 +162,17 @@ def save_tournament_bracket(request):
 		success = True
 		index = 1
 
-		for match_round in data["results"][0]:
-			for single_round in match_round:
-				game_round = Round.objects.get(match=match, round_number=index)
-				if single_round[0] != "None":
-					game_round.pkt1 = single_round[0]
-				if single_round[1] != "None":
-					game_round.pkt2 = single_round[1]
-				game_round.save()
-				index += 1
+		match_round = [item for sublist in data["results"][0] for item in sublist]
+		
+		for single_round in match_round:
+			print single_round	
+			game_round = Round.objects.get(match=match, round_number=index)
+			if single_round[0] != "None":
+				game_round.pkt1 = single_round[0]
+			if single_round[1] != "None":
+				game_round.pkt2 = single_round[1]
+			game_round.save()
+			index += 1
 
     response_data = {'success' : success,}
     return HttpResponse(json.dumps(response_data), content_type="application/json")

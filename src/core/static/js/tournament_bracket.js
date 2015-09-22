@@ -28,6 +28,7 @@ function createTeamDic() {
 		round = $(this).data('round');
 		pkt_list.push(jQuery.parseJSON($(this).val()));
 		if (round != counter) {
+			console.log(pkt_list);
 			data.results.push(pkt_list);
 			pkt_list = new Array();
 		}
