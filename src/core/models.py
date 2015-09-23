@@ -131,7 +131,11 @@ class Match(models.Model):
 			tour_bracket_list.append(round_number)
 			counter -= 1
 
-		tour_bracket_list[-1] -= 1
+		if self.tour_choose_type == "tree":
+			tour_bracket_list[-1] -= 1
+		elif self.tour_choose_type == "tree_loser":
+			tour_bracket_list.pop()
+
 		return tour_bracket_list
 	
 
