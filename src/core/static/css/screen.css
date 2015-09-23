@@ -158,6 +158,11 @@ ul {
 	display: none;
 }
 
+#tournament_tree_content {
+	overflow-y: hidden;
+}
+
+
 table {
 	width: 100%;
 	margin-top: 5px;

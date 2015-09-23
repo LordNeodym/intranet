@@ -281,12 +281,7 @@ def create_tournament(request):
 	if request.POST['create_tour'] == "vs":
 		create_tournament_vs(match, team_ids)
 	elif request.POST['create_tour'] == "tree":
-		create_tournament_tree(match, team_ids)
-		if "create_tour_tree_loserbracket" in request.POST:
-			match.tour_choose_type = "tree_loser"
-		else:
-			match.tour_choose_type = "tree"
-		match.save()
+		create_tournament_tree(request, match, team_ids)
 
 
 def create_tournament_vs(match, team_ids):
@@ -321,7 +316,7 @@ def roundRobin(units, sets=None):
     return schedule
 
 
-def create_tournament_tree(match, team_ids):
+def create_tournament_tree(request, match, team_ids):
 	if not len(team_ids) in settings.ALLOWED_TOURNAMENT_TREE_TEAMS:
 		return "Aus der Anzahl der Teams lässt sich kein Turnierbaum bauen."
 
@@ -337,14 +332,47 @@ def create_tournament_tree(match, team_ids):
 			team1 = Team.objects.get(id=team), 
 			team2 = Team.objects.get(id=team_ids.pop())
 		)
-		
 
-	""" empty teams after first round"""
-	for ele in range(len(team_ids)):
-		Round.objects.create(
-			round_number = current_index+ele+1,
-			match = match
-		) 
+	""" list team_ids is now half the size of the origin, cause of pop() """
+	""" dummy rounds after first round"""
+	if "create_tour_tree_loserbracket" in request.POST:
+		match.tour_choose_type = "tree_loser"
+		match.save()
+		""" WINNER BRACKET """
+		for ele in range(len(team_ids) - 1):
+			current_index += 1
+			Round.objects.create(
+				round_number = current_index,
+				match = match
+			)
+
+		""" LOSER BRACKET """
+		while not len(team_ids) == 1:
+			for ele in range(len(team_ids)):
+				current_index += 1
+				Round.objects.create(
+					round_number = current_index,
+					match = match
+				)
+			team_ids = team_ids[::2]
+
+		""" FINALS """
+		for ele in range(3):
+			current_index += 1
+			Round.objects.create(
+				round_number = current_index,
+				match = match
+			)
+	else:
+		match.tour_choose_type = "tree"
+		match.save()
+		""" WINNER BRACKET + FINALS """
+		for ele in range(len(team_ids)):
+			current_index += 1
+			Round.objects.create(
+				round_number = current_index,
+				match = match
+			) 
 
 
 def entry_round_result(request):

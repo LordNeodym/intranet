@@ -213,16 +213,17 @@
 			</table>
 		</div>
 		{% endif %}
-	{% elif match.tour_choose_type == "tree" %}
+	{% else %}
 		<div id="tournamen_tree">
 			<h2>Turnierbaum</h2>
+			<input type="hidden" id="tournament_bracket_mode" data-mode="{{ match.tour_choose_type }}" />
 			<div id="tournament_tree_teams">
 				{% for round in match.round_match.all %}
 					<input type="hidden" data-match="{{match.id}}" data-round="{{forloop.counter}}" class="tournament_tree_team" value="{{round.getTeams}}"/>					
 					<input type="hidden" data-match="{{match.id}}" data-round="{{ match.tournamentBracketRounds|getListElement:forloop.counter0 }}"class="tournament_tree_points" value="{{ round.getPoints }}" />
 				{% endfor %}
 			</div>
-			<div id="tournamen_tree_content"></div>
+			<div id="tournament_tree_content"></div>
 		</div>
 	{% endif %}
 
@@ -248,9 +249,9 @@
 			{% csrf_token %}
 			<input type="radio" id="create_tour_vs" name="create_tour" value="vs" {{ match|radioCheckedTour:"vs" }} />
 			<label for="create_tour_vs">Jeder gegen Jeden</label>
-			<input type="radio" id="create_tour_tree" name="create_tour" value="tree" {{ match|radioCheckedTour:"tree" }} />
+			<input type="radio" id="create_tour_tree" name="create_tour" value="tree" {{ match|radioCheckedTour:"tree" }} {{ match|radioCheckedTour:"tree_loser" }} />
 			<label for="create_tour_tree">Turnierbaum</label>
-			<input type="checkbox" id="create_tour_tree_loserbracket" name="create_tour_tree_loserbracket" disabled/>
+			<input type="checkbox" id="create_tour_tree_loserbracket" name="create_tour_tree_loserbracket" disabled {{ match|radioCheckedTour:"tree_loser" }}/>
 			<label for="create_tour_tree_loserbracket">Loserbracket</label>
 			<input type="submit" type="submit" value="Turnier erstellen" />
 			<input type="hidden" name="match_id" value="{{ match.id }}" />
