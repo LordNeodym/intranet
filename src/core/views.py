@@ -379,15 +379,18 @@ def create_tournament_tree(request, match, team_ids):
 
 
 def entry_round_result(request):
-	if not (request.POST['pkt1'] or request.POST['pkt2']):
-		return
 	form = RoundForm(data=request.POST)
 	if form.is_valid():
 		round = Round.objects.get(id=request.POST['round_id'])
-		round.pkt1 = request.POST['pkt1']
-		round.pkt2 = request.POST['pkt2']
+		if request.POST['pkt1'] == "":
+			round.pkt1 = None
+		else:
+			round.pkt1 = request.POST['pkt2']
+		if request.POST['pkt2'] == "":
+			round.pkt2 = None
+		else:
+			round.pkt2 = request.POST['pkt2']
 		round.save()
-		round.calcWinner()
 	else:
 		print form.errors
 

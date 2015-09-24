@@ -357,15 +357,15 @@ class Round(models.Model):
 
 	@property
 	def getPkt1(self):
-		if self.pkt1:
-		    return self.pkt1
-		return ""
+		if self.pkt1 == None:
+		    return ""
+		return self.pkt1
 
 	@property
 	def getPkt2(self):
-		if self.pkt2:
-		    return self.pkt2
-		return ""
+		if self.pkt2 == None:
+		    return ""
+		return self.pkt2
 
 	@property
 	def getDatetime(self):
