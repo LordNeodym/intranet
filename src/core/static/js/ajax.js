@@ -44,7 +44,7 @@ function saveTournamentBracket(json, match_id){
             if (resp.success == true) {
 
             } else {
-
+                console.log(resp.msg);
             }
         },
         error : function(xhr,errmsg,err) {

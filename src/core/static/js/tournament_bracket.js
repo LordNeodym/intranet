@@ -62,10 +62,12 @@ function createTeamDic() {
 				pkt_list.push(jQuery.parseJSON($(this).val()));
 				counter++;
 			}
+
 		});
+		subDataList.push(pkt_list);
+		data.results.push(subDataList);
 	}
 
-	data.results.push(pkt_list);
 	/*console.log(JSON.stringify(data,function(k,v){
    		if(v instanceof Array)
       		return JSON.stringify(v);

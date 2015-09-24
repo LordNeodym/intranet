@@ -151,30 +151,35 @@ def match(request, slug, match_id, command=None):
 
 @csrf_protect
 def save_tournament_bracket(request): 
-    group = Group.objects.get(name="Admin")
-    success = False
+	group = Group.objects.get(name="Admin")
+	success = False
+	msg = ""
 
-    if group in request.user.groups.all():
+	if group in request.user.groups.all():
 		json_data = request.POST["json"]
 		data = json.loads(json_data)
 		match_id = request.POST["match_id"]
-		match = Match.objects.get(id=match_id)    
-		success = True
-		index = 1
+		match = Match.objects.get(id=match_id)
 
-		match_round = [item for sublist in data["results"][0] for item in sublist]
-		
-		for single_round in match_round:
-			game_round = Round.objects.get(match=match, round_number=index)
+		if match.tour_choose_type == "tree":
+			match_round = [item for sublist in data["results"][0] for item in sublist]
+		elif match.tour_choose_type == "tree_loser":
+			match_round = [item for sublist in data["results"][0] for item in sublist]
+			match_round.extend([item for sublist in data["results"][1] for item in sublist])
+			match_round.extend([item for sublist in data["results"][2] for item in sublist])
+
+		for index, single_round in enumerate(match_round):
+			game_round = Round.objects.get(match=match, round_number=index+1)
 			if single_round[0] != "None":
 				game_round.pkt1 = single_round[0]
 			if single_round[1] != "None":
 				game_round.pkt2 = single_round[1]
 			game_round.save()
-			index += 1
-
-    response_data = {'success' : success,}
-    return HttpResponse(json.dumps(response_data), content_type="application/json")
+		success = True
+	else:
+		msg = "Nicht ausreichende Rechte zum Editieren."
+	response_data = {'success' : success, 'msg' : msg}
+	return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
 @never_cache

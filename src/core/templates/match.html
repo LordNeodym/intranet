@@ -133,7 +133,7 @@
 
 	<div class="teams">
 		{% if match.team_match.all %}
-			<h2>Teams</h2>
+			<h2 class="match_subline">Teams</h2>
 			{% for team in match.team_match.all %}
 				{% ifequal forloop.counter0|modulo:3 0 %}
 				<div class="team_row">
@@ -165,7 +165,7 @@
 	{% if match.tour_choose_type == "vs" %}
 		{% if match.round_match.all %}
 		<div class="tournament_rounds">
-			<h2>Begegnungen</h2>
+			<h2 class="match_subline">Begegnungen</h2>
 			<table class"rounds">
 				<tr>
 					<th>Runde</th>
@@ -196,7 +196,7 @@
 		</div>
 
 		<div class="ranking">
-			<h2>Ranking</h2>
+			<h2 class="match_subline">Ranking</h2>
 			<table>
 				<tr>
 					<th>Teams</th>
@@ -215,7 +215,7 @@
 		{% endif %}
 	{% else %}
 		<div id="tournamen_tree">
-			<h2>Turnierbaum</h2>
+			<h2 class="match_subline">Turnierbaum</h2>
 			<input type="hidden" id="tournament_bracket_mode" data-mode="{{ match.tour_choose_type }}" />
 			<div id="tournament_tree_teams">
 				{% for round in match.round_match.all %}

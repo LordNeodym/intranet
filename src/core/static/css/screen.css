@@ -87,6 +87,11 @@ ul {
 	margin-bottom: 20px;
 }
 
+.match_subline {
+	margin-bottom: 15px !important;
+    margin-top: 10px !important;
+}
+
 .single_rule {
 	text-align: left;
 	width: 50%;
