@@ -120,8 +120,8 @@ class Match(models.Model):
 	@property
 	def tournamentBracketRounds(self):
 		tour_bracket_list = []
-		counter = len(self.round_match.all()) 
-		n = len(self.round_match.all())/2
+		counter = len(self.team_match.all())
+		n = counter/2
 		round_number = 1
 
 		while counter != 0: 
@@ -130,14 +130,40 @@ class Match(models.Model):
 				round_number += 1
 			tour_bracket_list.append(round_number)
 			counter -= 1
-
-		if self.tour_choose_type == "tree":
-			tour_bracket_list[-1] -= 1
-		elif self.tour_choose_type == "tree_loser":
-			tour_bracket_list.pop()
+		tour_bracket_list[-1] -= 1
 
 		return tour_bracket_list
 	
+	@property
+	def tournamentBracketRoundsWLoser(self):
+		tour_bracket_list = []
+
+		# WINNER Bracket
+		tour_bracket_list = self.tournamentBracketRounds
+		tour_bracket_list.pop()
+
+		# LOSER Bracket
+		counter = len(self.team_match.all())
+		n = counter*3/4
+		round_number = 1
+		double_count = True
+
+		while counter > 2: 
+			if counter <= n:
+				round_number += 1
+				if not double_count:
+					n = n*3/4
+					double_count = True
+				else:
+					n = n*2/3
+					double_count = False
+			tour_bracket_list.append(round_number)
+			counter -= 1
+
+		# FINALS
+		tour_bracket_list.extend([1,1,2])
+
+		return tour_bracket_list
 
 	def matchDesciption(self):
 		if self.game_mode:

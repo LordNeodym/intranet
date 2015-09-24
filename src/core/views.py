@@ -165,7 +165,6 @@ def save_tournament_bracket(request):
 		match_round = [item for sublist in data["results"][0] for item in sublist]
 		
 		for single_round in match_round:
-			print single_round	
 			game_round = Round.objects.get(match=match, round_number=index)
 			if single_round[0] != "None":
 				game_round.pkt1 = single_round[0]
@@ -290,7 +289,6 @@ def create_tournament_vs(match, team_ids):
 	for index, pairings in enumerate(roundRobin(team_ids)):
 		for pairing in pairings:
 			if not None in pairing:
-				#team1 = Team.objects.get(id=pairing[0])
 				Round.objects.create(
 					round_number = index+1,
 					match = match,

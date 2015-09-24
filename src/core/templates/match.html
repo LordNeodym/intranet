@@ -221,9 +221,9 @@
 				{% for round in match.round_match.all %}
 					<input type="hidden" data-match="{{match.id}}" data-round="{{forloop.counter}}" class="tournament_tree_team" value="{{round.getTeams}}"/>
 					{% if match.tour_choose_type == "tree" %}
-						<input type="hidden" data-match="{{match.id}}" data-round="{{ match.tournamentBracketRounds|getListElement:forloop.counter0 }}"class="tournament_tree_points" value="{{ round.getPoints }}" />
+						<input type="hidden" data-match="{{match.id}}" data-round="{{ match.tournamentBracketRounds|getListElement:forloop.counter0 }}" class="tournament_tree_points" value="{{ round.getPoints }}" />
 					{% elif match.tour_choose_type == "tree_loser" %}
-						<input type="hidden" data-match="{{match.id}}" data-round="{{ match.tournamentBracketRounds|getListElement:forloop.counter0 }}"class="tournament_tree_points" value="{{ round.getPoints }}" />
+						<input type="hidden" data-match="{{match.id}}" data-round="{{ match.tournamentBracketRoundsWLoser|getListElement:forloop.counter0 }}" class="tournament_tree_points" value="{{ round.getPoints }}" />
 					{% endif %}
 				{% endfor %}
 			</div>

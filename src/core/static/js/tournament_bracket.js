@@ -11,6 +11,11 @@ function saveFn(data, userData) {
 
 function createTeamDic() {
 	var data = {teams : [], results : []}
+	var pkt_list = new Array();
+	var subDataList = new Array();
+	var round ;
+	var counter = 2;
+
 	/* get all Teams from Template */
 	$('.tournament_tree_team').each(function() {
 		if ($(this).val() != "None") {
@@ -18,21 +23,47 @@ function createTeamDic() {
 		}
 	});
 
-	var pkt_list = new Array();
-	var round ;
-	var counter = 2;
-	$('.tournament_tree_points').each(function() {
-		round = $(this).data('round');
-		if (round != counter) {
-			pkt_list.push(jQuery.parseJSON($(this).val()));
-			
-		} else {
-			data.results.push(pkt_list);
-			pkt_list = new Array();
-			pkt_list.push(jQuery.parseJSON($(this).val()));
-			counter++;
-		}
-	});
+	/* get all Points from Template */
+	if ($('#tournament_bracket_mode').data('mode') == "tree") {
+		$('.tournament_tree_points').each(function() {
+			round = $(this).data('round');
+			/* collect for 1 round */
+			if (round != counter) {
+				pkt_list.push(jQuery.parseJSON($(this).val()));
+			}
+			/* push on list and create new array for new round */
+		 	else {
+				data.results.push(pkt_list);
+				pkt_list = new Array();
+				pkt_list.push(jQuery.parseJSON($(this).val()));
+				counter++;
+			}
+		});
+	} else if ($('#tournament_bracket_mode').data('mode') == "tree_loser") {
+		$('.tournament_tree_points').each(function() {
+			round = $(this).data('round');
+			/* new bracket */
+			if (round < (counter-1)) {
+				subDataList.push(pkt_list);
+				data.results.push(subDataList);
+				subDataList = new Array();
+				pkt_list = new Array();
+				pkt_list.push(jQuery.parseJSON($(this).val()));
+				counter = 2;
+			} 
+			/* collect for 1 round */
+			else if (round != counter) { 
+				pkt_list.push(jQuery.parseJSON($(this).val()));
+			} 
+			/* push on list and create new array for new round */
+			else { 
+				subDataList.push(pkt_list);
+				pkt_list = new Array();
+				pkt_list.push(jQuery.parseJSON($(this).val()));
+				counter++;
+			}
+		});
+	}
 
 	data.results.push(pkt_list);
 	/*console.log(JSON.stringify(data,function(k,v){
@@ -70,16 +101,7 @@ function createTeamDic() {
 		]]
 	}
 
-	var countTeams = $('.tournament_tree_team').length;
-	console.log($('#tournament_bracket_mode').data('mode'));
-
-	if ($('#tournament_bracket_mode').data('mode') == "tree") {
-		var calcHeight = countTeams * 34;
-	} else {
-		var calcHeight = (countTeams + countTeams/2) * 17;
-	}
-	
-	$('#tournament_tree_content').css('height', calcHeight);
+	setTournamentHeight();
 
 	return data;
 
@@ -95,6 +117,18 @@ function createTeamDic() {
   	}*/
 }
 
+
+function setTournamentHeight() {
+	var countTeams = $('.tournament_tree_team').length;
+	
+	if ($('#tournament_bracket_mode').data('mode') == "tree") {
+		var calcHeight = countTeams * 34 + 45;
+	} else {
+		var calcHeight = (countTeams + countTeams/2) * 17 + 11;
+	}
+	
+	$('#tournament_tree_content').css('height', calcHeight);
+}
 
 $(function() {
 	var minimalData = createTeamDic();
