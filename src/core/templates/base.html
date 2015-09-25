@@ -53,7 +53,7 @@
         {% if user.is_authenticated %}
             <div class="username_header">
                 <h5>Angemeldet als:</h5>
-                <h4>{{ user.username }}</h4>
+                <h4>{{ user.shortenName }}</h4>
                 <a href="/logout">Logout</a>
             </div>
         {% else %}

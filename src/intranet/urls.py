@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
 	url(r'^login/$', views.login, name='login'),
 	url(r'^register/$', views.register, name='register'),
+    url(r'^edit_profile/', views.edit_profile),
     url(r'^logout/$', views.logout, name='logout'),
     url(r'^rules/(?P<slug>[-\w\d]+)/$', views.rules, name='rules'),
     url(r'^off-topic/menu/$', views.menu, name='menu'),

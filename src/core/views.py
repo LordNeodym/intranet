@@ -17,12 +17,18 @@ import json
 from random import shuffle
 
 from core.models import Game, Match, Team, Rules, Round, ImageCategory, VideoCategory
-from core.forms import UserForm, RoundForm
+from core.forms import UserForm, UserProfileForm, RoundForm
 
 
 def home(request):
 	context = RequestContext(request)
 	content = {}
+	
+	print dir(request.user)
+	print request.user.email
+	print request.user.userextension.shortenName
+	#print request.user.userextension.shortenName
+
 	if request.user.is_authenticated():
 		content['games'] = Game.objects.exclude(match_game=None)
 	else:
@@ -183,10 +189,38 @@ def save_tournament_bracket(request):
 
 
 @never_cache
+def edit_profile(request):
+    context = RequestContext(request)
+    error_msg = []
+    if request.user.is_authenticated():
+        if request.method == 'POST':
+            uf = UserForm(request.POST, prefix='user')
+            upf = UserProfileForm(request.POST, prefix='userprofile')
+            if uf.is_valid() * upf.is_valid():
+                user = request.user
+                userprofile = upf.save(commit=False)
+                userprofile.user = user
+                userprofile.save()
+            else:
+                for e in uf.errors, upf.errors:
+                    error_msg.append(e)
+        else:
+            uf = UserForm(prefix='user')
+            upf = UserProfileForm(prefix='userprofile')
+    else:
+        return redirect('/login/')
+    return render(request, 'edit_profile.html', {'userform': uf, 'userprofileform': upf, 'errors': error_msg}, context_instance=context)
+
+
+@never_cache
 @login_required(login_url="/login/")
 def logout(request):
     auth_logout(request)
     return redirect('/')
+
+
+
+
 
 
 
@@ -385,7 +419,7 @@ def entry_round_result(request):
 		if request.POST['pkt1'] == "":
 			round.pkt1 = None
 		else:
-			round.pkt1 = request.POST['pkt2']
+			round.pkt1 = request.POST['pkt1']
 		if request.POST['pkt2'] == "":
 			round.pkt2 = None
 		else:

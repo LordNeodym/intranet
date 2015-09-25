@@ -9,6 +9,8 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.validators import  MinValueValidator
 from django.template.defaultfilters import slugify
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from filer.fields.file import FilerFileField
 from filer.fields.image import FilerImageField
@@ -16,13 +18,13 @@ from filer.fields.image import FilerImageField
 from random import shuffle
 from datetime import date, datetime
 
-from core.validators import integer_only
+from core.validators import validate_only_one_instance, integer_only
 
 
-def validate_only_one_instance(obj):
-	model = obj.__class__
-	if (model.objects.count() > 0 and obj.id != model.objects.get().id):
-		raise ValidationError("Nur eine Instanz von %s erlaubt!" % model.__name__)
+@receiver(post_save, sender=User)
+def create_user_extension(sender, instance, created, **kwargs):
+    if created:
+        UserExtension.objects.create(user=instance)
 
 
 class IntranetMeta(models.Model):
@@ -39,6 +41,25 @@ class IntranetMeta(models.Model):
 	class Meta:
 		verbose_name = "Intranet Metadaten"
 		verbose_name_plural = "Intranet Metadaten"
+
+
+class UserExtension(models.Model):
+	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	avatar = models.ImageField(verbose_name="Avatar", upload_to="user_avatar", blank=True, null=True)
+
+	@property
+	def shortenName(self):
+		print "in der Methode"
+		if len(self.user.username) > 12:
+			return "{0}...".format(self.user.username[:13])
+		return self.user.username
+
+	def has_user(self):
+		return self.user_id is not None
+
+	class Meta:
+		verbose_name = "Zusätzliche Angaben"
+		verbose_name_plural = "Zusätzliche Angaben"
 
 
 class Rules(models.Model):
@@ -355,12 +376,14 @@ class Round(models.Model):
 	def getPoints(self):
 		return '["{0}", "{1}"]'.format(self.pkt1, self.pkt2)
 
+	""" prevent showing the input 'None' in the Field for points """
 	@property
 	def getPkt1(self):
 		if self.pkt1 == None:
 		    return ""
 		return self.pkt1
 
+	""" prevent showing the input 'None' in the Field for points """
 	@property
 	def getPkt2(self):
 		if self.pkt2 == None:

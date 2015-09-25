@@ -177,19 +177,25 @@
 				</tr>
 				{% for round in match.round_match.all %}
 				<tr>
-					<form method="post" class="single_round_form" action="entry_round_result/">
-						{% csrf_token %}
-						<th>{{ round.round_number }}</th>
-						<td>{{ round.getDatetime }}</td>
-						<td>{{ round.team1.getTeam }}</td>
-						<td><input type="text" maxlength="3" size="3" name="pkt1" value="{{ round.getPkt1 }}" autocomplete="off" /></td>
-						<td><input type="text" maxlength="3" size="3" name="pkt2" value="{{ round.getPkt2 }}" autocomplete="off" /></td>
+					<th>{{ round.round_number }}</th>
+					<td>{{ round.getDatetime }}</td>
+					<td>{{ round.team1.getTeam }}</td>
+					{% if user|has_group:"Admin" %}
+						<form method="post" class="single_round_form" action="entry_round_result/">
+							{% csrf_token %}
+							<td><input type="text" maxlength="3" size="3" name="pkt1" value="{{ round.getPkt1 }}" autocomplete="off" /></td>
+							<td><input type="text" maxlength="3" size="3" name="pkt2" value="{{ round.getPkt2 }}" autocomplete="off" /></td>
+							<td>{{ round.team2.getTeam }}</td>
+							<td>
+								<input type="submit" type="submit" value="Okay" />
+								<input type="hidden" name="round_id" value="{{ round.id }}" />
+							</td>
+						</form>
+					{% else %}
+						<td>{{ round.getPkt1 }}</td>
+						<td>{{ round.getPkt2 }}</td>
 						<td>{{ round.team2.getTeam }}</td>
-						<td>
-							<input type="submit" type="submit" value="Okay" />
-							<input type="hidden" name="round_id" value="{{ round.id }}" />
-						</td>
-					</form>
+					{% endif %}
 				</tr>
 				{% endfor %}
 			</table>
