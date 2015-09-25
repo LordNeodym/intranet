@@ -12,4 +12,4 @@ def validate_only_one_instance(obj):
 def integer_only(value):
     pattern = "^[0-9]+$"
     if not re.match(pattern, str(value)):
-        raise ValidationError(u'%s ist keine Zahl!' % value)
+        raise ValidationError('%s ist keine Zahl!' % value)

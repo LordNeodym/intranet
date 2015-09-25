@@ -49,7 +49,6 @@ class UserExtension(models.Model):
 
 	@property
 	def shortenName(self):
-		print "in der Methode"
 		if len(self.user.username) > 12:
 			return "{0}...".format(self.user.username[:13])
 		return self.user.username

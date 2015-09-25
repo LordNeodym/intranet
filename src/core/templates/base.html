@@ -53,11 +53,12 @@
         {% if user.is_authenticated %}
             <div class="username_header">
                 <h5>Angemeldet als:</h5>
-                <h4>{{ user.shortenName }}</h4>
+                <h4>{{ user.userextension.shortenName }}</h4>
+                <a href="/edit_profile">Editieren</a>
                 <a href="/logout">Logout</a>
             </div>
         {% else %}
-            <div class="username_header">
+            <div class="username_header login">
                 <a href="/register">Registrieren</a>
                 <a href="/login">Login</a>
             </div>

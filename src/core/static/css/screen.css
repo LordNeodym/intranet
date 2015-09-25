@@ -71,6 +71,10 @@ ul {
 }
 
 .username_header > a{
+	font-size: 0.9em;
+}
+
+.username_header.login > a{
 	display: block;
 	font-size: 0.9em;
 }

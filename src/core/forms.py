@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.contrib.auth.models import User
 from django import forms
 
@@ -10,7 +12,7 @@ class UserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('username', 'password', 'password_repeat')
+        fields = ('username', 'first_name', 'last_name', 'password', 'password_repeat')
 
 
 class UserProfileForm(forms.ModelForm):
@@ -22,25 +24,24 @@ class UserProfileForm(forms.ModelForm):
         avatar = self.cleaned_data['avatar']
 
         try:
-            w, h = get_image_dimensions(avatar)
+            #w, h = get_image_dimensions(avatar)
 
             #validate dimensions
-            max_width = max_height = 100
-            if w > max_width or h > max_height:
-                raise forms.ValidationError(
-                    u'Please use an image that is '
-                     '%s x %s pixels or smaller.' % (max_width, max_height))
+            #max_width = max_height = 100
+            #if w > max_width or h > max_height:
+            #    raise forms.ValidationError(
+            #        u'Please use an image that is '
+            #         '%s x %s pixels or smaller.' % (max_width, max_height))
 
             #validate content type
             main, sub = avatar.content_type.split('/')
             if not (main == 'image' and sub in ['jpeg', 'pjpeg', 'gif', 'png']):
-                raise forms.ValidationError(u'Please use a JPEG, '
-                    'GIF or PNG image.')
+                raise forms.ValidationError('Erlaubte Bildformate sind: JPEG, GIF und PNG.')
 
             #validate file size
-            if len(avatar) > (20 * 1024):
+            if len(avatar) > (3 * 1024 * 1024):
                 raise forms.ValidationError(
-                    u'Avatar file size may not exceed 20k.')
+                    'Datei überschreitet die maximale Größe von 3 MB')
 
         except AttributeError:
             """

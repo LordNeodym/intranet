@@ -2,9 +2,11 @@
 {% load staticfiles %}
 
 {% block body %}
+{{block.super}}
+
 	<div class="content">
 		<div class="register_headline">
-	        <h1>Login</h1>
+	        <h1>Profil editieren</h1>
 	    </div>
 
 	    {% if errors|length %}
@@ -16,9 +18,23 @@
 		{% endif %}
 
 		<form action="#" method="post" enctype="multipart/form-data">
-		    {% csrf_token %}
-		    {{ userform }}
-		    {{ userprofileform }}
+		    {% csrf_token %}	    
+		    <table class="login">
+				<tr>
+				    <td><label for='username'>Benutzername:</label></td>
+				    <td><input type='text' name='username' id='username' value="{{user.username}}" disabled></td>
+				</tr>
+				<tr>
+				    <td><label for='first_name'>Vorname:</label></td>
+				    <td><input type='text' name='first_name' id='first_name' maxlength="30" value="{{user.first_name}}"></td>
+				</tr>
+				<tr>
+				    <td><label for='last_name'>Vorname:</label></td>
+				    <td><input type='text' name='last_name' id='last_name' maxlength="30" value="{{user.last_name}}"></td>
+				</tr>
+			</table>
+            <span class="register_field">Avatar: {{ userprofileform.avatar }}</span>
+		    
 		    <input type="submit" value="Submit" />
 		</form>
 	</div>

@@ -2,14 +2,17 @@
 {% load staticfiles %}
 
 {% block body %}
+{{block.super}}
     <div class="content">
-    {% if registered %}
-        <strong>Erfolgreich registriert!</strong>
-        <a class="back_link" href="/">Zurück zur Startseite</a>
-    {% else %}
         <div class="register_headline">
             <h1>Registrierung</h1>
         </div>
+
+        {% if registered %}
+            <strong>Erfolgreich registriert!</strong>
+            <a class="back_link" href="/">Zurück zur Startseite</a>
+        {% else %}
+
         <form id="user_form" method="post" action="/register/" enctype="multipart/form-data">
             {% csrf_token %}
             <span class="register_field">Benutzername: {{ user_form.username }}</span>

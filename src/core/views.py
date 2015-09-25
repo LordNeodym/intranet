@@ -23,11 +23,6 @@ from core.forms import UserForm, UserProfileForm, RoundForm
 def home(request):
 	context = RequestContext(request)
 	content = {}
-	
-	print dir(request.user)
-	print request.user.email
-	print request.user.userextension.shortenName
-	#print request.user.userextension.shortenName
 
 	if request.user.is_authenticated():
 		content['games'] = Game.objects.exclude(match_game=None)
@@ -194,22 +189,29 @@ def edit_profile(request):
     error_msg = []
     if request.user.is_authenticated():
         if request.method == 'POST':
-            uf = UserForm(request.POST, prefix='user')
             upf = UserProfileForm(request.POST, prefix='userprofile')
-            if uf.is_valid() * upf.is_valid():
+            if upf.is_valid():
                 user = request.user
+                user.first_name = request.POST['first_name']
+                user.last_name = request.POST['last_name']
+                try:
+	                user.save()
+                except Exception as e:
+                	error_msg.append(e)
+
                 userprofile = upf.save(commit=False)
-                userprofile.user = user
-                userprofile.save()
+                #userprofile.user = user
+                print userprofile
+                print dir(userprofile)
+                #userprofile.save()
             else:
                 for e in uf.errors, upf.errors:
                     error_msg.append(e)
         else:
-            uf = UserForm(prefix='user')
             upf = UserProfileForm(prefix='userprofile')
     else:
         return redirect('/login/')
-    return render(request, 'edit_profile.html', {'userform': uf, 'userprofileform': upf, 'errors': error_msg}, context_instance=context)
+    return render_to_response('edit_profile.html', {'user': request.user, 'userprofileform': upf, 'errors': error_msg}, context_instance=context)
 
 
 @never_cache
