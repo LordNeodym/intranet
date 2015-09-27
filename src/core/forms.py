@@ -19,7 +19,8 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserExtension
         exclude = ['user']
-        
+        fields = ['birth_date', 'avatar']
+
     def clean_avatar(self):
         avatar = self.cleaned_data['avatar']
 
