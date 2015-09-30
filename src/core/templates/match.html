@@ -167,14 +167,17 @@
 		<div class="tournament_rounds">
 			<h2 class="match_subline">Begegnungen</h2>
 			<table class"rounds">
-				<tr>
-					<th>Runde</th>
-					<th>Uhrzeit</th>
-					<th>Team (Home)</th>
-					<th>Punkte (Home)</th>
-					<th>Punkte (Away)</th>
-					<th>Team (Away)</th>
-				</tr>
+				<thead>
+					<tr>
+						<th>Runde</th>
+						<th>Uhrzeit</th>
+						<th>Team (Home)</th>
+						<th>Punkte (Home)</th>
+						<th>Punkte (Away)</th>
+						<th>Team (Away)</th>
+					</tr>
+				</thead>
+				<tbody>
 				{% for round in match.round_match.all %}
 				<tr class="{% if forloop.counter0|modulo:2 == 0 %}table_row_odd{%else%}table_row_even{% endif %}">
 					<th>{{ round.round_number }}</th>
@@ -198,6 +201,7 @@
 					{% endif %}
 				</tr>
 				{% endfor %}
+				</tbody>
 			</table>
 		</div>
 

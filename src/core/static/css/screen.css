@@ -230,9 +230,9 @@ footer {
 }
 
 .table_row_odd {
-
+	background-color: #FFA940;
 }
 
 .table_row_even {
-
+	background-color: #A4D9FF;
 }
