@@ -176,7 +176,7 @@
 					<th>Team (Away)</th>
 				</tr>
 				{% for round in match.round_match.all %}
-				<tr>
+				<tr class="{% if forloop.counter0|modulo:2 == 0 %}table_row_odd{%else%}table_row_even{% endif %}">
 					<th>{{ round.round_number }}</th>
 					<td>{{ round.getDatetime }}</td>
 					<td>{{ round.team1.getTeam }}</td>
