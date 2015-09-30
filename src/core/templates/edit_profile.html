@@ -17,7 +17,7 @@
 			<h3>{{msg}}</h3>
 		{% endif %}
 
-		<form action="#" method="post" enctype="multipart/form-data">
+		<form action="" method="post" enctype="multipart/form-data">
 		    {% csrf_token %}	    
 		    <table class="login">
 				<tr>
@@ -31,6 +31,10 @@
 				<tr>
 				    <td><label for='last_name'>Nachname:</label></td>
 				    <td><input type='text' name='last_name' id='last_name' maxlength="30" value="{{user.last_name}}"></td>
+				</tr>
+				<tr>
+				    <td><label for='birthdate'>Geburtstag:</label></td>
+				    <td><input type="date" name='birthdate' id="birthdate" value={{userprofileform.birthdate}}</td>
 				</tr>
 			</table>
             <span class="register_field">Avatar: {{ userprofileform.avatar }}</span>

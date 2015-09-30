@@ -200,13 +200,14 @@ def edit_profile(request):
                 	error_msg.append(e)
 
                 userprofile = upf.save(commit=False)
-                #userprofile.user = user
-                print userprofile
-                print dir(userprofile)
-                #userprofile.save()
+
+                print request.POST['birthdate']
+                user.userextension.birthdate = request.POST['birthdate']
+                userprofile.save()
             else:
-                for e in uf.errors, upf.errors:
+                for e in upf.errors:
                     error_msg.append(e)
+                    print e
         else:
             upf = UserProfileForm(prefix='userprofile')
     else:

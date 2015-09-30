@@ -45,6 +45,7 @@ class IntranetMeta(models.Model):
 
 class UserExtension(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	birthdate = models.DateField(verbose_name="Geburtstag", null=True, blank=True)
 	avatar = models.ImageField(verbose_name="Avatar", upload_to="user_avatar", blank=True, null=True)
 
 	@property

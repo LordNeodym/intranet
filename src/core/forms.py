@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-
-from django.contrib.auth.models import User
 from django import forms
+from django.contrib.auth.models import User
+
+from datetime import datetime
 
 from core.models import Round, UserExtension
 
@@ -16,10 +17,13 @@ class UserForm(forms.ModelForm):
 
 
 class UserProfileForm(forms.ModelForm):
+    today = datetime.today()
+    birthdate = forms.DateField(widget=forms.DateInput(format="%m/%d/%Y"))
+
     class Meta:
         model = UserExtension
         exclude = ['user']
-        fields = ['birth_date', 'avatar']
+        fields = ['birthdate', 'avatar']
 
     def clean_avatar(self):
         avatar = self.cleaned_data['avatar']
