@@ -11,7 +11,7 @@
 
 	    {% if errors|length %}
 			{% for error in errors %}
-				<p style="color:#AA0000">{{error}}</p>
+				{{error}}
 			{% endfor %}
 		{% else %}
 			<h3>{{msg}}</h3>
@@ -33,11 +33,14 @@
 				    <td><input type='text' name='last_name' id='last_name' maxlength="30" value="{{user.last_name}}"></td>
 				</tr>
 				<tr>
-				    <td><label for='birthdate'>Geburtstag:</label></td>
-				    <td><input type="date" name='birthdate' id="birthdate" value={{userprofileform.birthdate}}</td>
+				    <td><label for="id_userprofile-birthdate">Geburtstag:</label></td>
+				    <td><input id="id_userprofile-birthdate" name="userprofile-birthdate" value="{{user.userextension.birthdate|date:"d.m.Y"}}" type="text"></td>
+				</tr>
+				<tr>
+				    <td>{{ userprofileform.avatar.label_tag }}</td>
+				    <td>{{ userprofileform.avatar }}</td>
 				</tr>
 			</table>
-            <span class="register_field">Avatar: {{ userprofileform.avatar }}</span>
 		    
 		    <input type="submit" value="Submit" />
 		</form>

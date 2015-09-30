@@ -224,3 +224,7 @@ footer {
     position: absolute;
     padding-left: 5px;
 }
+
+.errorlist {
+    color: red;
+}

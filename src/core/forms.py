@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django import forms
+from django.conf import settings
 from django.contrib.auth.models import User
 
 from datetime import datetime
@@ -17,8 +18,7 @@ class UserForm(forms.ModelForm):
 
 
 class UserProfileForm(forms.ModelForm):
-    today = datetime.today()
-    birthdate = forms.DateField(widget=forms.DateInput(format="%m/%d/%Y"))
+    birthdate = forms.DateField(label="Geburtstag", input_formats=settings.DATE_INPUT_FORMATS)
 
     class Meta:
         model = UserExtension
