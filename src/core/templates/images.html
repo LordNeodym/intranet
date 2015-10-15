@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 {% load thumbnail %}
+{% load helper %}
 
 {% block body %}
 {{block.super}}
@@ -11,7 +12,7 @@
 		</div>
 		
 		{% for image in category.image_imagecategory.all %}
-			<image src="{{ image.image.url }}" />
+			<img src="{{ image.image.url }}" />
 		{% endfor %}
 
 	{% else %}
@@ -22,9 +23,15 @@
 		{% for category in categories %}
 			<h2 class="category_headline">{{category.description}}</h2>
 			{% for image in category.image_imagecategory.all %}
-				<div class="{% if forloop.counter|divisibleby:2 %}even{% else %}odd{% endif %}">
-					<a id="single_image" href="{{image.image.url}}"><img src="{{ image.image|thumbnail_url:'game_site' }}" /></a>
+				{% if forloop.counter0|divisibleby:2 %}
+					<div class="image_row">
+				{% endif %}
+				<div class="single_image_container">
+					<a class="single_image" href="{{image.image.url}}"><img src="{{ image.image|thumbnail_url:'game_site' }}" /></a>
 				</div>
+				{% if forloop.counter0|modulo:2 == 1 or forloop.last %}
+					</div>
+				{% endif %}
 			{% endfor %}
 		{% endfor %}
 	{% endif %}

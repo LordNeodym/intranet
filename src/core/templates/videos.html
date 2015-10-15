@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load helper %}
 
 {% block body %}
 {{block.super}}
@@ -7,13 +8,22 @@
 	<div class="headline">
 		<h1 class="game_headline">Videos</h1>
 	</div>
-
-
-	<video controls>
-		<source src=http://techslides.com/demos/sample-videos/small.webm type=video/webm> 
-		<source src=http://techslides.com/demos/sample-videos/small.ogv type=video/ogg> 
-		<source src=http://techslides.com/demos/sample-videos/small.mp4 type=video/mp4>
-		<source src=http://techslides.com/demos/sample-videos/small.3gp type=video/3gp>
-	</video>
+	
+	{% for category in categories %}
+		<h2 class="category_headline">{{category.description}}</h2>
+		{% for video in category.video_videocategory.all %}
+			{% if forloop.counter0|divisibleby:2 %}
+				<div class="video_row">
+			{% endif %}
+			<div class="single_video">
+				<video width="500" controls loop>
+					<source src="{{ video.video.url }}">
+				</video>
+			</div>
+			{% if forloop.counter0|modulo:2 == 1 or forloop.last %}
+				</div>
+			{% endif %}
+		{% endfor %}
+	{% endfor %}
 </div>
 {% endblock %}

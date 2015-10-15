@@ -203,16 +203,17 @@ table.login td {
     width: 100%;
 }
 
+/*
 .odd > a {
 	float: left;
 }
 
 .even > a {
     margin-right: -17%;
-}
+}*/
 
-.odd img,
-.even img {
+.single_image img,
+.single_video {
 	margin-bottom: 50px;
 }
 

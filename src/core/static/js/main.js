@@ -37,7 +37,7 @@ function listenLoserBracketCheckbox() {
 function fancybox() {
 	/* This is basic - uses default settings */
 	
-	$("a#single_image").fancybox();
+	$("a.single_image").fancybox();
 	
 	/* Using custom settings */
 	
