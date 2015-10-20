@@ -2,6 +2,7 @@ $(document).ready(function() {
 	dropdown_style();
 	listenLoserBracketCheckbox();
 	fancybox();
+	$("#image_gallery").justifiedGallery();
 });
 
 
