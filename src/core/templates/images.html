@@ -5,7 +5,7 @@
 
 {% block body %}
 {{block.super}}
-<div class="content">
+<div class="content" id="image_page">
 	{% if "menu" in request.path %}
 		<div class="headline">
 			<h1 class="game_headline">Speisekarte</h1>
@@ -24,7 +24,7 @@
 			<h2 class="category_headline">{{category.description}}</h2>
 			<div id="image_gallery">
 			{% for image in category.image_imagecategory.all %}
-				<a href="{{image.image.url}}"><img src="{{ image.image|thumbnail_url:'game_site' }}" /></a>
+				<a class="single_image" href="{{image.image.url}}"><img src="{{ image.image|thumbnail_url:'game_site' }}" /></a>
 			{% endfor %}
 			</div>
 		{% endfor %}

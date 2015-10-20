@@ -124,6 +124,7 @@ STATIC_URL = '/static/'
 THUMBNAIL_ALIASES = {
     '': {
         'game_icon': {'size': (40, 40), 'crop': True},
+        'avatar': {'size': (80, 80), 'crop': True},
         'game_site': {'size': (256, 256), 'crop': False},
         'image_preview': {'size': (300, 300), 'crop': True},
     },

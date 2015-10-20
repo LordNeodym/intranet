@@ -75,7 +75,10 @@
 			<h5 class="row_info">Angemeldete Benutzer</h5>
 			<ul>
 			{% for user in match.user.all %}
-	 		<li class="user_list">{{ user }}</li>
+ 				<li class="user_list">
+	 				<img src="{{ user.userextension.avatar|thumbnail_url:'game_icon' }}" alt="">
+ 					{{ user }}
+				</li>
 			{% endfor %}
 			</ul>
 
@@ -223,7 +226,7 @@
 			</table>
 		</div>
 		{% endif %}
-	{% else %}
+	{% elif match.tour_choose_type == "tree" or match.tour_choose_type == "tree_loser" %}
 		<div id="tournamen_tree">
 			<h2 class="match_subline">Turnierbaum</h2>
 			<input type="hidden" id="tournament_bracket_mode" data-mode="{{ match.tour_choose_type }}" />

@@ -96,6 +96,15 @@ ul {
     margin-top: 10px !important;
 }
 
+.user ul {
+    min-height: 50px;
+}
+
+li.user_list {
+    display: inline;
+    padding: 5px;
+}
+
 .single_rule {
 	text-align: left;
 	width: 50%;
@@ -212,9 +221,9 @@ table.login td {
     margin-right: -17%;
 }*/
 
-.single_image img,
-.single_video {
-	margin-bottom: 50px;
+#image_page {
+	width: 80% !important;
+	left: 10% !important;
 }
 
 footer {

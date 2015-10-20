@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load thumbnail %}
 
 {% block body %}
 {{block.super}}
@@ -38,7 +39,10 @@
 				</tr>
 				<tr>
 				    <td>{{ userprofileform.avatar.label_tag }}</td>
-				    <td>{{ userprofileform.avatar }}</td>
+				    <td>
+				    	{{ userprofileform.avatar }}
+						<img src="{{ user.userextension.avatar|thumbnail_url:'avatar' }}" alt="">
+				    </td>
 				</tr>
 			</table>
 		    
