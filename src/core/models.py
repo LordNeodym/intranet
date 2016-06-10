@@ -446,3 +446,28 @@ class SingleImage(models.Model):
 	class Meta:
 		verbose_name = "Bild"
 		verbose_name_plural = "Bilder"
+
+
+class MenuOrder(models.Model):
+	description = models.CharField(verbose_name="Name",max_length=255, null=False, blank=False, default="Pizzeria")
+	timestamp = models.DateTimeField(verbose_name="Datum",default=datetime.now(), null=False, blank=False)
+	venue = models.CharField(verbose_name="Ort", max_length=255, null=True, blank=True)
+
+	def __unicode__(self):
+		return u"%s" % (self.description)
+
+	class Meta:
+		verbose_name = "Bestellung"
+		verbose_name_plural = "Bestellungen"
+
+
+class SingleMenuOrder(models.Model):
+    order = models.ForeignKey(MenuOrder, null=False)
+    name = models.ForeignKey(User, null=False)
+
+    def __unicode__(self):
+        return u"%s - %s" % (self.order, self.name)
+
+	class Meta:
+		verbose_name = "Einzel-Bestellung"
+		verbose_name_plural = "Einzel-Bestellungen"

@@ -83,8 +83,10 @@ def menu(request):
     context = RequestContext(request)
     content = {}
 
-    content['category'] = ImageCategory.objects.get(description="Speisekarte")
-    return render_to_response('images.html', content, context_instance=context)
+    content['name'] = "{0} {1}.".format(request.user.first_name, request.user.last_name[0])
+    #content['order'] =
+
+    return render_to_response('menu.html', content, context_instance=context)
 
 
 def videos(request):

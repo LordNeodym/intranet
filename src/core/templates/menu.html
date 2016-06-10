@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% load helper %}
+
+{% block body %}
+{{block.super}}
+<div class="content" id="image_page">
+    <div class="headline">
+        <h1 class="menu_headline">Speisekarte</h1>
+    </div>
+
+    <div class="menu_content">
+        <div class="menu_list">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Bestellungs-Nr.</th>
+                        <th>Extra</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for order in order_list %}
+                    <tr>
+                        <td>{% name %}</td>
+                        <td>{% order.name %}</td>
+                        <td>{% order.extra %}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <form method="post" class="menu_order" action="menu_order/">
+            {% csrf_token %}
+
+            <td><input type="text" maxlength="3" size="3" name="pkt1" value="{{ round.getPkt1 }}" autocomplete="off" /></td>
+            <td><input type="text" maxlength="3" size="3" name="pkt2" value="{{ round.getPkt2 }}" autocomplete="off" /></td>
+            <td>{{ round.team2.getTeam }}</td>
+            <td>
+                <input type="submit" type="submit" value="Okay" />
+                <input type="hidden" name="round_id" value="{{ round.id }}" />
+            </td>
+        </form>
+    </div>
+</div>
+{% endblock %}
