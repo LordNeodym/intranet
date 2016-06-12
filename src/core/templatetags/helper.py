@@ -76,3 +76,7 @@ def radioCheckedTour(match, button_label):
 @register.filter
 def getListElement(list, element):
   return list[element]
+
+@register.filter
+def getName(user):
+  return "{0} {1}.".format(user.first_name, user.last_name[0])

@@ -16,7 +16,7 @@ from django.contrib.auth.models import Group
 import json
 from random import shuffle
 
-from core.models import Game, Match, Team, Rules, Round, ImageCategory, VideoCategory
+from core.models import Game, Match, Team, Rules, Round, ImageCategory, VideoCategory, MenuOrder, SingleMenuOrder
 from core.forms import UserForm, UserProfileForm, RoundForm
 
 
@@ -79,12 +79,21 @@ def login(request):
     return render_to_response('login.html', {'errors': msg}, context_instance=context)
 
 
-def menu(request):
+@login_required(login_url="/login/")
+def menu(request, command=None):
     context = RequestContext(request)
     content = {}
+    order = MenuOrder.objects.all().order_by('-id')[0]
 
-    content['name'] = "{0} {1}.".format(request.user.first_name, request.user.last_name[0])
-    #content['order'] =
+    if request.user.is_authenticated():
+        if request.method == 'POST':
+            if command == "enter-order":
+                MenuOrderList.create(request.POST["orderId"], request.user, request.POST["orderNumber"], request.POST["extra"])
+
+
+    
+    content['order_list'] = MenuOrderList.objects.filter(order=order).order_by('-name')
+    content['order'] = order
 
     return render_to_response('menu.html', content, context_instance=context)
 

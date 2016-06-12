@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^logout/$', views.logout, name='logout'),
     url(r'^rules/(?P<slug>[-\w\d]+)/$', views.rules, name='rules'),
     url(r'^off-topic/menu/$', views.menu, name='menu'),
+    url(r'^off-topic/menu/(?P<command>[-_a-z]+)/$', views.menu, name='menu'),
     url(r'^off-topic/images/$', views.images, name='images'),
     url(r'^off-topic/videos/$', views.videos, name='videos'),
     url(r'^save_tournament_bracket$', views.save_tournament_bracket),

@@ -12,6 +12,7 @@
 
     <div class="menu_content">
         <div class="menu_list">
+            <h2>{{ order }}</h2>
             <table>
                 <thead>
                     <tr>
@@ -23,8 +24,8 @@
                 <tbody>
                 {% for order in order_list %}
                     <tr>
-                        <td>{% name %}</td>
-                        <td>{% order.name %}</td>
+                        <td>{% order.name | getName %}</td>
+                        <td>{% order.order_number %}</td>
                         <td>{% order.extra %}</td>
                     </tr>
                 {% endfor %}
@@ -32,16 +33,12 @@
             </table>
         </div>
 
-        <form method="post" class="menu_order" action="menu_order/">
+        <form method="post" class="menu_order" action="enter-order/">
             {% csrf_token %}
-
-            <td><input type="text" maxlength="3" size="3" name="pkt1" value="{{ round.getPkt1 }}" autocomplete="off" /></td>
-            <td><input type="text" maxlength="3" size="3" name="pkt2" value="{{ round.getPkt2 }}" autocomplete="off" /></td>
-            <td>{{ round.team2.getTeam }}</td>
-            <td>
-                <input type="submit" type="submit" value="Okay" />
-                <input type="hidden" name="round_id" value="{{ round.id }}" />
-            </td>
+            <input type="text" maxlength="255" name="orderNumber" value="" autocomplete="off" />
+            <input type="textarea" maxlength="255" rows="4" cols="50" name="extra" value="" autocomplete="off" />
+            <input type="submit" type="submit" value="Okay" />
+            <input type="hidden" name="orderId" value="{{ order.id }}" />
         </form>
     </div>
 </div>
