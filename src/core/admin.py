@@ -4,7 +4,7 @@ from django.forms import TextInput, Textarea
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 
-from core.models import IntranetMeta, Game, Match, Round, Team, Rules, RulesInline, VideoCategory, SingleVideo, ImageCategory, SingleImage, UserExtension
+from core.models import IntranetMeta, Game, Match, Round, Team, Rules, RulesInline, VideoCategory, SingleVideo, ImageCategory, SingleImage, UserExtension, MenuOrder, SingleMenuOrder
 
 
 class UserExtensionInlineAdmin(admin.StackedInline):
@@ -16,23 +16,23 @@ class UserAdmin(UserAdmin):
 
 
 class IntranetMetaAdmin(admin.ModelAdmin):
-	pass
+    pass
 
 
-class RulesInlineAdmin(admin.StackedInline):	
-	model = RulesInline
-	extra = 0
-	formfield_overrides = {
-    	models.TextField: {'widget': Textarea(attrs={'rows':2, 'cols':60})},
+class RulesInlineAdmin(admin.StackedInline):    
+    model = RulesInline
+    extra = 0
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows':2, 'cols':60})},
     }
 
 
 class RulesAdmin(admin.ModelAdmin):
-	inlines = [RulesInlineAdmin,]
+    inlines = [RulesInlineAdmin,]
 
 
 class GameAdmin(admin.ModelAdmin):
-	list_display = ('name',)
+    list_display = ('name',)
 
 
 class RoundAdmin(admin.ModelAdmin):
@@ -41,7 +41,7 @@ class RoundAdmin(admin.ModelAdmin):
 
 
 class TeamAdmin(admin.ModelAdmin):
-	filter_horizontal = ('user',)
+    filter_horizontal = ('user',)
 
 
 class MatchAdmin(admin.ModelAdmin):
@@ -70,6 +70,16 @@ class ImageCategoryAdmin(admin.ModelAdmin):
     ordering = ['description']
 
 
+class MenuOrderAdmin(admin.ModelAdmin):
+    list_display = ('description', 'timestamp',)
+    ordering = ['-timestamp']
+
+
+class SingleMenuOrderAdmin(admin.ModelAdmin):
+    list_display = ('order', 'name')
+    ordering = ['-order', '-name']
+
+
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 admin.site.register(IntranetMeta, IntranetMetaAdmin)
@@ -80,3 +90,5 @@ admin.site.register(Match, MatchAdmin)
 admin.site.register(Round, RoundAdmin)
 admin.site.register(VideoCategory, VideoCategoryAdmin)
 admin.site.register(ImageCategory, ImageCategoryAdmin)
+admin.site.register(MenuOrder, MenuOrderAdmin)
+admin.site.register(SingleMenuOrder, SingleMenuOrderAdmin)

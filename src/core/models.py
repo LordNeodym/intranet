@@ -450,11 +450,11 @@ class SingleImage(models.Model):
 
 class MenuOrder(models.Model):
     description = models.CharField(verbose_name="Name",max_length=255, null=False, blank=False, default="Pizzeria")
-    timestamp = models.DateTimeField(verbose_name="Datum",default=datetime.now(), null=False, blank=False)
+    timestamp = models.DateTimeField(verbose_name="Datum", null=False, blank=False)
     venue = models.CharField(verbose_name="Ort", max_length=255, null=True, blank=True)
 
     def __unicode__(self):
-        formatedTime = d.strftime("%A %d.%m.%Y - %H:%M")
+        formatedTime = self.timestamp.strftime("%A %d.%m.%Y - %H:%M")
         if self.venue:
             return u"%s - %s - %s" % (self.description, formatedTime, self.venue)
         return u"%s - %s" % (self.description, formatedTime)
@@ -475,11 +475,20 @@ class SingleMenuOrder(models.Model):
         return u"%s - %s" % (self.order, self.name)
 
     @classmethod
-    def create(cls, order, name, order_number, extra):
-        singleMenuOrder = cls(order=order, name=name, order_number=order_number, extra=extra)
-        return singleMenuOrder
+    def create(self, order, userId, order_number, extra):
+        if order_number:
+            try:
+                user = User.objects.get(id=userId)
+                singleMenuOrder = SingleMenuOrder.objects.create(order=order, name=user, order_number=order_number, extra=extra)
+                return None
+            except Exception as e:
+                error = {'msg': 'Bitte Eingaben überprüfen', 'exception': e}
+                return error
+        else:
+            error = {'msg': 'Bitte eine Bestellnummer eingeben'}
+            return error
 
     class Meta:
         verbose_name = "Einzel-Bestellung"
         verbose_name_plural = "Einzel-Bestellungen"
-        ordering = ['-order', 'name']
+        ordering = ['-order', '-name']

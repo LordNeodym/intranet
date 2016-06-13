@@ -20,14 +20,14 @@ def devide(num, val):
 
 @register.filter(name='has_group') 
 def has_group(user, group_name): 
-	group = Group.objects.get(name=group_name) 
-	return True if group in user.groups.all() else False
+    group = Group.objects.get(name=group_name) 
+    return True if group in user.groups.all() else False
 
 @register.filter
 def button_label(match, user):
-	if user in match.user.all():
-		return "Abmelden"
-	return "Anmelden"
+    if user in match.user.all():
+        return "Abmelden"
+    return "Anmelden"
 
 @register.filter
 def button_label_self_team(match, user):
@@ -79,4 +79,9 @@ def getListElement(list, element):
 
 @register.filter
 def getName(user):
-  return "{0} {1}.".format(user.first_name, user.last_name[0])
+  if user.first_name and user.last_name:
+    return "{0} {1}.".format(user.first_name, user.last_name[0])
+  elif user.first_name:
+    return user.first_name
+  else:
+    return user

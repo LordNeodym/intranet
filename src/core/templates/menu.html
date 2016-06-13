@@ -10,36 +10,58 @@
         <h1 class="menu_headline">Speisekarte</h1>
     </div>
 
-    <div class="menu_content">
-        <div class="menu_list">
-            <h2>{{ order }}</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Bestellungs-Nr.</th>
-                        <th>Extra</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for order in order_list %}
-                    <tr>
-                        <td>{% order.name | getName %}</td>
-                        <td>{% order.order_number %}</td>
-                        <td>{% order.extra %}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
+    {% if order %}
+        <div class="menu_content">
+            <div class="menu_list">
+                <h2>{{ order }}</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Bestellungs-Nr.</th>
+                            <th>Extra</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for order in order_list %}
+                        <tr>
+                            <td>{{ order.name | getName }}</td>
+                            <td>{{ order.order_number }}</td>
+                            <td>{{ order.extra }}</td>
+                            {% if order.name == user %}
+                                <td>
+                                    <form method="post" class="menu_order_delete" action="delete/">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="orderNumber" value="{{order.order_number}}" />
+                                        <input type="hidden" name="extra" value="{{order.extra}}" />
+                                        <input type="submit" type="submit" value="X" />
+                                    </form>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
 
-        <form method="post" class="menu_order" action="enter-order/">
-            {% csrf_token %}
-            <input type="text" maxlength="255" name="orderNumber" value="" autocomplete="off" />
-            <input type="textarea" maxlength="255" rows="4" cols="50" name="extra" value="" autocomplete="off" />
-            <input type="submit" type="submit" value="Okay" />
-            <input type="hidden" name="orderId" value="{{ order.id }}" />
-        </form>
-    </div>
+            <div class="errorlist">
+            {% if error %}
+                <span>{{ error.msg }}</span>
+            {% endif %}
+            </div>
+
+            <form method="post" class="menu_order" action="">
+                {% csrf_token %}
+                <label for="orderNumber">Bestellnummer: </label>
+                <input type="text" maxlength="255" name="orderNumber" value="" autocomplete="off" placeholder="" />
+                <label for="orderNumber">Extra: </label>
+                <input type="text" maxlength="255" name="extra" value="" autocomplete="off" placeholder="bsp. ohne Pilze/mit extra Mozzarella" />
+                <input type="submit" type="submit" value="Okay" />
+                <input type="hidden" name="orderId" value="{{ order.id }}" />
+            </form>
+        </div>
+    {% else %}
+        <span>Zurzeit keine Bestellliste erstellt.</span>
+    {% endif %}
 </div>
 {% endblock %}

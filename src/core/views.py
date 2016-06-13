@@ -83,18 +83,21 @@ def login(request):
 def menu(request, command=None):
     context = RequestContext(request)
     content = {}
-    order = MenuOrder.objects.all().order_by('-id')[0]
+    order = MenuOrder.objects.all().order_by('-id')
+
+    if order:
+        order = order[0]
+        content['order_list'] = SingleMenuOrder.objects.filter(order=order).order_by('-name')
+        content['order'] = order
+        content['user'] = request.user
 
     if request.user.is_authenticated():
         if request.method == 'POST':
-            if command == "enter-order":
-                MenuOrderList.create(request.POST["orderId"], request.user, request.POST["orderNumber"], request.POST["extra"])
-
-
+            if command == "delete":
+                return HttpResponseRedirect(reverse('menu'))
+            else:
+                content['error'] = SingleMenuOrder.create(order, request.user.id, request.POST["orderNumber"], request.POST["extra"])
     
-    content['order_list'] = MenuOrderList.objects.filter(order=order).order_by('-name')
-    content['order'] = order
-
     return render_to_response('menu.html', content, context_instance=context)
 
 
