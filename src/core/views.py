@@ -80,15 +80,28 @@ def login(request):
 
 
 @login_required(login_url="/login/")
-def menu(request, command=None):
+def menu(request):
     context = RequestContext(request)
     content = {}
-    order = MenuOrder.objects.all().order_by('-id')
+    orders = MenuOrder.objects.all().order_by('id')
+    content['orders'] = orders
 
+    return render_to_response('menu.html', content, context_instance=context)
+
+
+@login_required(login_url="/login/")
+def menu_order(request, slug=None, command=None):
+    context = RequestContext(request)
+    content = {}
+    try:
+        order = MenuOrder.objects.get(id=slug)
+    except:
+        order = None
+    
+    print order
     if order:
-        order = order[0]
-        content['order_list'] = SingleMenuOrder.objects.filter(order=order).order_by('-name')
         content['order'] = order
+        content['order_list'] = SingleMenuOrder.objects.filter(order=order).order_by('-name')
         content['user'] = request.user
 
     if request.user.is_authenticated():
@@ -98,7 +111,7 @@ def menu(request, command=None):
             else:
                 content['error'] = SingleMenuOrder.create(order, request.user.id, request.POST["orderNumber"], request.POST["extra"])
     
-    return render_to_response('menu.html', content, context_instance=context)
+    return render_to_response('menu_order.html', content, context_instance=context)
 
 
 def videos(request):
