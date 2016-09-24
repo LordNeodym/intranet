@@ -1,14 +1,14 @@
 html {
 	background: #010101;
 	height: 100%;
-	box-sizing: border-box;
+	/*box-sizing: border-box;*/
 }
-
+/*
 *,
 *:before,
 *:after {
   box-sizing: inherit;
-}
+}*/
 
 body {
 	max-width: 1000px;
@@ -19,9 +19,9 @@ body {
 	padding-bottom: 6rem;
 }
 
-h1, h2, h3, h4, h5, h6, ul {
+/*h1, h2, h3, h4, h5, h6, ul {
 	margin: 0 !important;
-}
+}*/
 
 ul {
 	padding: 0;
@@ -39,6 +39,10 @@ ul {
 	background: -ms-linear-gradient(-45deg,  rgba(61,61,61,1) 0%,rgba(1,1,1,1) 50%,rgba(61,61,61,1) 100%); /* IE10+ */
 	background: linear-gradient(90deg,  #010101 0%, #3D3D3D 50%, #010101 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3d3d3d', endColorstr='#1b1b1b',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+.header_banner > h1 {
+    margin: 0 !important;
 }
 
 .header_url {
@@ -68,6 +72,10 @@ ul {
 	width: 140px;
 	border: 1px solid #000;
 	text-align: center;
+}
+
+.username_header * {
+    margin: 0 !important;
 }
 
 .username_header > a{
@@ -180,22 +188,8 @@ li.user_list {
 	overflow-y: hidden;
 }
 
-
-table {
-	width: 100%;
-	margin-top: 5px;
-	/*margin-bottom: 100px;*/
-	table-layout: fixed;
-}
-
-table, td, th {
-	border: 1px solid #000;
-	padding: 5px;
-}
-
-td, th {
-	display: table-cell;
-	width: 100%;
+.table th {
+   text-align: center;
 }
 
 table.login, 
@@ -211,15 +205,6 @@ table.login td {
     float: left;
     width: 100%;
 }
-
-/*
-.odd > a {
-	float: left;
-}
-
-.even > a {
-    margin-right: -17%;
-}*/
 
 #image_page {
 	width: 80% !important;
@@ -237,12 +222,4 @@ footer {
 
 .errorlist {
     color: red;
-}
-
-.table_row_odd {
-	background-color: #FFA940;
-}
-
-.table_row_even {
-	background-color: #A4D9FF;
 }

@@ -13,29 +13,35 @@
     <div class="menu_content">
         <div class="menu_list">
             <h2>{{ order }}</h2>
-            <table>
+            <table class="table table-striped">
                 <thead>
                     <tr>
+                        <th>#</th>
                         <th>Name</th>
-                        <th>Bestellungs-Nr.</th>
+                        <th>Bestellung / Bestellungs-Nr.</th>
                         <th>Extra</th>
+                        <th>Preis</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                 {% for order in order_list %}
                     <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
                         <td>{{ order.name | getName }}</td>
                         <td>{{ order.order_number }}</td>
                         <td>{{ order.extra }}</td>
+                        <td>{% if order.price %}{{ order.price|floatformat:2 }} &euro;{% endif %}</td>
                         {% if order.name == user %}
                             <td>
                                 <form method="post" class="menu_order_delete" action="delete/">
                                     {% csrf_token %}
-                                    <input type="hidden" name="orderNumber" value="{{order.order_number}}" />
-                                    <input type="hidden" name="extra" value="{{order.extra}}" />
-                                    <input type="submit" type="submit" value="X" />
+                                    <input type="hidden" name="menuSingleOrderId" value="{{ order.id }}" />
+                                    <input class="btn btn-primary btn-sm" type="submit" type="submit" value="X" />
                                 </form>
                             </td>
+                        {% else %}
+                            <td></td>
                         {% endif %}
                     </tr>
                 {% endfor %}
@@ -49,15 +55,43 @@
         {% endif %}
         </div>
 
+        {% if order.locked %}
+            <span>Liste gesperrt. Es können keine Bestellungen mehr aufgegeben werden.</span>
+        {% else %}
         <form method="post" class="menu_order" action="">
             {% csrf_token %}
-            <label for="orderNumber">Bestellnummer: </label>
-            <input type="text" maxlength="255" name="orderNumber" value="" autocomplete="off" placeholder="" />
-            <label for="orderNumber">Extra: </label>
-            <input type="text" maxlength="255" name="extra" value="" autocomplete="off" placeholder="bsp. ohne Pilze/mit extra Mozzarella" />
-            <input type="submit" type="submit" value="Okay" />
-            <input type="hidden" name="orderId" value="{{ order.id }}" />
+            <div class="form-group row">
+                <label class="col-sm-offset-1 col-sm-3 col-form-label" for="single-menu-order-number">Bestellung / BestellNr.: </label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control" id="single-menu-order-number" maxlength="255" name="orderNumber" value="" autocomplete="off" placeholder="" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-offset-1 col-sm-3 col-form-label" for="single-menu-extra">Extra: </label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control" id="single-menu-extra" maxlength="255" name="extra" value="" autocomplete="off" placeholder="bsp. ohne Pilze/mit extra Mozzarella" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-offset-1 col-sm-3 col-form-label" for="single-menu-price">Preis: </label>
+                <div class="col-sm-7">
+                    <input type="number" class="form-control" step="any" min="0", max="99.99", id="single-menu-price" name="price" autocomplete="off" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <input class="btn btn-primary btn-lg" type="submit" type="submit" value="Okay" />
+            </div>
         </form>
+        {% endif %}
+
+        {% if user|has_group:"Admin" %}
+        <div class="menu-list-lock">
+            <form method="post" action="lock/">
+                {% csrf_token %}
+                <input class="btn btn-primary btn-lg" type="submit" value="Liste {% if order.locked %}entsperren{% else %}sperren{% endif %}">
+            </form>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

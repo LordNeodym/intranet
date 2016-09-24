@@ -98,7 +98,6 @@ def menu_order(request, slug=None, command=None):
     except:
         order = None
     
-    print order
     if order:
         content['order'] = order
         content['order_list'] = SingleMenuOrder.objects.filter(order=order).order_by('-name')
@@ -107,9 +106,19 @@ def menu_order(request, slug=None, command=None):
     if request.user.is_authenticated():
         if request.method == 'POST':
             if command == "delete":
-                return HttpResponseRedirect(reverse('menu'))
+                try:
+                    SingleMenuOrder.objects.get(id=request.POST["menuSingleOrderId"]).delete()
+                except:
+                    content['error'] = "Beim Löschen der Bestellung trat ein Fehler auf."
+                return HttpResponseRedirect(reverse('menu_order', kwargs={'slug': order.id}))
+            elif command == "lock":
+                order.locked = not order.locked
+                order.save()
+                return HttpResponseRedirect(reverse('menu_order', kwargs={'slug': order.id}))
             else:
-                content['error'] = SingleMenuOrder.create(order, request.user.id, request.POST["orderNumber"], request.POST["extra"])
+                content['error'] = SingleMenuOrder.create(order, request.user.id, request.POST["orderNumber"], request.POST["extra"], request.POST["price"])
+                if not content['error']:
+                    return HttpResponseRedirect(reverse('menu_order', kwargs={'slug': order.id}))
     
     return render_to_response('menu_order.html', content, context_instance=context)
 

@@ -7,7 +7,7 @@ from django.conf import settings
 from django.core import validators
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from django.core.validators import  MinValueValidator
+from django.core.validators import  MinValueValidator, MaxValueValidator
 from django.template.defaultfilters import slugify
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -452,6 +452,7 @@ class MenuOrder(models.Model):
     description = models.CharField(verbose_name="Name",max_length=255, null=False, blank=False, default="Pizzeria")
     timestamp = models.DateTimeField(verbose_name="Datum", null=False, blank=False)
     venue = models.CharField(verbose_name="Ort", max_length=255, null=True, blank=True)
+    locked = models.BooleanField(verbose_name="Bestellung sperren?", default=False)
 
     def __unicode__(self):
         formatedTime = self.timestamp.strftime("%A %d.%m.%Y - %H:%M")
@@ -470,16 +471,17 @@ class SingleMenuOrder(models.Model):
     name = models.ForeignKey(User, verbose_name="Benutzer", null=False, blank=False)
     order_number = models.CharField(verbose_name="Bestellnummer", max_length=255, null=False, blank=False)
     extra = models.CharField(verbose_name="Extra", max_length=255, null=True, blank=True)
+    price = models.FloatField(verbose_name="Preis", null=True, blank=True, validators = [MinValueValidator(0), MaxValueValidator(99.99)])
 
     def __unicode__(self):
         return u"%s - %s" % (self.order, self.name)
 
     @classmethod
-    def create(self, order, userId, order_number, extra):
+    def create(self, order, userId, order_number, extra, price):
         if order_number:
             try:
                 user = User.objects.get(id=userId)
-                singleMenuOrder = SingleMenuOrder.objects.create(order=order, name=user, order_number=order_number, extra=extra)
+                SingleMenuOrder.objects.create(order=order, name=user, order_number=order_number, extra=extra, price=price)
                 return None
             except Exception as e:
                 error = {'msg': 'Bitte Eingaben überprüfen', 'exception': e}
