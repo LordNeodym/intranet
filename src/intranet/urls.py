@@ -11,7 +11,7 @@ urlpatterns = [
 	url(r'^register/$', views.register, name='register'),
     url(r'^edit_profile/', views.edit_profile),
     url(r'^logout/$', views.logout, name='logout'),
-    url(r'^rules/(?P<slug>[-\w\d]+)/$', views.rules, name='rules'),
+    url(r'^rules/$', views.rules, name='rules'),
     url(r'^off-topic/menu/$', views.menu, name='menu'),
     url(r'^off-topic/menu/(?P<slug>[-\w\d]+)/$', views.menu_order, name='menu_order'),
     url(r'^off-topic/menu/(?P<slug>[-\w\d]+)/(?P<command>[-_a-z]+)/$', views.menu_order, name='menu_order'),
@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^games/(?P<slug>[-\w\d]+)/(?P<match_id>[\d]+)/$', views.match, name='match'),
     url(r'^games/(?P<slug>[-\w\d]+)/(?P<match_id>[\d]+)/(?P<command>[-_a-z]+)/$', views.match),
 ]
+
 
 
 if settings.DEBUG:

@@ -13,7 +13,7 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.models import Group
 
-import json
+import json, os
 from random import shuffle
 
 from core.models import Game, Match, Team, Rules, Round, ImageCategory, VideoCategory, MenuOrder, SingleMenuOrder
@@ -136,16 +136,17 @@ def images(request):
     context = RequestContext(request)
     content = {}
 
-    content['categories'] = ImageCategory.objects.all().exclude(
-        description="Speisekarte")
+    content['categories'] = ImageCategory.objects.all().exclude(description="Speisekarte")
+    content['imageFiler'] = os.listdir(os.path.join(settings.MEDIA_ROOT, "image_gallery"))
+
     return render_to_response('images.html', content, context_instance=context)
 
 
-def rules(request, slug):
+def rules(request):
     context = RequestContext(request)
     content = {}
 
-    content['rule'] = Rules.objects.get(slug=slug)
+    content['rules'] = Rules.objects.all()
     return render_to_response('rules.html', content, context_instance=context)
 
 

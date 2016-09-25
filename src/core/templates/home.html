@@ -13,7 +13,9 @@
 		</div>
 
 		<div class="home_description">
-			<p>{{ lan_name.description }}</p>
+			{% for line in lan_name.description.splitlines %}
+				<p>{{ line }}</p>
+			{% endfor %}
 		</div>
 
 	{% endif %}

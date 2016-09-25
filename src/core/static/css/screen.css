@@ -75,7 +75,7 @@ ul {
 }
 
 .username_header * {
-    margin: 0 !important;
+    margin: 5px 0 !important;
 }
 
 .username_header > a{
@@ -92,6 +92,14 @@ ul {
 	text-align: center;
 	width: 60%;
 	left: 20%;
+	margin-top: 20px;
+}
+
+.content-image-gallery {
+    position: relative;
+	text-align: center;
+	width: 90%;
+	left: 5%;
 	margin-top: 20px;
 }
 
@@ -113,6 +121,11 @@ li.user_list {
     padding: 5px;
 }
 
+.bottom_line {
+    border-bottom: 1px solid #000;
+}
+
+/*
 .single_rule {
 	text-align: left;
 	width: 50%;
@@ -128,7 +141,7 @@ li.user_list {
 .single_rule > p {
 	float: left;
 	margin: 0;
-}
+}*/
 
 .game_info_overview {
 	text-align: left;

@@ -1,20 +1,20 @@
+<!DOCTYPE html>
 {% load staticfiles %}
 {% load thumbnail %}
 
-<!DOCTYPE html>
+<html lang="de">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>{% block title %}Intranet{% endblock %}</title>
+        <title>{% block title %}{{ lan_name.name }}: Intranet{% endblock %}</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width,initial-scale=1">
-        <link rel="stylesheet" type="text/css" href="{% static 'css/jquery.fancybox.css'%}">
         <link rel="stylesheet" type="text/css" href="{% static 'css/jquery.bracket.min.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css'%}">
         <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-theme.min.css'%}">
         <link rel="stylesheet" type="text/css" href="{% static 'css/screen.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'css/drop_down_menu.css' %}">
-        <link rel="stylesheet" type="text/css" href="{% static 'css/justifiedGallery.min.css' %}">
+        <link rel='stylesheet' type="text/css" href="{% static 'unitegallery/css/unite-gallery.css' %}">
     </head>
     <body>
         {% block body %}
@@ -26,13 +26,7 @@
         <!-- Drop Down Menu -->
         <ul class="menu">
             <li><a href="/">Startseite</a></li>
-            <li><a href="#">Regeln</a>
-                <ul>
-                    {% for rule in rules %}
-                        <li><a href="/rules/{{ rule.slug }}" class="documents">{{ rule.name }}</a></li>
-                    {% endfor %}
-                </ul>
-            </li>
+            <li><a href="/rules">Regeln</a></li>
             <li><a href="#">Spiele</a>
                 <ul>
                     {% for game in games %}
@@ -71,8 +65,9 @@
         </footer>
         <script type="text/javascript" src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
-        <script type="text/javascript" src="{% static 'js/jquery.fancybox.pack.js' %}"></script>
-        <script type="text/javascript" src="{% static 'js/jquery.justifiedGallery.min.js' %}"></script>
+        <script type='text/javascript' src="{% static 'unitegallery/js/jquery-11.0.min.js' %}"></script>
+        <script type='text/javascript' src="{% static 'unitegallery/js/unitegallery.min.js' %}"></script>
+	    <script type='text/javascript' src="{% static 'unitegallery/themes/tiles/ug-theme-tiles.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/ajax.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
         {% block js %}

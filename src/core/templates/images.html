@@ -5,30 +5,40 @@
 
 {% block body %}
 {{block.super}}
-<div class="content" id="image_page">
-	{% if "menu" in request.path %}
-		<div class="headline">
-			<h1 class="game_headline">Speisekarte</h1>
-		</div>
-		
-		{% for image in category.image_imagecategory.all %}
-			<img src="{{ image.image.url }}" />
-		{% endfor %}
+<div class="content-image-gallery">
+	<div class="headline">
+		<h1 class="game_headline">Bilder</h1>
+	</div>
 
-	{% else %}
-		<div class="headline">
-			<h1 class="game_headline">Bilder</h1>
-		</div>
-	
-		{% for category in categories %}
-			<h2 class="category_headline">{{category.description}}</h2>
-			<div id="image_gallery">
-			{% for image in category.image_imagecategory.all %}
-				<a class="single_image" href="{{image.image.url}}"><img src="{{ image.image|thumbnail_url:'game_site' }}" /></a>
-			{% endfor %}
-			</div>
-		{% endfor %}
-	{% endif %}
-
+    <div id="gallery" style="display:none;">
+        {% for category in categories %}
+        {% for image in category.image_imagecategory.all %}
+            <img alt="{{ image.image }}"
+                 src="{{ image.image.url }}"
+                 data-image="{{ image.image.url }}"
+                 data-image-mobile="{{ image.image.url }}"
+                 data-thumb-mobile="{{ image.image.url }}"
+                 data-description="{{ image.image }}"
+                 style="display:none">
+        {% endfor %}
+        {% endfor %}
+        {% for image in imageFiler %}
+            <img alt="{{ image }}"
+                 src="/media/image_gallery/{{ image }}"
+                 data-image="/media/image_gallery/{{ image }}"
+                 data-image-mobile="/media/image_gallery/{{ image }}"
+                 data-thumb-mobile="/media/image_gallery/{{ image }}"
+                 data-description="{{ image }}"
+                 style="display:none">
+        {% endfor %}
+    </div>
 </div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        jQuery("#gallery").unitegallery();
+    });
+</script>
 {% endblock %}
