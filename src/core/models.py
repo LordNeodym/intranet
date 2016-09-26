@@ -11,6 +11,7 @@ from django.core.validators import  MinValueValidator, MaxValueValidator
 from django.template.defaultfilters import slugify
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils.translation import ugettext_lazy as _
 
 from filer.fields.file import FilerFileField
 from filer.fields.image import FilerImageField
@@ -18,7 +19,7 @@ from filer.fields.image import FilerImageField
 from random import shuffle
 from datetime import date, datetime
 
-from core.validators import validate_only_one_instance, integer_only
+from core.validators import integer_only
 
 
 @receiver(post_save, sender=User)
@@ -29,11 +30,10 @@ def create_user_extension(sender, instance, created, **kwargs):
 
 class IntranetMeta(models.Model):
     name = models.CharField(verbose_name="LAN Name", max_length=50, default="Intranet", null=False, blank=False)
+    lan_id = models.PositiveIntegerField(verbose_name="LAN ID", unique=True)
     title = models.CharField(verbose_name="Begrüßungstext", max_length=128, default="Herzlich Willkommen im Intranet", null=True, blank=True)
     description = models.TextField(verbose_name="Beschreibung", max_length=1024, null=True, blank=True)
-
-    def clean(self):
-        validate_only_one_instance(self)
+    date = models.DateField(verbose_name="Beginn der LAN")
 
     def __unicode__(self):
         return u"%s" % (self.name)
@@ -123,11 +123,12 @@ class Match(models.Model):
         ('tree_loser', 'Turnierbaum mit Loserbracket'),
     )
 
+    lan = models.ForeignKey(IntranetMeta, verbose_name="LAN", default=1, related_name="match_lan")
     game = models.ForeignKey(Game, verbose_name="Spiel", blank=False, null=False, related_name="match_game")
     game_mode = models.CharField(verbose_name="Modus", max_length=50, blank=True, null=True)
-    player_per_team = models.IntegerField(verbose_name="Spieler pro Team", blank=False, null=False, validators=[MinValueValidator('1')])
+    player_per_team = models.IntegerField(verbose_name="Spieler pro Team", blank=False, null=False, validators=[MinValueValidator(1)])
     description = models.TextField(verbose_name="Beschreibung", max_length=255, blank=True, null=True)
-    user = models.ManyToManyField(User, verbose_name="Spieler", related_name="match_user")
+    user = models.ManyToManyField(User, verbose_name="Spieler", blank=True, related_name="match_user")
     datetime = models.DateTimeField(verbose_name="Datum/Uhrzeit", blank=True, null=True)
     team_choose_type = models.CharField(verbose_name="Team Wahl", editable=False, max_length=5, choices=TEAM_CHOOSE_TYPE, default="None", blank=True)
     tour_choose_type = models.CharField(verbose_name="Turnier Wahl", editable=False, max_length=10, choices=TOUR_CHOOSE_TYPE, default="None", blank=True)

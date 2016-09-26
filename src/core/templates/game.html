@@ -26,7 +26,7 @@
 	{% endif %}
 
 	<div class="match_list">
-		{% for match in game.match_game.all %}
+		{% for match in matches.all %}
 			<a href="{% url 'match' match.game.slug match.id %}">{{ match.matchDesciption }}</a>
 			<br/>
 		{% endfor %}

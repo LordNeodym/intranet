@@ -16,7 +16,7 @@ from django.contrib.auth.models import Group
 import json, os
 from random import shuffle
 
-from core.models import Game, Match, Team, Rules, Round, ImageCategory, VideoCategory, MenuOrder, SingleMenuOrder
+from core.models import IntranetMeta, Game, Match, Team, Rules, Round, ImageCategory, VideoCategory, MenuOrder, SingleMenuOrder
 from core.forms import UserForm, UserProfileForm, RoundForm
 
 
@@ -153,7 +153,9 @@ def rules(request):
 def game(request, slug):
     context = RequestContext(request)
     content = {}
+    lan_name = IntranetMeta.objects.all().order_by("-lan_id")[0]
     content['game'] = Game.objects.get(slug=slug)
+    content['matches'] = Match.objects.filter(game=content['game'], lan=lan_name)
     return render_to_response('game.html', content, context_instance=context)
 
 
