@@ -153,7 +153,11 @@ def rules(request):
 def game(request, slug):
     context = RequestContext(request)
     content = {}
-    lan_name = IntranetMeta.objects.all().order_by("-lan_id")[0]
+    activeMeta = IntranetMeta.objects.filter(active=True)
+    if activeMeta:
+        lan_name = activeMeta[0]
+    else:
+        lan_name = IntranetMeta.objects.all().order_by("-lan_id")[0]
     content['game'] = Game.objects.get(slug=slug)
     content['matches'] = Match.objects.filter(game=content['game'], lan=lan_name)
     return render_to_response('game.html', content, context_instance=context)

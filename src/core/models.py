@@ -9,8 +9,6 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.validators import  MinValueValidator, MaxValueValidator
 from django.template.defaultfilters import slugify
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 
 from filer.fields.file import FilerFileField
@@ -22,18 +20,13 @@ from datetime import date, datetime
 from core.validators import integer_only
 
 
-@receiver(post_save, sender=User)
-def create_user_extension(sender, instance, created, **kwargs):
-    if created:
-        UserExtension.objects.create(user=instance)
-
-
 class IntranetMeta(models.Model):
     name = models.CharField(verbose_name="LAN Name", max_length=50, default="Intranet", null=False, blank=False)
     lan_id = models.PositiveIntegerField(verbose_name="LAN ID", unique=True)
     title = models.CharField(verbose_name="Begrüßungstext", max_length=128, default="Herzlich Willkommen im Intranet", null=True, blank=True)
     description = models.TextField(verbose_name="Beschreibung", max_length=1024, null=True, blank=True)
     date = models.DateField(verbose_name="Beginn der LAN")
+    active = models.BooleanField(verbose_name="Aktiv?", default=False)
 
     def __unicode__(self):
         return u"%s" % (self.name)
