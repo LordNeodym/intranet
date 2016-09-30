@@ -47,3 +47,5 @@ tests/htmlcov
 
 # Node Modules
 node_modules
+.idea/
+media/image_gallery/*

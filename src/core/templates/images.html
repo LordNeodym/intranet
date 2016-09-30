@@ -22,16 +22,25 @@
                  style="display:none">
         {% endfor %}
         {% endfor %}
-        {% for image in imageFiler %}
-            <img alt="{{ image }}"
-                 src="/media/image_gallery/{{ image }}"
-                 data-image="/media/image_gallery/{{ image }}"
-                 data-image-mobile="/media/image_gallery/{{ image }}"
-                 data-thumb-mobile="/media/image_gallery/{{ image }}"
-                 data-description="{{ image }}"
-                 style="display:none">
+    </div>
+
+    <div class="image-gallery-extern">
+        {% for folder, files in imageFiler.items %}
+            <h2 class="image-gallery-extern-headline">{% if folder == "." %}Rest{% else %}{{ folder|splitOnSlash }}{% endif %}</h2>
+            <div id="gallery-extern-{{ forloop.counter }}" class="image-gallery-extern" style="display:none;">
+                {% for image in files %}
+                    <img alt="{{ image }}"
+                         src="{{MEDIA_URL}}image_gallery/{{ image }}"
+                         data-image="{{MEDIA_URL}}image_gallery/{{ image }}"
+                         data-image-mobile="{{MEDIA_URL}}image_gallery/{{ image }}"
+                         data-thumb-mobile="{{MEDIA_URL}}image_gallery/{{ image }}"
+                         data-description="{{ image }}"
+                         style="display:none">
+                {% endfor %}
+            </div>
         {% endfor %}
     </div>
+
 </div>
 {% endblock %}
 
@@ -39,6 +48,9 @@
 <script type="text/javascript">
     jQuery(document).ready(function(){
         jQuery("#gallery").unitegallery();
+        {% for folder in imageFiler %}
+            jQuery("#gallery-extern-{{ forloop.counter }}").unitegallery();
+        {% endfor %}
     });
 </script>
 {% endblock %}

@@ -57,6 +57,10 @@ def get_range( value ):
   return range( value )
 
 @register.filter
+def splitOnSlash(folder):
+    return folder.split("/")[-1]
+
+@register.filter
 def sortTeam(teams):
   team_dic = {}
   for team in teams:

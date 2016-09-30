@@ -135,9 +135,25 @@ def videos(request):
 def images(request):
     context = RequestContext(request)
     content = {}
+    fileArray = []
+    galleryExternDic = {}
 
     content['categories'] = ImageCategory.objects.all().exclude(description="Speisekarte")
-    content['imageFiler'] = os.listdir(os.path.join(settings.MEDIA_ROOT, "image_gallery"))
+    #content['imageFiler'] = os.listdir(os.path.join(settings.MEDIA_ROOT, "image_gallery"))
+
+    gallery_folder = os.path.join(settings.MEDIA_ROOT, "image_gallery")
+    for root, dirnames, files in os.walk(gallery_folder):
+        for file in files:
+            relDir = os.path.relpath(root, gallery_folder)
+            relFile = os.path.join(relDir, file)
+            if relDir in galleryExternDic:
+                galleryExternDic[relDir].append(relFile)
+            else:
+                galleryExternDic[relDir] = [relFile,]
+
+    print galleryExternDic
+    content['imageFiler'] = galleryExternDic
+
 
     return render_to_response('images.html', content, context_instance=context)
 
