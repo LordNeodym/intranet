@@ -2,14 +2,13 @@
 {% load staticfiles %}
 {% load thumbnail %}
 
+{% block headline %}
+    <h1>Profil editieren</h1>
+{% endblock %}
+
 {% block body %}
 {{block.super}}
-
 	<div class="content">
-		<div class="register_headline">
-	        <h1>Profil editieren</h1>
-	    </div>
-
 	    {% if errors|length %}
 			{% for error in errors %}
 				{{error}}

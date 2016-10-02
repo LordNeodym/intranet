@@ -61,6 +61,12 @@ def splitOnSlash(folder):
     return folder.split("/")[-1]
 
 @register.filter
+def shortenString(value):
+    if len(value) > 18:
+        return value[:15] + "..."
+    return value
+
+@register.filter
 def sortTeam(teams):
   team_dic = {}
   for team in teams:

@@ -11,6 +11,9 @@ def intranet_processor(request):
         lan_name = IntranetMeta.objects.all().order_by("-lan_id")[0]
     content['lan_name'] = lan_name
 
+    lanparties = IntranetMeta.objects.all().exclude(id=lan_name.id)
+    content['lanparties'] = lanparties
+
     rules = Rules.objects.all()
     content['rules'] = rules
 

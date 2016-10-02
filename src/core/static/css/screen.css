@@ -23,6 +23,11 @@ body {
 	margin: 0 !important;
 }*/
 
+.site-header {
+    margin: 0 auto! important;
+    text-align: center;
+}
+
 ul {
 	padding: 0;
 	list-style-type: none;
@@ -103,7 +108,7 @@ ul {
 	margin-top: 20px;
 }
 
-.headline {
+.game_avatar {
 	margin-bottom: 20px;
 }
 
@@ -171,6 +176,10 @@ li.user_list {
 	margin-bottom: 40px;
 }
 
+.admin_interface > h3 {
+    margin-top: 0;
+}
+
 .team_row {
 	display: table;
 	width: 100%;
@@ -227,7 +236,7 @@ table.login td {
 footer {
     background-color: #4C4E5A;
     color: #FFF;
-    width: 1000px;
+    width: 100%;
     bottom: 0;
     position: absolute;
     padding-left: 5px;

@@ -45,9 +45,10 @@ class TeamAdmin(admin.ModelAdmin):
 
 
 class MatchAdmin(admin.ModelAdmin):
-    list_display = ('game', 'game_mode', 'player_per_team')
+    list_display = ('lan', 'game', 'game_mode', 'player_per_team')
     list_filter = ('game',)
     filter_horizontal = ('user',)
+    ordering = ['lan', 'game']
 
 
 class VideoInlineAdmin(admin.TabularInline):

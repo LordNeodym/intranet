@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
+{% block headline %}
+    <h1>Registrierung</h1>
+{% endblock %}
+
 {% block body %}
 {{block.super}}
     <div class="content">
-        <div class="register_headline">
-            <h1>Registrierung</h1>
-        </div>
-
         {% if registered %}
             <strong>Erfolgreich registriert!</strong>
             <a class="back_link" href="/">Zurück zur Startseite</a>

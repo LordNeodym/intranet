@@ -3,31 +3,34 @@
 {% load thumbnail %}
 {% load helper %}
 
+{% block headline %}
+    <h1>Bilder</h1>
+{% endblock %}
+
 {% block body %}
 {{block.super}}
 <div class="content-image-gallery">
-	<div class="headline">
-		<h1 class="game_headline">Bilder</h1>
-	</div>
-
-    <div id="gallery" style="display:none;">
+    <div class="image-gallery-intern">
         {% for category in categories %}
-        {% for image in category.image_imagecategory.all %}
-            <img alt="{{ image.image }}"
-                 src="{{ image.image.url }}"
-                 data-image="{{ image.image.url }}"
-                 data-image-mobile="{{ image.image.url }}"
-                 data-thumb-mobile="{{ image.image.url }}"
-                 data-description="{{ image.image }}"
-                 style="display:none">
-        {% endfor %}
+            <h2 class="image-gallery-intern-headline">{{ category }}</h2>
+            <div id="image-gallery-intern-{{ forloop.counter }}" style="display:none;">
+                {% for image in category.image_imagecategory.all %}
+                    <img alt="{{ image.image }}"
+                         src="{{ image.image.url }}"
+                         data-image="{{ image.image.url }}"
+                         data-image-mobile="{{ image.image.url }}"
+                         data-thumb-mobile="{{ image.image.url }}"
+                         data-description="{{ image.image }}"
+                         style="display:none">
+                {% endfor %}
+            </div>
         {% endfor %}
     </div>
 
     <div class="image-gallery-extern">
         {% for folder, files in imageFiler.items %}
             <h2 class="image-gallery-extern-headline">{% if folder == "." %}Rest{% else %}{{ folder|splitOnSlash }}{% endif %}</h2>
-            <div id="gallery-extern-{{ forloop.counter }}" class="image-gallery-extern" style="display:none;">
+            <div id="image-gallery-extern-{{ forloop.counter }}" style="display:none;">
                 {% for image in files %}
                     <img alt="{{ image }}"
                          src="{{MEDIA_URL}}image_gallery/{{ image }}"
@@ -47,9 +50,17 @@
 {% block js %}
 <script type="text/javascript">
     jQuery(document).ready(function(){
-        jQuery("#gallery").unitegallery();
+        {% for category in categories %}
+            jQuery("#image-gallery-intern-{{ forloop.counter }}").unitegallery({
+                tiles_type:"nested",
+                tiles_nested_optimal_tile_width: 300
+            });
+        {% endfor %}
         {% for folder in imageFiler %}
-            jQuery("#gallery-extern-{{ forloop.counter }}").unitegallery();
+            jQuery("#image-gallery-extern-{{ forloop.counter }}").unitegallery({
+                tiles_type:"nested",
+                tiles_nested_optimal_tile_width: 300
+            });
         {% endfor %}
     });
 </script>

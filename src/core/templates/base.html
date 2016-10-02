@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load staticfiles %}
+{% load helper %}
 {% load thumbnail %}
 
 <html lang="de">
@@ -17,7 +18,6 @@
         <link rel='stylesheet' type="text/css" href="{% static 'unitegallery/css/unite-gallery.css' %}">
     </head>
     <body>
-        {% block body %}
         <!-- Intranet Title -->
         <div class="header_banner">
             <h1>{{ lan_name.name }}</h1>
@@ -26,39 +26,59 @@
         <!-- Drop Down Menu -->
         <ul class="menu">
             <li><a href="/">Startseite</a></li>
-            <li><a href="/rules">Regeln</a></li>
-            <li><a href="#">Spiele</a>
+            <li><a href="#">Internes</a>
+                <ul>
+                    <li><a href="{% url 'rules' %}" class="documents">Regeln</a></li>
+                    <li><a href="{% url 'users' %}" class="documents">Teilnehmer</a></li>
+                </ul>
+            </li>
+            <li class="menu-tournaments"><a href="#">Turniere</a>
                 <ul>
                     {% for game in games %}
-                        <li><a href="/games/{{ game.slug }}" class="documents" style="background: url(
-{{ game.icon|thumbnail_url:'game_icon' }}) no-repeat 6px center;">{{game.name}}</a></li>
+                        <li><a href="/games/{{ game.slug }}" class="documents" style="background: url({{ game.icon|thumbnail_url:'game_icon' }}) no-repeat 6px center;">{{ game.name|shortenString }}</a></li>
+                    {% endfor %}
+                </ul>
+            </li>
+            <li><a href="#">LAN-Archiv</a>
+                <ul>
+                    {% for lanparty in lanparties %}
+                        <li><a href="/lanparty/{{ lanparty.lan_id }}" class="documents">{{ lanparty.name }}</a></li>
                     {% endfor %}
                 </ul>
             </li>
             <li><a href="#">Offtopic</a>
                 <ul>
-                    <li><a href="{% url 'menu' %}" class="documents">Speisekarte</a></li>
+                    <li><a href="{% url 'menu' %}" class="documents">Lieferdienst</a></li>
                     <li><a href="{% url 'images' %}" class="documents">Bilder</a></li>
                     <li><a href="{% url 'videos' %}" class="documents">Videos</a></li>
                 </ul>
             </li>
         </ul>
 
-        <!-- User Info Field -->
-        {% if user.is_authenticated %}
-            <div class="username_header">
-                <h5>Angemeldet als:</h5>
-                <h4>{{ user.userextension.shortenName }}</h4>
-                <a href="/edit_profile">Editieren</a>
-                <a href="/logout">Logout</a>
+        <div class="site-header row">
+            <div class="col-sm-2"></div>
+            <div class="site-header-headline col-sm-8">
+                {% block headline %}
+                {% endblock %}
             </div>
-        {% else %}
-            <div class="username_header login">
-                <a href="/register">Registrieren</a>
-                <a href="/login">Login</a>
+            <div class="col-sm-2">
+                <!-- User Info Field -->
+                {% if user.is_authenticated %}
+                    <div class="username_header">
+                        <h5>Angemeldet als:</h5>
+                        <h4>{{ user.userextension.shortenName }}</h4>
+                        <a href="/edit_profile">Editieren</a>
+                        <a href="/logout">Logout</a>
+                    </div>
+                {% else %}
+                    <div class="username_header login">
+                        <a href="/register">Registrieren</a>
+                        <a href="/login">Login</a>
+                    </div>
+                {% endif %}
             </div>
-        {% endif %}
-
+        </div>
+        {% block body %}
         {% endblock %}
         <footer>
             <div class="left">&copy; {% now "Y" %} Carlo Völker</div>

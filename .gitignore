@@ -48,4 +48,5 @@ tests/htmlcov
 # Node Modules
 node_modules
 .idea/
-media/image_gallery/*
+src/core/media/image_gallery/*
+src/core/media/video_gallery/*

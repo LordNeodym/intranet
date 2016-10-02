@@ -3,13 +3,13 @@
 {% load thumbnail %}
 {% load helper %}
 
+{% block headline %}
+    <h1>Lieferdienste</h1>
+{% endblock %}
+
 {% block body %}
 {{block.super}}
 <div class="content" id="image_page">
-    <div class="headline">
-        <h1 class="menu_headline">Speisekarte</h1>
-    </div>
-
     <div class="menu_content">
         <ul>
         {% for order in orders %}

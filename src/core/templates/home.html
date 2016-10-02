@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
+{% block headline %}
+    <h1>{{ lan_name.title }}</h1>
+{% endblock %}
+
 {% block body %}
 {{block.super}}
 <div class="content">
-	{% if content.msg %}
-		<span class="message">{{content.msg}}</span>
+	{% if msg %}
+		<span class="message">{{msg}}</span>
 	{% else %}
-
-		<div class="headline">
-			<h1 class="game_headline">{{ lan_name.title }}</h1>
-		</div>
 
 		<div class="home_description">
 			{% for line in lan_name.description.splitlines %}

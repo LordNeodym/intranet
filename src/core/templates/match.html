@@ -3,6 +3,10 @@
 {% load thumbnail %}
 {% load helper %}
 
+{% block headline %}
+    <h1>{{ match.game.name }}</h1>
+{% endblock %}
+
 {% block body %}
 {{block.super}}
 <div class="content">
@@ -73,6 +77,7 @@
 
 		<div class="user">
 			<h5 class="row_info">Angemeldete Benutzer</h5>
+			<a name="regUser"></a>
 			<ul>
 			{% for user in match.user.all %}
  				<li class="user_list">
@@ -245,41 +250,40 @@
 	{% endif %}
 
 	{% if user|has_group:"Admin" %}
-	<div class="admin_interface">
-		<form method="post" class="create_team" action="create_teams/">
-			{% csrf_token %}
-			{% if match.player_per_team == 1 %}
-				<input type="hidden" id="create_team_random" name="create_team_type" value="random" />
-			{% else %}
-				<input type="radio" id="create_team_random" name="create_team_type" value="random" {{ match|radioCheckedTeam:"rand" }} />
-				<label for="create_team_random">Zufall</label>
-				<input type="radio" id="create_team_self" name="create_team_type" value="self" {{ match|radioCheckedTeam:"self" }} />
-				<label for="create_team_self">Eigene Wahl</label>
-				<input type="radio" id="create_team_admin" name="create_team_type" value="admin" {{ match|radioCheckedTeam:"admin" }} />
-				<label for="create_team_admin">Admin Wahl</label>
-			{% endif %}
-			<input type="submit" type="submit" value="Teams erstellen" />
-			<input type="hidden" name="match_id" value="{{match.id}}" />
-		</form>
-
-		<form method="post" class="create_tournament" action="create_tournament/">
-			{% csrf_token %}
-			<input type="radio" id="create_tour_vs" name="create_tour" value="vs" {{ match|radioCheckedTour:"vs" }} />
-			<label for="create_tour_vs">Jeder gegen Jeden</label>
-			<input type="radio" id="create_tour_tree" name="create_tour" value="tree" {{ match|radioCheckedTour:"tree" }} {{ match|radioCheckedTour:"tree_loser" }} />
-			<label for="create_tour_tree">Turnierbaum</label>
-			<input type="checkbox" id="create_tour_tree_loserbracket" name="create_tour_tree_loserbracket" disabled {{ match|radioCheckedTour:"tree_loser" }}/>
-			<label for="create_tour_tree_loserbracket">Loserbracket</label>
-			<input type="submit" type="submit" value="Turnier erstellen" />
-			<input type="hidden" name="match_id" value="{{ match.id }}" />
-		</form>
-
-		<form method="post" class="delete_tournament" action="delete_tournament/">
-			{% csrf_token %}
-			<input type="submit" type="submit" value="Turnier löschen" />
-			<input type="hidden" name="match_id" value="{{ match.id }}" />
-		</form>
-	</div>
+	<div class="admin_interface well row">
+		<h3 class="col-sm-12">Admin Panel</h3>
+        <div class="col-sm-6 container">
+            <form method="post" class="create_team" action="create_teams/">
+                {% csrf_token %}
+                {% if match.player_per_team == 1 %}
+                    <input type="hidden" id="create_team_random" name="create_team_type" value="random" />
+                {% else %}
+                    <label class="radio"><input type="radio" id="create_team_random" name="create_team_type" value="random" {{ match|radioCheckedTeam:"rand" }} />Zufall</label>
+                    <label class="radio"><input type="radio" id="create_team_self" name="create_team_type" value="self" {{ match|radioCheckedTeam:"self" }} />Eigene Wahl</label>
+                    <label class="radio"><input type="radio" id="create_team_admin" name="create_team_type" value="admin" {{ match|radioCheckedTeam:"admin" }} />Admin Wahl</label>
+                {% endif %}
+                <input class="btn btn-primary btn-sm" type="submit" value="Teams erstellen" />
+                <input type="hidden" name="match_id" value="{{match.id}}" />
+            </form>
+        </div>
+        <div class="col-sm-6">
+            <form method="post" class="create_tournament" action="create_tournament/">
+                {% csrf_token %}
+                <label class="radio"><input type="radio" id="create_tour_vs" name="create_tour" value="vs" {{ match|radioCheckedTour:"vs" }} />Jeder gegen Jeden</label>
+                <label class="radio"><input type="radio" id="create_tour_tree" name="create_tour" value="tree" {{ match|radioCheckedTour:"tree" }} {{ match|radioCheckedTour:"tree_loser" }} />Turnierbaum</label>
+                <label class="checkbox"><input type="checkbox" id="create_tour_tree_loserbracket" name="create_tour_tree_loserbracket" disabled {{ match|radioCheckedTour:"tree_loser" }}/>+ Loserbracket</label>
+                <input class="btn btn-primary btn-sm" type="submit" value="Turnier erstellen" />
+                <input type="hidden" name="match_id" value="{{ match.id }}" />
+            </form>
+        </div>
+        <div class="col-sm-12">
+            <form method="post" class="delete_tournament" action="delete_tournament/">
+                {% csrf_token %}
+                <input class="btn btn-primary btn-sm" type="submit" value="Turnier löschen" />
+                <input type="hidden" name="match_id" value="{{ match.id }}" />
+            </form>
+        </div>
+    </div>
 	{% endif %}
 	
 	{% endif %}

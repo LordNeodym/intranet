@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
+{% block headline %}
+    <h1>Login</h1>
+{% endblock %}
+
 {% block body %}
 {{block.super}}
 	<div class="content">
-		<div class="register_headline">
-	        <h1>Login</h1>
-	    </div>
-
 		{% if form.errors %}
 		<p>Username oder Passwort falsch</p>
 		{% endif %}

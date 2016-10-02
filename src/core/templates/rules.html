@@ -1,13 +1,14 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
+{% block headline %}
+    <h1>Regeln</h1>
+{% endblock %}
+
+
 {% block body %}
 {{ block.super }}
 <div class="content">
-	<div class="headline">
-		<h1 class="game_headline">Regeln</h1>
-	</div>
-
 	{% for rule in rules.all %}
 		<div class="rule-headline row">
 			<h2>{{ rule }}</h2>

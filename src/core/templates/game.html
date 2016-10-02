@@ -3,20 +3,19 @@
 {% load thumbnail %}
 {% load helper %}
 
+{% block headline %}
+    <h1>{{ game.name }}</h1>
+{% endblock %}
+
 {% block body %}
 {{block.super}}
 <div class="content">
-	{% if msg %}
-		<span class="message">{{msg}}</span>
-	{% endif %}
+    {% if game.icon %}
+        <div class="game_avatar">
+            <img src="{{ game.icon|thumbnail_url:'game_site' }}" />
+        </div>
+    {% endif %}
 
-	<div class="headline">
-		{% if game.icon %}
-		<img src="{{ game.icon|thumbnail_url:'game_site' }}" />
-		{% else %}
-		<h1 class="game_headline">{{ game.name }}</h1>
-		{% endif %}
-	</div>
 	{% if game.description %}
 		<div class="game_info_overview">
 			{% for line in game.description.splitlines %}

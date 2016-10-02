@@ -24,9 +24,7 @@ def home(request):
     context = RequestContext(request)
     content = {}
 
-    if request.user.is_authenticated():
-        content['games'] = Game.objects.exclude(match_game=None)
-    else:
+    if not request.user.is_authenticated():
         content['msg'] = "Bitte zuerst einloggen!"
     return render_to_response('home.html', {'content': content}, context_instance=context)
 
@@ -126,8 +124,22 @@ def menu_order(request, slug=None, command=None):
 def videos(request):
     context = RequestContext(request)
     content = {}
+    galleryExternDic = {}
 
     content['categories'] = VideoCategory.objects.all()
+
+    gallery_folder = os.path.join(settings.MEDIA_ROOT, "video_gallery")
+    for root, dirnames, files in os.walk(gallery_folder):
+        for file in files:
+            relDir = os.path.relpath(root, gallery_folder)
+            relFile = os.path.join(relDir, file)
+            if relDir in galleryExternDic:
+                galleryExternDic[relDir].append(relFile)
+            else:
+                galleryExternDic[relDir] = [relFile, ]
+
+    content['imageFiler'] = galleryExternDic
+
     return render_to_response('videos.html', content, context_instance=context)
 
 
@@ -135,11 +147,9 @@ def videos(request):
 def images(request):
     context = RequestContext(request)
     content = {}
-    fileArray = []
     galleryExternDic = {}
 
     content['categories'] = ImageCategory.objects.all().exclude(description="Speisekarte")
-    #content['imageFiler'] = os.listdir(os.path.join(settings.MEDIA_ROOT, "image_gallery"))
 
     gallery_folder = os.path.join(settings.MEDIA_ROOT, "image_gallery")
     for root, dirnames, files in os.walk(gallery_folder):
@@ -151,7 +161,6 @@ def images(request):
             else:
                 galleryExternDic[relDir] = [relFile,]
 
-    print galleryExternDic
     content['imageFiler'] = galleryExternDic
 
 
@@ -171,11 +180,14 @@ def game(request, slug):
     content = {}
     activeMeta = IntranetMeta.objects.filter(active=True)
     if activeMeta:
-        lan_name = activeMeta[0]
+        lan = activeMeta[0]
     else:
-        lan_name = IntranetMeta.objects.all().order_by("-lan_id")[0]
-    content['game'] = Game.objects.get(slug=slug)
-    content['matches'] = Match.objects.filter(game=content['game'], lan=lan_name)
+        lan = IntranetMeta.objects.all().order_by("-lan_id")[0]
+    try:
+        content['game'] = Game.objects.get(slug=slug)
+        content['matches'] = Match.objects.filter(game=content['game'], lan=lan)
+    except Exception:
+        return HttpResponseRedirect(reverse('home'))
     return render_to_response('game.html', content, context_instance=context)
 
 

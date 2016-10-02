@@ -135,6 +135,21 @@
 .menu a.signout { background: url(../img/arrow.png) no-repeat 6px center; }*/
 
 .menu a {
-    background-size: 40px 40px !important;
+    background-size: 20px 20px !important;
     background-repeat: no-repeat;
 }
+
+@media screen and (max-width: 900px) {
+    .menu-tournaments > ul > li > a{
+        background-image:none !important;
+    }
+}
+
+/*
+.menu-tournaments:hover > ul {
+    height: 140px !important;
+}
+
+.menu-tournaments:hover > ul > li > a{
+    height: 140px !important;
+}*/

@@ -2,28 +2,38 @@
 {% load staticfiles %}
 {% load helper %}
 
+{% block headline %}
+    <h1>Videos</h1>
+{% endblock %}
+
 {% block body %}
 {{block.super}}
-<div class="content">
-	<div class="headline">
-		<h1 class="game_headline">Videos</h1>
-	</div>
-	
-	{% for category in categories %}
-		<h2 class="category_headline">{{category.description}}</h2>
-		{% for video in category.video_videocategory.all %}
-			{% if forloop.counter0|divisibleby:2 %}
-				<div class="video_row">
-			{% endif %}
-			<div class="single_video">
-				<video width="500" controls loop>
-					<source src="{{ video.video.url }}">
-				</video>
-			</div>
-			{% if forloop.counter0|modulo:2 == 1 or forloop.last %}
-				</div>
-			{% endif %}
-		{% endfor %}
-	{% endfor %}
+<div class="content-image-gallery">
+    <div class="video-gallery-intern">
+        {% for category in categories %}
+            <h2 class="video-gallery-intern-headline">{{ category }}</h2>
+            <div class="row">
+                {% for video in category.video_videocategory.all %}
+                    <video width="300" class="video col-sm-6" controls onclick="this.paused ? this.play() : this.pause();">
+                        <source src="{{ video.video.url }}">
+                    </video>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+
+	<div class="video-gallery-extern">
+        {% for folder, files in imageFiler.items %}
+            <h2 class="video-gallery-extern-headline">{% if folder == "." %}Rest{% else %}{{ folder|splitOnSlash }}{% endif %}</h2>
+            <div class="row">
+                {% for video in files %}
+                    <video width="300" class="video col-sm-6" controls onclick="this.paused ? this.play() : this.pause();">
+					    <source src="{{ MEDIA_URL }}video_gallery/{{ video }}">
+				    </video>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+
 </div>
 {% endblock %}

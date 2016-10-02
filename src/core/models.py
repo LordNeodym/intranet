@@ -34,6 +34,8 @@ class IntranetMeta(models.Model):
     class Meta:
         verbose_name = "Intranet Metadaten"
         verbose_name_plural = "Intranet Metadaten"
+        app_label = "core"
+        ordering = ["-lan_id"]
 
 
 class UserExtension(models.Model):
@@ -53,6 +55,7 @@ class UserExtension(models.Model):
     class Meta:
         verbose_name = "Zusätzliche Angaben"
         verbose_name_plural = "Zusätzliche Angaben"
+        app_label = "core"
 
 
 class Rules(models.Model):
@@ -69,6 +72,7 @@ class Rules(models.Model):
     class Meta:
         verbose_name = "Regelgruppe"
         verbose_name_plural = "Regelgruppen"
+        app_label = "core"
 
 
 class RulesInline(models.Model):
@@ -81,6 +85,7 @@ class RulesInline(models.Model):
     class Meta:
         verbose_name = "Regel"
         verbose_name_plural = "Regeln"
+        app_label = "core"
 
 
 class Game(models.Model):
@@ -100,6 +105,7 @@ class Game(models.Model):
         verbose_name = "Spiel"
         verbose_name_plural = "Spiele"
         ordering = ['name']
+        app_label = "core"
 
 
 class Match(models.Model):
@@ -116,7 +122,7 @@ class Match(models.Model):
         ('tree_loser', 'Turnierbaum mit Loserbracket'),
     )
 
-    lan = models.ForeignKey(IntranetMeta, verbose_name="LAN", default=1, related_name="match_lan")
+    lan = models.ForeignKey(IntranetMeta, verbose_name="LAN", related_name="match_lan")
     game = models.ForeignKey(Game, verbose_name="Spiel", blank=False, null=False, related_name="match_game")
     game_mode = models.CharField(verbose_name="Modus", max_length=50, blank=True, null=True)
     player_per_team = models.IntegerField(verbose_name="Spieler pro Team", blank=False, null=False, validators=[MinValueValidator(1)])
@@ -265,6 +271,7 @@ class Match(models.Model):
         verbose_name = "Match"
         verbose_name_plural = "Matches"
         ordering = ['game', 'datetime']
+        app_label = "core"
 
 
 #class MatchRulesInline(models.Model):
@@ -326,6 +333,7 @@ class Team(models.Model):
         verbose_name = "Team"
         verbose_name_plural = "Teams"
         ordering = ['id']
+        app_label = "core"
 
 
 class Round(models.Model):
@@ -394,6 +402,7 @@ class Round(models.Model):
         verbose_name = "Runde"
         verbose_name_plural = "Runden"
         ordering = ['round_number', 'datetime']
+        app_label = "core"
 
 
 class VideoCategory(models.Model):
@@ -405,6 +414,7 @@ class VideoCategory(models.Model):
     class Meta:
         verbose_name = "Videokategorie"
         verbose_name_plural = "Videokategorien"
+        app_label = "core"
 
 
 class SingleVideo(models.Model):
@@ -417,6 +427,7 @@ class SingleVideo(models.Model):
     class Meta:
         verbose_name = "Video"
         verbose_name_plural = "Videos"
+        app_label = "core"
 
 
 class ImageCategory(models.Model):
@@ -428,6 +439,7 @@ class ImageCategory(models.Model):
     class Meta:
         verbose_name = "Bilderkategorie"
         verbose_name_plural = "Bilderkategorien"
+        app_label = "core"
 
 
 class SingleImage(models.Model):
@@ -440,6 +452,7 @@ class SingleImage(models.Model):
     class Meta:
         verbose_name = "Bild"
         verbose_name_plural = "Bilder"
+        app_label = "core"
 
 
 class MenuOrder(models.Model):
@@ -458,6 +471,7 @@ class MenuOrder(models.Model):
         verbose_name = "Bestellung"
         verbose_name_plural = "Bestellungen"
         ordering = ['-timestamp']
+        app_label = "core"
 
 
 class SingleMenuOrder(models.Model):
@@ -488,3 +502,4 @@ class SingleMenuOrder(models.Model):
         verbose_name = "Einzel-Bestellung"
         verbose_name_plural = "Einzel-Bestellungen"
         ordering = ['-order', '-name']
+        app_label = "core"
