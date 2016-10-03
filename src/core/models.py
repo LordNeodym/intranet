@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.db.models import Q
 from django.db.models import Sum
-from django.conf import settings
-from django.core import validators
 from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
 from django.core.validators import  MinValueValidator, MaxValueValidator
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
@@ -15,7 +11,7 @@ from filer.fields.file import FilerFileField
 from filer.fields.image import FilerImageField
 
 from random import shuffle
-from datetime import date, datetime
+from datetime import datetime
 
 from core.validators import integer_only
 
@@ -42,6 +38,9 @@ class UserExtension(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     birthdate = models.DateField(verbose_name="Geburtstag", null=True, blank=True)
     avatar = models.ImageField(verbose_name="Avatar", upload_to="user_avatar", blank=True, null=True)
+    seat = models.CharField(verbose_name="Sitzplatz", max_length=63, null=True, blank=True)
+    ip = models.GenericIPAddressField(verbose_name="IP-Adresse", null=True, blank=True)
+    participated_lans = models.ManyToManyField(IntranetMeta, verbose_name="Teilgenommene LANs", blank=True, related_name="user_lan")
 
     @property
     def shortenName(self):
@@ -128,7 +127,7 @@ class Match(models.Model):
     player_per_team = models.IntegerField(verbose_name="Spieler pro Team", blank=False, null=False, validators=[MinValueValidator(1)])
     description = models.TextField(verbose_name="Beschreibung", max_length=255, blank=True, null=True)
     user = models.ManyToManyField(User, verbose_name="Spieler", blank=True, related_name="match_user")
-    datetime = models.DateTimeField(verbose_name="Datum/Uhrzeit", blank=True, null=True)
+    datetime = models.DateTimeField(verbose_name="Startzeit", blank=True, null=True, default=datetime.now())
     team_choose_type = models.CharField(verbose_name="Team Wahl", editable=False, max_length=5, choices=TEAM_CHOOSE_TYPE, default="None", blank=True)
     tour_choose_type = models.CharField(verbose_name="Turnier Wahl", editable=False, max_length=10, choices=TOUR_CHOOSE_TYPE, default="None", blank=True)
     rules = models.TextField(verbose_name="Spielregeln", max_length=1024, null=True, blank=True)

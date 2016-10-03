@@ -10,6 +10,8 @@ from core.models import IntranetMeta, Game, Match, Round, Team, Rules, RulesInli
 class UserExtensionInlineAdmin(admin.StackedInline):
     model = UserExtension
     extra = 1
+    exclude = ('seat', 'ip')
+    filter_horizontal = ('participated_lans',)
 
 class UserAdmin(UserAdmin):
     inlines = [UserExtensionInlineAdmin,]

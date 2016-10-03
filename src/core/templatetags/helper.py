@@ -68,10 +68,10 @@ def shortenString(value):
 
 @register.filter
 def sortTeam(teams):
-  team_dic = {}
+  team_dic = []
   for team in teams:
-    team_dic[team] = {'wins': team.num_wins, 'pts': team.num_pts}
-  return sorted(team_dic.items(), key=operator.itemgetter(1), reverse=True)
+    team_dic.append([team, team.num_wins, team.num_pts])
+  return sorted(team_dic, key=lambda x: (x[1], x[2]), reverse=True)
 
 @register.filter
 def radioCheckedTeam(match, button_label):
@@ -95,3 +95,15 @@ def getName(user):
     return user.first_name
   else:
     return user
+
+@register.filter
+def getIP(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[-1].strip()
+    elif request.META.get('HTTP_X_REAL_IP'):
+        ip = request.META.get('HTTP_X_REAL_IP')
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    print request.META.get('HTTP_X_FORWARDED_FOR'), request.META.get('HTTP_X_REAL_IP'), request.META.get('REMOTE_ADDR')
+    return ip

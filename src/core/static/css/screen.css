@@ -210,8 +210,11 @@ li.user_list {
 	overflow-y: hidden;
 }
 
-.table th {
-   text-align: center;
+.table>thead>tr>th,
+.table>tbody>tr>th,
+.table>tbody>tr>td {
+   text-align: center !important;
+   vertical-align: middle !important;
 }
 
 table.login, 
@@ -244,4 +247,17 @@ footer {
 
 .errorlist {
     color: red;
+}
+
+.list_rule {
+    text-align: left;
+    margin-bottom: 30px;
+}
+
+.menu_list > h2 {
+    margin-bottom: 30px;
+}
+
+.headline {
+    margin-bottom: 30px;
 }

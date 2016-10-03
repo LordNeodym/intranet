@@ -158,7 +158,7 @@
 						{% if not match.round_match.all and user|has_group:"Admin" %}
 						<form method="post" class="delete_team" action="delete_team/">
 							{% csrf_token %}
-							<input type="submit" type="submit" value="X" />
+							<input class="btn btn-primary btn-sm" type="submit" value="Löschen" />
 							<input type="hidden" name="team_id" value="{{team.id}}" />
 						</form>
 						{% endif %}
@@ -174,7 +174,7 @@
 		{% if match.round_match.all %}
 		<div class="tournament_rounds">
 			<h2 class="match_subline">Begegnungen</h2>
-			<table class"rounds">
+			<table class="table table-striped rounds">
 				<thead>
 					<tr>
 						<th>Runde</th>
@@ -183,6 +183,7 @@
 						<th>Punkte (Home)</th>
 						<th>Punkte (Away)</th>
 						<th>Team (Away)</th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -191,14 +192,14 @@
 					<th>{{ round.round_number }}</th>
 					<td>{{ round.getDatetime }}</td>
 					<td>{{ round.team1.getTeam }}</td>
-					{% if user|has_group:"Admin" %}
+					{% if user|has_group:"Admin" or request.user in round.team1.user.all or request.user in round.team2.user.all %}
 						<form method="post" class="single_round_form" action="entry_round_result/">
 							{% csrf_token %}
 							<td><input type="text" maxlength="3" size="3" name="pkt1" value="{{ round.getPkt1 }}" autocomplete="off" /></td>
 							<td><input type="text" maxlength="3" size="3" name="pkt2" value="{{ round.getPkt2 }}" autocomplete="off" /></td>
 							<td>{{ round.team2.getTeam }}</td>
 							<td>
-								<input type="submit" type="submit" value="Okay" />
+								<input class="btn btn-primary btn-sm" type="submit" value="Okay" />
 								<input type="hidden" name="round_id" value="{{ round.id }}" />
 							</td>
 						</form>
@@ -206,6 +207,7 @@
 						<td>{{ round.getPkt1 }}</td>
 						<td>{{ round.getPkt2 }}</td>
 						<td>{{ round.team2.getTeam }}</td>
+						<td></td>
 					{% endif %}
 				</tr>
 				{% endfor %}
@@ -215,17 +217,19 @@
 
 		<div class="ranking">
 			<h2 class="match_subline">Ranking</h2>
-			<table>
+			<table class="table table-bordered">
 				<tr>
+					<th>Platz</th>
 					<th>Teams</th>
 					<th>Siege</th>
 					<th>Punkte</th>
 				</tr>
 				{% for team in match.team_match.all|sortTeam %}
 				<tr>
+					<th>{{ forloop.counter }}</th>
 					<td>Team {{ team.0.description }}</td>
-					<td>{{ team.1.wins }}</td>
-					<td>{{ team.1.pts }}</td>
+					<td>{{ team.1 }}</td>
+					<td>{{ team.2 }}</td>
 				</tr>
 				{% endfor %}
 			</table>

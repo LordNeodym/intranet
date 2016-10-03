@@ -10,10 +10,10 @@
 {{ block.super }}
 <div class="content">
 	{% for rule in rules.all %}
-		<div class="rule-headline row">
-			<h2>{{ rule }}</h2>
+		<div class="row">
+			<h3><strong>{{ rule }}</strong></h3>
 		</div>
-		<div class="list_rule bottom_line row">
+		<div class="list_rule row">
 		{% for singleRule in rule.inline_rules.all %}
 			<div class="single_rule">
 				<h4 class="col-sm-2">Regel {{ forloop.counter }}:</h4>

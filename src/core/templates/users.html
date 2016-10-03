@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% load helper %}
+
+{% block headline %}
+    <h1>Teilnehmerliste</h1>
+{% endblock %}
+
+{% block body %}
+{{block.super}}
+<div class="content eighty_ten">
+    <div class="user_list">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>User</th>
+                    <th>Name</th>
+                    <th>IP</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr>
+                    <th>{{ forloop.counter }}</th>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user|getName }}</td>
+                    <td>{% if user.userextension.ip %}{{ user.userextension.ip }}{% else %}-{% endif %}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
