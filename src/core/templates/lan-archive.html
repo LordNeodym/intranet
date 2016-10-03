@@ -10,40 +10,38 @@
 {% block body %}
 {{block.super}}
 <div class="eighty_ten content">
-	<div class="lan-archive-matches">
-		<table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Spiel</th>
-                    <th>Datum/Uhrzeit</th>
-                    <th>Modus</th>
-                    <th>Sieger</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for match in matches.all %}
-                <tr>
-                    <th>
-                        {% if match.game.icon %}
-                        <img src="{{ match.game.icon|thumbnail_url:'avatar' }}" />
-                        {% else %}
-                        {{ match.game.name }}
-                        {% endif %}
-                    </th>
-                    <td>{{ match.datetime }}</td>
-                    <td>{{ match.player_per_team }} vs. {{ match.player_per_team }} {% if match.game_mode %}({{match.game_mode}}){% endif %}</td>
-                    <td>
-                        {% for team in match.team_match.all|sortTeam|slice:"1" %}
-						    {% for user in team.0.user.all %}
-                                <span class="row">{{ user }}</span>
-                            {% endfor %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Spiel</th>
+                <th>Datum/Uhrzeit</th>
+                <th>Modus</th>
+                <th>Sieger</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for match in matches.all %}
+            <tr>
+                <th>
+                    {% if match.game.icon %}
+                    <img src="{{ match.game.icon|thumbnail_url:'avatar' }}" />
+                    {% else %}
+                    {{ match.game.name }}
+                    {% endif %}
+                </th>
+                <td>{{ match.datetime }}</td>
+                <td>{{ match.player_per_team }} vs. {{ match.player_per_team }} {% if match.game_mode %}({{match.game_mode}}){% endif %}</td>
+                <td>
+                    {% for team in match.team_match.all|sortTeam|slice:"1" %}
+                        {% for user in team.0.user.all|sort_by:'username' %}
+                            <span class="row">{{ user }}</span>
                         {% endfor %}
-                    </td>
-				</tr>
-            {% endfor %}
-            </tbody>
-        </table>
-	</div>
+                    {% endfor %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 </div>
 
 {% endblock %}

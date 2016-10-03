@@ -107,3 +107,7 @@ def getIP(request):
         ip = request.META.get('REMOTE_ADDR')
     print request.META.get('HTTP_X_FORWARDED_FOR'), request.META.get('HTTP_X_REAL_IP'), request.META.get('REMOTE_ADDR')
     return ip
+
+@register.filter
+def sort_by(queryset, order):
+    return queryset.order_by(order)

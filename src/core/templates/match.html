@@ -12,7 +12,7 @@
 <div class="content">
 	{% if msg %}
 		<span class="message">{{msg}}</span>
-	{% else %}
+	{% endif %}
 
 	<div class="headline">
 		{% if match.game.icon %}
@@ -21,76 +21,67 @@
 		<h1 class="game_headline">{{ match.game.name }}</h1>
 		{% endif %}
 	</div>
-	<div class="match_info">
-		<div class="datetime">
-			<div class="game_info_time">
-				<h5 class="row_info">Datum</h5>
-				{% if match.datetime.date %}
-					<h4 class="game_info">{{ match.datetime.date|date:"d.m.Y" }}</h4>
-				{% else %}
-					<h4 class="game_info">-</h4>
-				{% endif %}
-			</div>
-			<div class="game_info_time">
-				<h5 class="row_info">Uhrzeit</h5>
-				{% if match.datetime.time %}
-					<h4 class="game_info">{{ match.datetime.time }}</h4>
-				{% else %}
-					<h4 class="game_info">-</h4>
-				{% endif %}
-			</div>
-		</div>
 
-		<div class="game_mode">
-			<h5 class="row_info">Spielmodus</h5>
+	<div class="match-info row">
+		<div class="col-sm-6">
+			<u><h5>Datum</h5></u>
+			{% if match.datetime.date %}
+				<h4>{{ match.datetime.date|date:"d.m.Y" }}</h4>
+			{% else %}
+				<h4>-</h4>
+			{% endif %}
+		</div>
+		<div class="col-sm-6">
+			<u><h5>Uhrzeit</h5></u>
+			{% if match.datetime.time %}
+				<h4>{{ match.datetime.time }}</h4>
+			{% else %}
+				<h4>-</h4>
+			{% endif %}
+		</div>
+		<div class="col-sm-6">
+			<u><h5>Spieler pro Team</h5></u>
+			<h4>{{ match.player_per_team }}</h4>
+		</div>
+		<div class="col-sm-6">
+			<u><h5>Spielmodus</h5></u>
 			{% if match.game_mode %}
-				<h4 class="game_info">{{ match.game_mode }}</h4>
+				<h4>{{ match.game_mode }}</h4>
 			{% else %}
-				<h4 class="game_info">-</h4>
+				<h4>-</h4>
 			{% endif %}
 		</div>
-		
-		<div class="description">
-			<h5 class="row_info">Beschreibung</h5>
+		<div class="col-sm-12">
+			<u><h5>Beschreibung</h5></u>
 			{% if match.description %}
-				<h4 class="game_info">{{ match.description }}</h4>
-			{% else %}
-				<h4 class="game_info">-</h4>
-			{% endif %}
-		</div>
-		
-		<div class="player">
-			<h5 class="row_info">Spieler pro Team</h5>
-			<h4 class="game_info">{{ match.player_per_team }}</h4>
-		</div>
-
-		<div class="rules">
-			<h5 class="row_info">Regeln</h5>
-			{% if match.rules %}
-				{% for rule in match.rules.splitlines %}
-					<h4 class="game_info">{{ rule }}</h4>
+				{% for description in match.description.splitlines %}
+					<h4>{{ description }}</h4>
 				{% endfor %}
 			{% else %}
-				<h4 class="game_info">-</h4>
+				<h4>-</h4>
 			{% endif %}
 		</div>
-
-		<div class="user">
-			<h5 class="row_info">Angemeldete Benutzer</h5>
-			<a name="regUser"></a>
-			<ul>
-			{% for user in match.user.all %}
- 				<li class="user_list">
-	 				<img src="{{ user.userextension.avatar|thumbnail_url:'game_icon' }}" alt="">
- 					{{ user }}
-				</li>
+		<div class="col-sm-12">
+			<u><h5>Regeln</h5></u>
+			{% if match.rules %}
+				{% for rule in match.rules.splitlines %}
+					<h4>{{ rule }}</h4>
+				{% endfor %}
+			{% else %}
+				<h4>-</h4>
+			{% endif %}
+		</div>
+		<div class="col-sm-12">
+			<u><h5>Angemeldete Benutzer</h5></u>
+			<ul class="list-inline">
+			{% for user in match.user.all|sort_by:'username' %}
+ 				<li><h4>{{ user }}</h4></li>
 			{% endfor %}
 			</ul>
-
 			{% if not match.team_match.all %}
 				<form method="post" action="register_user/">
 					{% csrf_token %}
-					<input type="submit" class="match_register" type="submit" value="{{ match|button_label:user }}" />
+					<input type="submit" class="btn btn-primary btn-sm" type="submit" value="{{ match|button_label:user }}" />
 					<input type="hidden" name="match_id" value="{{match.id}}" />
 				</form>
 			{% endif %}
@@ -98,45 +89,41 @@
 	</div>
 
 	{% if match.team_choose_type == "self" and match.playerWithoutTeam %}
-	<div class="choose_team">
-		<div class="player_pool">
-			{% if user in match.playerWithoutTeam %}
-			<form method="post" class="create_self_team" action="create_self_team/">
-			{% else %}
-			<form method="post" class="create_self_team" action="update_self_team/">
-			{% endif %}
-				{% csrf_token %}
-				{% for player in match.playerWithoutTeam %}
-					<input type="checkbox" id="user_{{player.id}}" name="create_self_team" value="{{player.id}}" 
-					{% if user == player %}
-					checked disabled
-					{% endif %}
-					 />
-					<label for="user_{{player.id}}">{{ player }}</label>
-				{% endfor %}
-				<input type="submit" type="submit" value="{{ match|button_label_self_team:user }}" />
-				<input type="hidden" name="match_id" value="{{match.id}}" />
-			</form>
+		<div class="choose_team">
+			<div class="player_pool">
+				<form method="post" class="create_self_team" action="{% if user in match.playerWithoutTeam %}create_self_team/{% else %}update_self_team/{% endif %}">
+					{% csrf_token %}
+					{% for player in match.playerWithoutTeam %}
+						<input type="checkbox" id="user_{{player.id}}" name="create_self_team" value="{{player.id}}"
+						{% if user == player %}
+						checked disabled
+						{% endif %}
+						 />
+						<label for="user_{{player.id}}">{{ player }}</label>
+					{% endfor %}
+					<input class="btn btn-primary btn-sm" type="submit" value="{{ match|button_label_self_team:user }}" />
+					<input type="hidden" name="match_id" value="{{match.id}}" />
+				</form>
+			</div>
 		</div>
-	</div>
 	{% endif %}
 
 	{% if match.team_choose_type == "admin" and match.playerWithoutTeam %}
-	{% if user|has_group:"Admin" %}
-	<div class="choose_team">
-		<div class="player_pool">
-			<form method="post" class="create_admin_team" action="create_admin_team/">
-				{% csrf_token %}
-				{% for user in match.playerWithoutTeam %}
-					<input type="checkbox" id="user_{{user.id}}" name="create_admin_team" value="{{user.id}}" />
-					<label for="user_{{user.id}}">{{ user }}</label>
-				{% endfor %}
-				<input type="submit" type="submit" value="Team erstellen" />
-				<input type="hidden" name="match_id" value="{{match.id}}" />
-			</form>
-		</div>
-	</div>
-	{% endif %}
+		{% if user|has_group:"Admin" %}
+			<div class="choose_team">
+				<div class="player_pool">
+					<form method="post" class="create_admin_team" action="create_admin_team/">
+						{% csrf_token %}
+						{% for user in match.playerWithoutTeam %}
+							<input type="checkbox" id="user_{{user.id}}" name="create_admin_team" value="{{user.id}}" />
+							<label for="user_{{user.id}}">{{ user }}</label>
+						{% endfor %}
+						<input class="btn btn-primary btn-sm" type="submit" value="Team erstellen" />
+						<input type="hidden" name="match_id" value="{{match.id}}" />
+					</form>
+				</div>
+			</div>
+		{% endif %}
 	{% endif %}
 
 	<div class="teams">
@@ -174,7 +161,7 @@
 		{% if match.round_match.all %}
 		<div class="tournament_rounds">
 			<h2 class="match_subline">Begegnungen</h2>
-			<table class="table table-striped rounds">
+			<table class="table table-striped">
 				<thead>
 					<tr>
 						<th>Runde</th>
@@ -288,8 +275,6 @@
             </form>
         </div>
     </div>
-	{% endif %}
-	
 	{% endif %}
 </div>
 {% endblock %}
