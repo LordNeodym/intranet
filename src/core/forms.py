@@ -2,10 +2,10 @@
 from django import forms
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.utils.translation import ugettext_lazy as _
+from django.template.defaultfilters import filesizeformat
 
-from datetime import datetime
-
-from core.models import Round, UserExtension
+from core.models import Round, UserExtension, Software, SingleImage, SingleVideo
 
 
 class UserForm(forms.ModelForm):
@@ -56,6 +56,40 @@ class UserProfileForm(forms.ModelForm):
             pass
 
         return avatar
+
+
+class SoftwareForm(forms.ModelForm):
+    class Meta:
+        model = Software
+        fields = ('name', 'file', 'description',)
+
+
+class ImageForm(forms.Form):
+    image = forms.ImageField()
+
+    def clean_image(self):
+        image = self.cleaned_data['image']
+        content_type = image.content_type.split('/')[0]
+        if content_type == "image":
+            if image._size > settings.MAX_UPLOAD_SIZE:
+                raise forms.ValidationError(_('Please keep filesize under %s. Current filesize %s') % (filesizeformat(settings.MAX_UPLOAD_SIZE), filesizeformat(image._size)))
+        else:
+            raise forms.ValidationError(_('File type is not supported'))
+        return image
+
+
+class VideoForm(forms.Form):
+    video = forms.FileField()
+
+    def clean_video(self):
+        video = self.cleaned_data['video']
+        content_type = video.content_type.split('/')[0]
+        if content_type == "video":
+            if video._size > settings.MAX_UPLOAD_SIZE:
+                raise forms.ValidationError(_('Please keep filesize under %s. Current filesize %s') % (filesizeformat(settings.MAX_UPLOAD_SIZE), filesizeformat(video._size)))
+        else:
+            raise forms.ValidationError(_('File type is not supported'))
+        return video
 
 
 class RoundForm(forms.ModelForm):

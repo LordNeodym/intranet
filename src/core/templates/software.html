@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load helper %}
+
+{% block headline %}
+    <h1>Software</h1>
+{% endblock %}
+
+{% block body %}
+{{block.super}}
+<div class="content">
+    <div class="software-download row">
+    {% for file in software %}
+        <div class="software-download-file col-sm-6">
+            <h3>{{ file.name }}</h3>
+            <p>{{ file.description }}</p>
+            <a href="{{ file.file.url }}">Download</a>
+        </div>
+    {% endfor %}
+    </div>
+
+    {% if user|has_group:"Admin" or user|has_group:"Software-Admin" %}
+    <div class="admin_interface well row">
+        <h3 class="col-sm-12">Dateiupload</h3>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_name">Name</label>
+                <input class="form-control" id="id_name" maxlength="255" name="name" type="text">
+            </div>
+            <div class="form-group">
+                <label for="id_description">Beschreibung</label>
+                <textarea class="form-control" id="id_description" maxlength="255" name="description" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="id_file">Datei</label>
+                <input id="id_file" name="file" type="file">
+            </div>
+            <button class="btn btn-primary btn-sm" type="submit">Upload</button>
+        </form>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

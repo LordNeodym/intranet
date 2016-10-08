@@ -57,6 +57,21 @@ class UserExtension(models.Model):
         app_label = "core"
 
 
+class Software(models.Model):
+    name = models.CharField(verbose_name="Name", max_length=255, null=False, blank=False)
+    file = models.FileField(verbose_name="Dateiupload", upload_to='software')
+    description = models.TextField(verbose_name="Beschreibung", max_length=255, null=True, blank=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return u"%s" % (self.name)
+
+    class Meta:
+        verbose_name = "Software"
+        verbose_name_plural = "Software"
+        app_label = "core"
+
+
 class Rules(models.Model):
     name = models.CharField(verbose_name="Regelgruppe", max_length=30, null=False, unique=True, blank=False, default="Allgemeine Regeln")
     slug = models.SlugField(verbose_name="Slug", blank=True, unique=True, editable=False)

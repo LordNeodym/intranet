@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^logout/$', views.logout, name='logout'),
     url(r'^rules/$', views.rules, name='rules'),
     url(r'^users/$', views.users, name='users'),
+    url(r'^software/$', views.software, name='software'),
     url(r'^lan-archive/(?P<slug>[-\w\d]+)/$', views.lan_archive, name='lan_archive'),
     url(r'^off-topic/menu/$', views.menu, name='menu'),
     url(r'^off-topic/menu/(?P<slug>[-\w\d]+)/$', views.menu_order, name='menu_order'),

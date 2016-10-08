@@ -10,7 +10,7 @@
 {{block.super}}
 <div class="content-image-gallery">
     <div class="video-gallery-intern">
-        {% for category in categories %}
+        {% for category in content.categories %}
             <h2 class="video-gallery-intern-headline">{{ category }}</h2>
             <div class="row">
                 {% for video in category.video_videocategory.all %}
@@ -23,7 +23,7 @@
     </div>
 
 	<div class="video-gallery-extern">
-        {% for folder, files in imageFiler.items %}
+        {% for folder, files in content.imageFiler.items %}
             <h2 class="video-gallery-extern-headline">{% if folder == "." %}Rest{% else %}{{ folder|splitOnSlash }}{% endif %}</h2>
             <div class="row">
                 {% for video in files %}
@@ -35,5 +35,13 @@
         {% endfor %}
     </div>
 
+    <div class="admin_interface well row">
+        <h3 class="col-sm-12">Bildupload</h3>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input id="id_video" name="video" type="file">
+            <button class="btn btn-primary btn-sm" type="submit">Upload</button>
+        </form>
+    </div>
 </div>
 {% endblock %}

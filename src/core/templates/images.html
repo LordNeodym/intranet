@@ -11,7 +11,7 @@
 {{block.super}}
 <div class="content-image-gallery">
     <div class="image-gallery-intern">
-        {% for category in categories %}
+        {% for category in content.categories %}
             <h2 class="image-gallery-intern-headline">{{ category }}</h2>
             <div id="image-gallery-intern-{{ forloop.counter }}" style="display:none;">
                 {% for image in category.image_imagecategory.all %}
@@ -28,7 +28,7 @@
     </div>
 
     <div class="image-gallery-extern">
-        {% for folder, files in imageFiler.items %}
+        {% for folder, files in content.imageFiler.items %}
             <h2 class="image-gallery-extern-headline">{% if folder == "." %}Rest{% else %}{{ folder|splitOnSlash }}{% endif %}</h2>
             <div id="image-gallery-extern-{{ forloop.counter }}" style="display:none;">
                 {% for image in files %}
@@ -44,19 +44,27 @@
         {% endfor %}
     </div>
 
+    <div class="admin_interface well row">
+        <h3 class="col-sm-12">Bildupload</h3>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input id="id_image" name="image" type="file">
+            <button class="btn btn-primary btn-sm" type="submit">Upload</button>
+        </form>
+    </div>
 </div>
 {% endblock %}
 
 {% block js %}
 <script type="text/javascript">
     jQuery(document).ready(function(){
-        {% for category in categories %}
+        {% for category in content.categories %}
             jQuery("#image-gallery-intern-{{ forloop.counter }}").unitegallery({
                 tiles_type:"nested",
                 tiles_nested_optimal_tile_width: 300
             });
         {% endfor %}
-        {% for folder in imageFiler %}
+        {% for folder in content.imageFiler %}
             jQuery("#image-gallery-extern-{{ forloop.counter }}").unitegallery({
                 tiles_type:"nested",
                 tiles_nested_optimal_tile_width: 300

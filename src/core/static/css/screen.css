@@ -263,3 +263,7 @@ footer {
 .headline {
     margin-bottom: 30px;
 }
+
+input[type=file] {
+    margin: 0 auto;
+}

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.shortcuts import render_to_response, redirect, HttpResponseRedirect
+from django.shortcuts import render_to_response, redirect, HttpResponseRedirect, render
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
@@ -15,8 +15,8 @@ from django.contrib.auth.models import User, Group
 
 import json, os
 
-from core.models import Game, Rules, ImageCategory, VideoCategory, MenuOrder, SingleMenuOrder
-from core.forms import UserForm, UserProfileForm
+from core.models import Game, Rules, ImageCategory, VideoCategory, MenuOrder, SingleMenuOrder, Software
+from core.forms import UserForm, UserProfileForm, SoftwareForm, ImageForm, VideoForm
 from core.views_helper import *
 
 def home(request):
@@ -92,6 +92,21 @@ def users(request):
 
 
 @login_required(login_url="/login/")
+def software(request):
+    context = RequestContext(request)
+
+    software = Software.objects.all()
+    if request.method == 'POST':
+        form = SoftwareForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('software')
+    else:
+        form = SoftwareForm()
+    return render_to_response('software.html', {'form': form, 'software': software}, context_instance=context)
+
+
+@login_required(login_url="/login/")
 def menu(request):
     context = RequestContext(request)
     content = {}
@@ -142,7 +157,6 @@ def videos(request):
     galleryExternDic = {}
 
     content['categories'] = VideoCategory.objects.all()
-
     gallery_folder = os.path.join(settings.MEDIA_ROOT, "video_gallery")
     for root, dirnames, files in os.walk(gallery_folder):
         for file in files:
@@ -152,10 +166,18 @@ def videos(request):
                 galleryExternDic[relDir].append(relFile)
             else:
                 galleryExternDic[relDir] = [relFile, ]
-
     content['imageFiler'] = galleryExternDic
 
-    return render_to_response('videos.html', content, context_instance=context)
+    if request.method == 'POST':
+        form = VideoForm(request.POST, request.FILES)
+        if form.is_valid():
+            filename = "{0}-{1}".format(request.user.username, request.FILES['video'].name)
+            handle_uploaded_file(os.path.join(settings.MEDIA_ROOT, "video_gallery", "User Uploads"), request.FILES['video'], filename)
+            return redirect('videos')
+    else:
+        form = VideoForm()
+
+    return render_to_response('videos.html', {"form": form, "content": content}, context_instance=context)
 
 
 @login_required(login_url="/login/")
@@ -165,7 +187,6 @@ def images(request):
     galleryExternDic = {}
 
     content['categories'] = ImageCategory.objects.all().exclude(description="Speisekarte")
-
     gallery_folder = os.path.join(settings.MEDIA_ROOT, "image_gallery")
     for root, dirnames, files in os.walk(gallery_folder):
         for file in files:
@@ -175,11 +196,18 @@ def images(request):
                 galleryExternDic[relDir].append(relFile)
             else:
                 galleryExternDic[relDir] = [relFile,]
-
     content['imageFiler'] = galleryExternDic
 
+    if request.method == 'POST':
+        form = ImageForm(request.POST, request.FILES)
+        if form.is_valid():
+            filename = "{0}-{1}".format(request.user.username, request.FILES['image'].name)
+            handle_uploaded_file(os.path.join(settings.MEDIA_ROOT, "image_gallery", "User Uploads"), request.FILES['image'], filename)
+            return redirect('images')
+    else:
+        form = ImageForm()
 
-    return render_to_response('images.html', content, context_instance=context)
+    return render_to_response('images.html', {"form": form, "content": content}, context_instance=context)
 
 
 def rules(request):
@@ -320,6 +348,15 @@ def lan_archive(request, slug):
     content['matches'] = Match.objects.filter(lan=lan).order_by('datetime')
 
     return render_to_response('lan-archive.html', content, context_instance=context)
+
+
+def handle_uploaded_file(directory, file, filename):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    with open(os.path.join(directory, filename), 'wb+') as destination:
+        for chunk in file.chunks():
+            destination.write(chunk)
 
 
 @never_cache

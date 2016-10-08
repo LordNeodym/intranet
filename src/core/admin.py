@@ -4,7 +4,7 @@ from django.forms import TextInput, Textarea
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 
-from core.models import IntranetMeta, Game, Match, Round, Team, Rules, RulesInline, VideoCategory, SingleVideo, ImageCategory, SingleImage, UserExtension, MenuOrder, SingleMenuOrder
+from core.models import IntranetMeta, Game, Match, Round, Team, Rules, RulesInline, VideoCategory, SingleVideo, ImageCategory, SingleImage, UserExtension, MenuOrder, SingleMenuOrder, Software
 
 
 class UserExtensionInlineAdmin(admin.StackedInline):
@@ -20,6 +20,8 @@ class UserAdmin(UserAdmin):
 class IntranetMetaAdmin(admin.ModelAdmin):
     pass
 
+class SoftwareAdmin(admin.ModelAdmin):
+    pass
 
 class RulesInlineAdmin(admin.StackedInline):    
     model = RulesInline
@@ -95,3 +97,4 @@ admin.site.register(VideoCategory, VideoCategoryAdmin)
 admin.site.register(ImageCategory, ImageCategoryAdmin)
 admin.site.register(MenuOrder, MenuOrderAdmin)
 admin.site.register(SingleMenuOrder, SingleMenuOrderAdmin)
+admin.site.register(Software, SoftwareAdmin)
