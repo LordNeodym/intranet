@@ -27,12 +27,17 @@ class UserForm(forms.ModelForm):
 
 
 class UserProfileForm(forms.ModelForm):
-    birthdate = forms.DateField(label="Geburtstag", input_formats=settings.DATE_INPUT_FORMATS)
+    birthdate = forms.DateField(label="Geburtstag", input_formats=settings.DATE_INPUT_FORMATS, required=False)
 
     class Meta:
         model = UserExtension
-        exclude = ['user']
-        fields = ['birthdate', 'avatar']
+        fields = ('user', 'birthdate', 'avatar')
+
+    def clean_user(self):
+        return self.cleaned_data['user']
+
+    def clean_birthdate(self):
+        return self.cleaned_data['birthdate']
 
     def clean_avatar(self):
         avatar = self.cleaned_data['avatar']

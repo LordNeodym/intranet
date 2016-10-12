@@ -75,14 +75,17 @@ class ImageCategoryAdmin(admin.ModelAdmin):
     ordering = ['description']
 
 
-class MenuOrderAdmin(admin.ModelAdmin):
-    list_display = ('description', 'timestamp',)
-    ordering = ['-timestamp']
-
-
-class SingleMenuOrderAdmin(admin.ModelAdmin):
+class SingleMenuOrderAdmin(admin.StackedInline):
+    model = SingleMenuOrder
+    extra = 0
     list_display = ('order', 'name')
     ordering = ['-order', '-name']
+
+
+class MenuOrderAdmin(admin.ModelAdmin):
+    list_display = ('description', 'timestamp',)
+    inlines = [SingleMenuOrderAdmin, ]
+    ordering = ['-timestamp']
 
 
 admin.site.unregister(User)
@@ -96,5 +99,4 @@ admin.site.register(Round, RoundAdmin)
 admin.site.register(VideoCategory, VideoCategoryAdmin)
 admin.site.register(ImageCategory, ImageCategoryAdmin)
 admin.site.register(MenuOrder, MenuOrderAdmin)
-admin.site.register(SingleMenuOrder, SingleMenuOrderAdmin)
 admin.site.register(Software, SoftwareAdmin)

@@ -82,6 +82,41 @@ def login(request):
     return render_to_response('login.html', {'errors': msg}, context_instance=context)
 
 
+@never_cache
+def edit_profile(request):
+    context = RequestContext(request)
+    error_msg = []
+    success = False
+
+    if request.user.is_authenticated():
+        if request.method == 'POST':
+            upf = UserProfileForm(
+                data=request.POST,
+                files=request.FILES,
+                instance=request.user.userextension
+            )
+            if upf.is_valid():
+                user = request.user
+                user.first_name = request.POST['first_name']
+                user.last_name = request.POST['last_name']
+                user.save()
+                #upf.birthdate = request.POST['birthdate']
+                upf.save()
+
+                #userprofile = upf.save(commit=False)
+                #userprofile.user = user
+                #userprofile.save()
+                success = True
+            else:
+                for error in upf.errors.viewvalues():
+                    error_msg.append(error)
+        else:
+            upf = UserProfileForm(instance=request.user)
+    else:
+        return redirect('/login/')
+    return render_to_response('edit_profile.html', {'user': request.user, 'userprofileform': upf, 'errors': error_msg, 'success': success}, context_instance=context)
+
+
 def users(request):
     context = RequestContext(request)
     content = {}
@@ -312,38 +347,6 @@ def save_tournament_bracket(request):
         msg = "Nicht ausreichende Rechte zum Editieren."
     response_data = {'success': success, 'msg': msg}
     return HttpResponse(json.dumps(response_data), content_type="application/json")
-
-
-@never_cache
-def edit_profile(request):
-    context = RequestContext(request)
-    error_msg = []
-    if request.user.is_authenticated():
-        if request.method == 'POST':
-            upf = UserProfileForm(
-                data=request.POST,
-                instance=request.user.userextension,
-                prefix='userprofile',
-                files=request.FILES
-            )
-            if upf.is_valid():
-                user = request.user
-                user.first_name = request.POST['first_name']
-                user.last_name = request.POST['last_name']
-                user.save()
-
-                #user.userextension.birthdate = request.POST['birthdate']
-                userprofile = upf.save(commit=False)
-                userprofile.user = user
-                userprofile.save()
-            else:
-                for error in upf.errors.viewvalues():
-                    error_msg.append(error)
-        else:
-            upf = UserProfileForm(prefix='userprofile')
-    else:
-        return redirect('/login/')
-    return render_to_response('edit_profile.html', {'user': request.user, 'userprofileform': upf, 'errors': error_msg}, context_instance=context)
 
 
 def lan_archive(request, slug):

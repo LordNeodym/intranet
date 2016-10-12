@@ -53,6 +53,14 @@ class UserExtension(models.Model):
     def has_user(self):
         return self.user_id is not None
 
+    def delete(self, *args, **kwargs):
+        # You have to prepare what you need before delete the model
+        storage, path = self.avatar.storage, self.avatar.path
+        # Delete the model before the file
+        super(UserExtension, self).delete(*args, **kwargs)
+        # Delete the file after the model
+        storage.delete(path)
+
     class Meta:
         verbose_name = "Zusätzliche Angaben"
         verbose_name_plural = "Zusätzliche Angaben"

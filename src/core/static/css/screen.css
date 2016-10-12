@@ -254,7 +254,10 @@ footer {
 
 .error-list {
     color: red;
-    margin-top: 50px;
+}
+
+.success {
+    color: green;
 }
 
 .list_rule {

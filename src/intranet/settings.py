@@ -97,10 +97,10 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
-DATE_INPUT_FORMATS = (
+DATE_INPUT_FORMATS = [
     '%d.%m.%Y', '%d.%m.%Y', '%d.%m.%y',  # '25.10.2006', '25.10.2006', '25.10.06'
     '%d-%m-%Y', '%d/%m/%Y', '%d/%m/%y',  # '25-10-2006', '25/10/2006', '25/10/06'
-)
+]
 
 LANGUAGE_CODE = 'de'
 
