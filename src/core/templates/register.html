@@ -8,11 +8,6 @@
 {% block body %}
 {{block.super}}
     <div class="content">
-        {% if registered %}
-            <strong>Erfolgreich registriert!</strong>
-            <a class="back_link" href="/">Zurück zur Startseite</a>
-        {% else %}
-
         <form id="user_form" method="post" action="/register/" enctype="multipart/form-data">
             {% csrf_token %}
             <span class="register_field">Benutzername: {{ user_form.username }}</span>
@@ -26,7 +21,5 @@
             <input type="submit" value="Register" />
             <input type="hidden" name="next" value="../" />
         </form>
-    {% endif %}
     </div>
-
 {% endblock %}

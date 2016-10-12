@@ -22,6 +22,8 @@ class IntranetMeta(models.Model):
     title = models.CharField(verbose_name="Begrüßungstext", max_length=128, default="Herzlich Willkommen im Intranet", null=True, blank=True)
     description = models.TextField(verbose_name="Beschreibung", max_length=1024, null=True, blank=True)
     date = models.DateField(verbose_name="Beginn der LAN")
+    image_upload_allowed = models.BooleanField(verbose_name="Alle User dürfen Bilder hochladen?", default=True)
+    video_upload_allowed = models.BooleanField(verbose_name="Alle User dürfen Videos hochladen?", default=True)
     active = models.BooleanField(verbose_name="Aktiv?", default=False)
 
     def __unicode__(self):
@@ -142,7 +144,7 @@ class Match(models.Model):
     player_per_team = models.IntegerField(verbose_name="Spieler pro Team", blank=False, null=False, validators=[MinValueValidator(1)])
     description = models.TextField(verbose_name="Beschreibung", max_length=255, blank=True, null=True)
     user = models.ManyToManyField(User, verbose_name="Spieler", blank=True, related_name="match_user")
-    datetime = models.DateTimeField(verbose_name="Startzeit", blank=True, null=True, default=datetime.now())
+    datetime = models.DateTimeField(verbose_name="Startzeit", blank=True, null=True, default=datetime.now)
     team_choose_type = models.CharField(verbose_name="Team Wahl", editable=False, max_length=5, choices=TEAM_CHOOSE_TYPE, default="None", blank=True)
     tour_choose_type = models.CharField(verbose_name="Turnier Wahl", editable=False, max_length=10, choices=TOUR_CHOOSE_TYPE, default="None", blank=True)
     rules = models.TextField(verbose_name="Spielregeln", max_length=1024, null=True, blank=True)

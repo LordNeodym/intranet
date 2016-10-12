@@ -1,13 +1,23 @@
-todo list:
+TODO
+- Start Dump (Set LAN)
+- Signal for extended user
+- set extended user on register
+- username lower darf nicht vorhanden sein
+- aus dem admin bereich einloggen und auf die startseite (im cache steht der name) oben rechts aber feld leer
+- nach registrierungautomatisch angemeldet sein
+- löschen von user = löschen von jeweiligen spielen und matches ?!
+- profil editieren error bei keiner angabe
+- manual als statische seite
+
 - personal user profiles (open via userlist)
-- every entry in userlist can be more detailed 
+- every entry in userlist may be more detailed
 - rebuild of tournament tree
 -- ability to build a tree with an uneven team number
 - every can create a food order list and is an admin of their own list
-- user upload form for images/videos
-- filezilla download + manual
 - commentary function with spam filter
+
 - mobile view
 - chat with spam filter
+- dropdown filter for image categories / video categories
 - make it fancier
 

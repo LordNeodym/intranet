@@ -94,7 +94,7 @@ def getName(user):
   elif user.first_name:
     return user.first_name
   else:
-    return user
+    return "-"
 
 @register.filter
 def getIP(request):
@@ -105,7 +105,6 @@ def getIP(request):
         ip = request.META.get('HTTP_X_REAL_IP')
     else:
         ip = request.META.get('REMOTE_ADDR')
-    print request.META.get('HTTP_X_FORWARDED_FOR'), request.META.get('HTTP_X_REAL_IP'), request.META.get('REMOTE_ADDR')
     return ip
 
 @register.filter

@@ -44,14 +44,26 @@
         {% endfor %}
     </div>
 
+    {% if content.upload_allowed and not user|has_group:"Upload-Ban" %}
     <div class="admin_interface well row">
-        <h3 class="col-sm-12">Bildupload</h3>
+        <h3 class="col-sm-12">Bild Upload</h3>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <input id="id_image" name="image" type="file">
             <button class="btn btn-primary btn-sm" type="submit">Upload</button>
         </form>
     </div>
+    {% endif %}
+
+    {% if user|has_group:"Admin" %}
+    <div class="admin_interface well row">
+        <h3 class="col-sm-12">Admin Panel</h3>
+        <form method="post" action="upload-lock/">
+            {% csrf_token %}
+            <button class="btn btn-primary btn-sm" type="submit">{% if content.upload_allowed %}Uploads verbieten{% else %}Upload erlauben{% endif %}</button>
+        </form>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}
 

@@ -7,33 +7,36 @@
 
 {% block body %}
 {{block.super}}
-	<div class="content">
-		{% if form.errors %}
-		<p>Username oder Passwort falsch</p>
-		{% endif %}
-
+<div class="content">
+	<div class="login-box">
 		<form method="post" action="{% url 'login' %}">
-		{% csrf_token %}
-		<table class="login">
-			<tr>
-			    <td><label for='username'> Username </label></td>
-			    <td><input type='text' name='username' id='username'></td>
-			</tr>
-			<tr>
-			    <td><label for='password'>Passwort </label></td>
-			    <td><input type='password' name='password' id='password'></td>
-			</tr>
-		</table>
-		{% if errors %}
-		    <ul>
-		        {% for error in errors %}
-		        <li>{{ error }}</li>
-		        {% endfor %}
-		    </ul>
-		{% endif %}
+			{% csrf_token %}
+			<div class="form-group row">
+				<label class="col-sm-3 col-form-label" for="id_username">Username</label>
+				<div class="col-sm-9">
+                    <input class="form-control" id="id_username" maxlength="255" name="username" type="text">
+			    </div>
+            </div>
+            <div class="form-group row">
+				<label class="col-sm-3 col-form-label" for="id_password">Passwort</label>
+				<div class="col-sm-9">
+                    <input class="form-control" id="id_password" maxlength="255" name="password" type="password">
+	            </div>
+            </div>
+            <div class="form-group row">
+                <button class="btn btn-primary btn-lg" type="submit">Login</button>
+            </div>
+        </form>
 
-		<input type="submit" value="login" />
-		<input type="hidden" name="next" value="../" />
-		</form>
+		{% if errors %}
+            <div class="error-list row">
+                <ul>
+                    {% for error in errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+		{% endif %}
 	</div>
+</div>
 {% endblock %}

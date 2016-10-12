@@ -16,6 +16,15 @@ class UserForm(forms.ModelForm):
         model = User
         fields = ('username', 'first_name', 'last_name', 'password', 'password_repeat')
 
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        users = User.objects.all()
+        for user in users:
+            if username.lower() == user.username.lower():
+                raise forms.ValidationError('Username schon vorhanden.')
+
+        return username
+
 
 class UserProfileForm(forms.ModelForm):
     birthdate = forms.DateField(label="Geburtstag", input_formats=settings.DATE_INPUT_FORMATS)

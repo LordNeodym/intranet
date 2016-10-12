@@ -15,7 +15,7 @@ from django.contrib.auth.models import User, Group
 
 import json, os
 
-from core.models import Game, Rules, ImageCategory, VideoCategory, MenuOrder, SingleMenuOrder, Software
+from core.models import Game, Rules, ImageCategory, VideoCategory, MenuOrder, SingleMenuOrder, Software, UserExtension
 from core.forms import UserForm, UserProfileForm, SoftwareForm, ImageForm, VideoForm
 from core.views_helper import *
 
@@ -30,7 +30,6 @@ def home(request):
 
 def register(request):
     context = RequestContext(request)
-    registered = False
     msg = []
 
     if request.method == 'POST':
@@ -42,10 +41,12 @@ def register(request):
                 user = user_form.save()
                 user.set_password(user.password)
                 user.save()
-                user.userextension.ip = getIP(request)
-                user.userextension.participated_lans.add(getCurrentLAN())
-                user.userextension.save()
-                registered = True
+                userExtension = UserExtension.objects.create(user=user, ip = getIP(request))
+                userExtension.save()
+                userExtension.participated_lans.add(getCurrentLAN())
+                user = authenticate(username=user.username, password=password)
+                auth_login(request, user)
+                return HttpResponseRedirect(reverse('home'))
             else:
                 msg.append("Passwörter sind verschieden!")
         else:
@@ -53,13 +54,13 @@ def register(request):
                 "Benutzername enthält ungültige Zeichen oder ist schon vergeben!")
     else:
         user_form = UserForm()
-    return render_to_response('register.html', {'errors': msg, 'user_form': user_form, 'registered': registered}, context_instance=context)
+    return render_to_response('register.html', {'errors': msg, 'user_form': user_form}, context_instance=context)
 
 
 @never_cache
 def login(request):
-    msg = []
     context = RequestContext(request)
+    msg = []
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -71,11 +72,10 @@ def login(request):
                 user.userextension.save()
                 # Redirect to a success page.
                 auth_login(request, user)
-                next = request.POST['next']
-                return redirect('/%s' % next)
+                return HttpResponseRedirect(reverse('home'))
             else:
                 # Return a 'disabled account' error message
-                msg.append("Benutzeraccount für {0} gesperrt.".format(user))
+                msg.append("Benutzeraccount {0} gesperrt.".format(user))
         else:
             # Return an 'invalid login' error message.
             msg.append("Benutzername oder Passwort falsch.")
@@ -151,11 +151,12 @@ def menu_order(request, slug=None, command=None):
 
 
 @login_required(login_url="/login/")
-def videos(request):
+def videos(request, command=None):
     context = RequestContext(request)
     content = {}
     galleryExternDic = {}
 
+    content['upload_allowed'] = getCurrentLAN().video_upload_allowed
     content['categories'] = VideoCategory.objects.all()
     gallery_folder = os.path.join(settings.MEDIA_ROOT, "video_gallery")
     for root, dirnames, files in os.walk(gallery_folder):
@@ -168,24 +169,30 @@ def videos(request):
                 galleryExternDic[relDir] = [relFile, ]
     content['imageFiler'] = galleryExternDic
 
+    form = VideoForm()
     if request.method == 'POST':
-        form = VideoForm(request.POST, request.FILES)
-        if form.is_valid():
-            filename = "{0}-{1}".format(request.user.username, request.FILES['video'].name)
-            handle_uploaded_file(os.path.join(settings.MEDIA_ROOT, "video_gallery", "User Uploads"), request.FILES['video'], filename)
-            return redirect('videos')
-    else:
-        form = VideoForm()
+        if command == "upload-lock":
+            lan = getCurrentLAN()
+            lan.video_upload_allowed ^= True
+            lan.save()
+            return HttpResponseRedirect(reverse('videos'))
+        else:
+            form = VideoForm(request.POST, request.FILES)
+            if form.is_valid():
+                filename = "{0}-{1}".format(request.user.username, request.FILES['video'].name)
+                handle_uploaded_file(os.path.join(settings.MEDIA_ROOT, "video_gallery", "User Uploads"), request.FILES['video'], filename)
+                return redirect('videos')
 
     return render_to_response('videos.html', {"form": form, "content": content}, context_instance=context)
 
 
 @login_required(login_url="/login/")
-def images(request):
+def images(request, command=None):
     context = RequestContext(request)
     content = {}
     galleryExternDic = {}
 
+    content['upload_allowed'] = getCurrentLAN().image_upload_allowed
     content['categories'] = ImageCategory.objects.all().exclude(description="Speisekarte")
     gallery_folder = os.path.join(settings.MEDIA_ROOT, "image_gallery")
     for root, dirnames, files in os.walk(gallery_folder):
@@ -198,14 +205,19 @@ def images(request):
                 galleryExternDic[relDir] = [relFile,]
     content['imageFiler'] = galleryExternDic
 
+    form = ImageForm()
     if request.method == 'POST':
-        form = ImageForm(request.POST, request.FILES)
-        if form.is_valid():
-            filename = "{0}-{1}".format(request.user.username, request.FILES['image'].name)
-            handle_uploaded_file(os.path.join(settings.MEDIA_ROOT, "image_gallery", "User Uploads"), request.FILES['image'], filename)
-            return redirect('images')
-    else:
-        form = ImageForm()
+        if command == "upload-lock":
+            lan = getCurrentLAN()
+            lan.image_upload_allowed ^= True
+            lan.save()
+            return HttpResponseRedirect(reverse('images'))
+        else:
+            form = ImageForm(request.POST, request.FILES)
+            if form.is_valid():
+                filename = "{0}-{1}".format(request.user.username, request.FILES['image'].name)
+                handle_uploaded_file(os.path.join(settings.MEDIA_ROOT, "image_gallery", "User Uploads"), request.FILES['image'], filename)
+                return redirect('images')
 
     return render_to_response('images.html', {"form": form, "content": content}, context_instance=context)
 
@@ -306,7 +318,6 @@ def save_tournament_bracket(request):
 def edit_profile(request):
     context = RequestContext(request)
     error_msg = []
-    msg = ""
     if request.user.is_authenticated():
         if request.method == 'POST':
             upf = UserProfileForm(
@@ -319,16 +330,12 @@ def edit_profile(request):
                 user = request.user
                 user.first_name = request.POST['first_name']
                 user.last_name = request.POST['last_name']
-                #user.userextension.birthdate = request.POST['birthdate']
-                try:
-                    user.save()
-                except Exception as e:
-                    error_msg.append(e)
+                user.save()
 
+                #user.userextension.birthdate = request.POST['birthdate']
                 userprofile = upf.save(commit=False)
                 userprofile.user = user
                 userprofile.save()
-                msg = "Daten erfolgreich aktualisiert."
             else:
                 for error in upf.errors.viewvalues():
                     error_msg.append(error)
@@ -336,7 +343,7 @@ def edit_profile(request):
             upf = UserProfileForm(prefix='userprofile')
     else:
         return redirect('/login/')
-    return render_to_response('edit_profile.html', {'user': request.user, 'userprofileform': upf, 'errors': error_msg, 'msg': msg}, context_instance=context)
+    return render_to_response('edit_profile.html', {'user': request.user, 'userprofileform': upf, 'errors': error_msg}, context_instance=context)
 
 
 def lan_archive(request, slug):
