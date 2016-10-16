@@ -44,7 +44,7 @@
         {% endfor %}
     </div>
 
-    {% if content.upload_allowed and not user|has_group:"Upload-Ban" %}
+    {% if content.upload_allowed and not user|has_group:"Upload-Ban" or user|has_group:"Image-Admin" or user|has_group:"Admin" %}
     <div class="admin_interface well row">
         <h3 class="col-sm-12">Bild Upload</h3>
         <form method="post" enctype="multipart/form-data">

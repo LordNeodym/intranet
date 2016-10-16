@@ -181,6 +181,14 @@ li.user_list {
     margin-top: 0;
 }
 
+.admin_interface > form {
+    margin-bottom: 15px;
+}
+
+.admin_interface > form:last-child {
+    margin-bottom: 0;
+}
+
 .team_row {
 	display: table;
 	width: 100%;
@@ -250,6 +258,10 @@ footer {
     bottom: 0;
     position: absolute;
     padding-left: 5px;
+}
+
+.hint-admin {
+    color: #EE7600;
 }
 
 .error-list, .errorlist {

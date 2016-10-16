@@ -11,7 +11,7 @@ def create_user_extension(sender, instance, created, **kwargs):
         UserExtension.objects.create(user=instance)
 
 @receiver(post_save, sender=IntranetMeta)
-def create_user_extension(sender, instance, created, **kwargs):
+def toggle_lan_active(sender, instance, created, **kwargs):
     currentMeta = IntranetMeta.objects.get(pk=instance.pk)
     if currentMeta.active:
         metas = IntranetMeta.objects.all().exclude(pk=instance.pk)

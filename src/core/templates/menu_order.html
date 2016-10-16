@@ -83,10 +83,15 @@
         {% endif %}
 
         {% if user == order.creator or user|has_group:"Admin" %}
-        <div class="menu-list-lock">
+        <div class="admin_interface well row">
+            <h3 class="col-sm-12">Admin Interface</h3>
             <form method="post" action="lock/">
                 {% csrf_token %}
                 <input class="btn btn-primary" type="submit" value="Liste {% if order.locked %}entsperren{% else %}sperren{% endif %}">
+            </form>
+            <form method="post" action="delete-list/">
+                {% csrf_token %}
+                <input class="btn btn-primary" type="submit" value="Liste löschen">
             </form>
         </div>
         {% endif %}

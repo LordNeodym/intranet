@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load staticfiles helper %}
+
+{% block headline %}
+    <h1>Hinweise</h1>
+{% endblock %}
+
+
+{% block body %}
+{{ block.super }}
+<div class="content">
+	<div class="hint-group">
+		<span>Diese Hinweise helfen dem Verständnis und dem Umgang mit dem Intranet.</span>
+	</div>
+
+    <div class="hint-group">
+		<h2>- Profile -</h2>
+        <div class="hint-user">Jedes Nutzerprofil kann nur von einem selbst oder einem Admin bearbeitet werden. In der aktuellen Version des Intranets haben die Angaben des Geburtsdatums und des Avatars keine Bewandtnis.</div>
+	</div>
+
+    <div class="hint-group">
+		<h2>- Regeln -</h2>
+        <a href="{% url 'rules' %}">(Link zu den LAN-Regeln)</a>
+        <div class="hint-admin">Innerhalb des <a href="{{ django_cms }}" target="_blank">CMS</a> können Regelkategorien angelegt werden, die wiederum einzelne Regeln beinhalten.</div>
+	</div>
+
+    <div class="hint-group">
+		<h2>- Teilnehmer -</h2>
+        <a href="{% url 'users' %}">(Link zur Teilnehmerliste)</a>
+        <div class="hint-user">Die Teilnehmerliste listet alle Spieler der aktuellen LAN auf. Der Nachname des Spielers wird nur durch den Anfangsbuchstaben repräsentiert. Nach jedem Login im Intranet wird die IP des Users aktualisiert und kann in der Teilnehmerliste eingesehen werden.</div>
+	</div>
+
+    <div class="hint-group">
+		<h2>- Bilder -</h2>
+        <a href="{% url 'images' %}">(Link zur Bildergallerie)</a>
+        <div class="hint-user">Bilder können durch Klicken innerhalb der Gallerie vergrößert werden und durch Klicken der Pfeiltasten gewechselt werden. Jeder Nutzer kann innerhalb der Gallerie Bilder hochladen. Anschließend werden diese Bilder in der Kategorie "User Uploads" aufgeführt und jedes hochgeladene Bild bekommt das Prefix des eigenen Nutzernamens. Somit kann nachvollzogen werden, wer welches Bild hochgeladen hat. Der Admin hat zu jeder Zeit die Möglichkeit den Bilder-Upload komplett zu sperren, vereinzelt Nutzern den Upload zu verwehren und einzelnen Nutzern ein Exklusivrecht zu geben, Bilder hochzuladen.</div>
+        <div class="hint-admin">Durch das Betätigen des Knopfes "Uploads verbieten" verschwindet das Formularfeld für den Bildupload und es können nur noch Bilder über das <a href="{{ django_cms }}" target="_blank">CMS</a> eingepflegt werden. Innerhalb des CMS kann unter "Benutzer" einzelnen Nutzern ein Exklusivrecht gegeben werden Bilder hochzuladen. Dieses Recht wird durch das Hinzufügen der Gruppe "Image-Admin" gegeben. Durch das Hinzufügen der Gruppe "Upload-Ban" kann man einzelnen Nutzern das Uploaden untersagen.</div>
+	</div>
+
+    <div class="hint-group">
+		<h2>- Videos -</h2>
+        <a href="{% url 'videos' %}">(Link zur Videogallerie)</a>
+        <div class="hint-user">Jeder Nutzer kann innerhalb der Gallerie Videos hochladen. Anschließend werden diese Videos in der Kategorie "User Uploads" aufgeführt und jedes hochgeladene Bild bekommt das Prefix des eigenen Nutzernamens. Somit kann nachvollzogen werden, wer welches Video hochgeladen hat. Der Admin hat zu jeder Zeit die Möglichkeit den Video-Upload komplett zu sperren, vereinzelt Nutzern den Upload zu verwehren und einzelnen Nutzern ein Exklusivrecht zu geben, Videos hochzuladen.</div>
+        <div class="hint-admin">Durch das Betätigen des Knopfes "Uploads verbieten" verschwindet das Formularfeld für den Videoupload und es können nur noch Videos über das <a href="{{ django_cms }}" target="_blank">CMS</a> eingepflegt werden. Innerhalb des CMS kann unter "Benutzer" einzelnen Nutzern ein Exklusivrecht gegeben werden Videos hochzuladen. Dieses Recht wird durch das Hinzufügen der Gruppe "Video-Admin" gegeben. Durch das Hinzufügen der Gruppe "Upload-Ban" kann man einzelnen Nutzern das Uploaden untersagen.</div>
+	</div>
+
+    <div class="hint-group">
+		<h2>- Software -</h2>
+        <a href="{% url 'software' %}">(Link zum Software-Download)</a>
+        <div class="hint-user">Auf dieser Seite kann man hochgeladene Software herunterladen. In der Regel befinden sich hier kleinere Programme, die auf einer LAN nicht fehlen dürfen (wie zum Beispiel Teamspeak)</div>
+        <div class="hint-admin">Über das <a href="{{ django_cms }}" target="_blank">CMS</a> können Nutzer der Gruppe "Software-Admin" hinzugefügt werden. Dadurch hat dieser Nutzer die Möglichkeit Software hochzuladen und anderen zur Verfügung zu stellen.</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        {% if not user|has_group:"Admin" %}
+            jQuery(".hint-admin").hide();
+        {% endif %}
+    });
+</script>
+{% endblock %}

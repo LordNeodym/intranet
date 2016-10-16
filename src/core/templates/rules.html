@@ -16,8 +16,8 @@
 		<div class="list_rule row">
 		{% for singleRule in rule.inline_rules.all %}
 			<div class="single_rule">
-				<h4 class="col-sm-2">Regel {{ forloop.counter }}:</h4>
-				<h4 class="col-sm-10">{{ singleRule }}</h4>
+				<div class="col-sm-2">Regel {{ forloop.counter }}:</div>
+				<div class="col-sm-10">{{ singleRule }}</div>
 			</div>
 		{% endfor %}
 		</div>

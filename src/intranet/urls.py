@@ -11,6 +11,7 @@ urlpatterns = [
 	url(r'^register/$', views.register, name='register'),
     url(r'^edit_profile/', views.edit_profile),
     url(r'^logout/$', views.logout, name='logout'),
+    url(r'^hints/$', views.hints, name='hints'),
     url(r'^rules/$', views.rules, name='rules'),
     url(r'^users/$', views.users, name='users'),
     url(r'^software/$', views.software, name='software'),

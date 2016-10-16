@@ -28,6 +28,18 @@ def home(request):
     return render_to_response('home.html', content, context_instance=context)
 
 
+def hints(request):
+    context = RequestContext(request)
+    content = {}
+
+    if request.is_secure():
+        content['django_cms'] = "https://{0}/admin".format(request.get_host())
+    else:
+        content['django_cms'] = "http://{0}/admin".format(request.get_host())
+
+    return render_to_response('hints.html', content, context_instance=context)
+
+
 def register(request):
     context = RequestContext(request)
     msg = []
@@ -186,6 +198,9 @@ def menu_order(request, slug=None, command=None):
                 order.locked = not order.locked
                 order.save()
                 return HttpResponseRedirect(reverse('menu_order', kwargs={'slug': order.id}))
+            elif command == "delete-list":
+                order.delete()
+                return HttpResponseRedirect(reverse('menu'))
             else:
                 content['error'] = SingleMenuOrder.create(order, request.user.id, request.POST["orderNumber"], request.POST["extra"], request.POST["price"])
                 if not content['error']:
@@ -263,7 +278,7 @@ def images(request, command=None):
                 handle_uploaded_file(os.path.join(settings.MEDIA_ROOT, "image_gallery", "User Uploads"), request.FILES['image'], filename)
                 return redirect('images')
 
-    return render_to_response('images.html', {"form": form, "content": content}, context_instance=context)
+    return render_to_response('images.html', {"user": request.user, "form": form, "content": content}, context_instance=context)
 
 
 def rules(request):

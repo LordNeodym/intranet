@@ -25,14 +25,17 @@
             {% csrf_token %}
             <div class="form-group">
                 <label for="id_name">Name</label>
-                <input class="form-control" id="id_name" maxlength="255" name="name" type="text">
+                {{ form.name.errors }}
+                <input class="form-control" id="id_name" maxlength="255" name="name" type="text" value="{% if form.name.value %}{{ form.name.value }}{% endif %}">
             </div>
             <div class="form-group">
                 <label for="id_description">Beschreibung</label>
+                {{ form.description.errors }}
                 <textarea class="form-control" id="id_description" maxlength="255" name="description" rows="3"></textarea>
             </div>
             <div class="form-group">
                 <label for="id_file">Datei</label>
+                {{ form.file.errors }}
                 <input id="id_file" name="file" type="file">
             </div>
             <button class="btn btn-primary btn-sm" type="submit">Upload</button>
