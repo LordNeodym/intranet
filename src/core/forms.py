@@ -5,7 +5,9 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.template.defaultfilters import filesizeformat
 
-from core.models import Round, UserExtension, Software, SingleImage, SingleVideo
+from datetime import datetime
+
+from core.models import Round, UserExtension, Software, MenuOrder
 
 
 class UserForm(forms.ModelForm):
@@ -76,6 +78,13 @@ class SoftwareForm(forms.ModelForm):
     class Meta:
         model = Software
         fields = ('name', 'file', 'description',)
+
+
+class MenuOrderForm(forms.ModelForm):
+    description = forms.CharField(error_messages={'required': 'Bitte den Namen des Lieferdienstes eintragen'})
+    class Meta:
+        model = MenuOrder
+        fields = ('description', 'creator', 'venue', 'timestamp')
 
 
 class ImageForm(forms.Form):

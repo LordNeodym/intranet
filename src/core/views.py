@@ -12,11 +12,11 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.models import User, Group
 
-
 import json, os
+from datetime import datetime
 
 from core.models import Game, Rules, ImageCategory, VideoCategory, MenuOrder, SingleMenuOrder, Software, UserExtension
-from core.forms import UserForm, UserProfileForm, SoftwareForm, ImageForm, VideoForm
+from core.forms import UserForm, UserProfileForm, SoftwareForm, ImageForm, VideoForm, MenuOrderForm
 from core.views_helper import *
 
 def home(request):
@@ -107,14 +107,11 @@ def edit_profile(request):
                 #userprofile.user = user
                 #userprofile.save()
                 success = True
-            else:
-                for error in upf.errors.viewvalues():
-                    error_msg.append(error)
         else:
             upf = UserProfileForm(instance=request.user)
     else:
         return redirect('/login/')
-    return render_to_response('edit_profile.html', {'user': request.user, 'userprofileform': upf, 'errors': error_msg, 'success': success}, context_instance=context)
+    return render_to_response('edit_profile.html', {'user': request.user, 'userprofileform': upf, 'success': success}, context_instance=context)
 
 
 def users(request):
@@ -145,10 +142,22 @@ def software(request):
 def menu(request):
     context = RequestContext(request)
     content = {}
+
     orders = MenuOrder.objects.all().order_by('id')
     content['orders'] = orders
+    content['error_msg'] = []
+    content['timestamp'] = datetime.now()
 
-    return render_to_response('menu.html', content, context_instance=context)
+    if request.method == 'POST':
+        orderForm = MenuOrderForm(
+            data=request.POST
+        )
+        if orderForm.is_valid():
+            orderForm.save()
+    else:
+        orderForm = MenuOrderForm()
+
+    return render_to_response('menu.html', {'user': request.user, 'content': content, 'form': orderForm}, context_instance=context)
 
 
 @login_required(login_url="/login/")

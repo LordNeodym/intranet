@@ -481,15 +481,15 @@ class SingleImage(models.Model):
 
 class MenuOrder(models.Model):
     description = models.CharField(verbose_name="Name",max_length=255, null=False, blank=False, default="Pizzeria")
-    timestamp = models.DateTimeField(verbose_name="Datum", null=False, blank=False)
+    timestamp = models.DateTimeField(verbose_name="Datum", null=False, blank=False, default=datetime.now)
     venue = models.CharField(verbose_name="Ort", max_length=255, null=True, blank=True)
     locked = models.BooleanField(verbose_name="Bestellung sperren?", default=False)
+    creator = models.ForeignKey(User, verbose_name="Ersteller")
 
     def __unicode__(self):
-        formatedTime = self.timestamp.strftime("%A %d.%m.%Y - %H:%M")
         if self.venue:
-            return u"%s - %s - %s" % (self.description, formatedTime, self.venue)
-        return u"%s - %s" % (self.description, formatedTime)
+            return u"%s: %s (%s)" % (self.creator, self.description, self.venue)
+        return u"%s: %s" % (self.creator, self.description)
 
     class Meta:
         verbose_name = "Bestellung"
