@@ -288,3 +288,14 @@ footer {
 input[type=file] {
     margin: 0 auto;
 }
+
+.home-countdown {
+    margin-top: 80px;
+}
+
+.flip-clock-wrapper {
+    display: inline-flex;
+    width: 460px !important;
+    margin: 0 !important;
+    top: 25px;
+}

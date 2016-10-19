@@ -1,14 +1,11 @@
 TODO
+- auflistung turnier-zusammenfassung auf startseite
+- (eigene) Bilder löschen
 - Start Dump (Set LAN)
-- Signal for extended user
-- set extended user on register
-- username lower darf nicht vorhanden sein
-- aus dem admin bereich einloggen und auf die startseite (im cache steht der name) oben rechts aber feld leer
-- nach registrierungautomatisch angemeldet sein
 - löschen von user = löschen von jeweiligen spielen und matches ?!
-- profil editieren error bei keiner angabe
-- manual als statische seite
 
+- teamspeak server view/api
+- polls (game vote, match type vote, ...)
 - personal user profiles (open via userlist)
 - every entry in userlist may be more detailed
 - rebuild of tournament tree

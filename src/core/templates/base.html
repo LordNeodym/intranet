@@ -16,6 +16,8 @@
         <link rel="stylesheet" type="text/css" href="{% static 'css/screen.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'css/drop_down_menu.css' %}">
         <link rel='stylesheet' type="text/css" href="{% static 'unitegallery/css/unite-gallery.css' %}">
+        {% block css %}
+        {% endblock %}
     </head>
     <body>
         <!-- Intranet Title -->
@@ -86,6 +88,15 @@
             <div class="left">&copy; {% now "Y" %} Carlo Völker</div>
         </footer>
         <script type="text/javascript" src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'flipclock/compiled/flipclock.min.js'%}"></script>
+    <script type="text/javascript">
+        var clock;
+            clock = $('.clock').FlipClock({{ starttime }}, {
+                clockFace: 'TwentyFourHourClock',
+                countdown: true,
+            });
+
+    </script>
         <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
         <script type='text/javascript' src="{% static 'unitegallery/js/jquery-11.0.min.js' %}"></script>
         <script type='text/javascript' src="{% static 'unitegallery/js/unitegallery.min.js' %}"></script>

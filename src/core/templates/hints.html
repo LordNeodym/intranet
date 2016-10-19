@@ -9,10 +9,6 @@
 {% block body %}
 {{ block.super }}
 <div class="content">
-	<div class="hint-group">
-		<span>Diese Hinweise helfen dem Verständnis und dem Umgang mit dem Intranet.</span>
-	</div>
-
     <div class="hint-group">
 		<h2>- Profile -</h2>
         <div class="hint-user">Jedes Nutzerprofil kann nur von einem selbst oder einem Admin bearbeitet werden. In der aktuellen Version des Intranets haben die Angaben des Geburtsdatums und des Avatars keine Bewandtnis.</div>
@@ -21,6 +17,7 @@
     <div class="hint-group">
 		<h2>- Regeln -</h2>
         <a href="{% url 'rules' %}">(Link zu den LAN-Regeln)</a>
+        <div class="hint-user">Regeln werden von den Admins mündlich oder schriftlich hier im Intranet festgelegt</div>
         <div class="hint-admin">Innerhalb des <a href="{{ django_cms }}" target="_blank">CMS</a> können Regelkategorien angelegt werden, die wiederum einzelne Regeln beinhalten.</div>
 	</div>
 
@@ -50,6 +47,12 @@
         <div class="hint-user">Auf dieser Seite kann man hochgeladene Software herunterladen. In der Regel befinden sich hier kleinere Programme, die auf einer LAN nicht fehlen dürfen (wie zum Beispiel Teamspeak)</div>
         <div class="hint-admin">Über das <a href="{{ django_cms }}" target="_blank">CMS</a> können Nutzer der Gruppe "Software-Admin" hinzugefügt werden. Dadurch hat dieser Nutzer die Möglichkeit Software hochzuladen und anderen zur Verfügung zu stellen.</div>
 	</div>
+
+    <div class="hint-group">
+		<h2>- Lieferdienst -</h2>
+        <a href="{% url 'menu' %}">(Link zu den Lieferdiensten)</a>
+        <div class="hint-user">Man kann eine Bestellliste erstellen, wenn man bei einem Lieferanten bestellen möchte. Dadurch können sich mehrere Leute anschließen und es lässt sich eine Sammelbestellung abschicken.</div>
+    </div>
 </div>
 {% endblock %}
 

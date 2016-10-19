@@ -19,12 +19,24 @@ from core.models import Game, Rules, ImageCategory, VideoCategory, MenuOrder, Si
 from core.forms import UserForm, UserProfileForm, SoftwareForm, ImageForm, VideoForm, MenuOrderForm
 from core.views_helper import *
 
+
 def home(request):
     context = RequestContext(request)
     content = {}
+    content['starttime'] = ""
+    from django.utils import timezone
 
     if not request.user.is_authenticated():
         content['msg'] = "Bitte zuerst die IP des Computers setzen und dann einloggen/registrieren."
+    else:
+        match = Match.objects.filter(lan=getCurrentLAN(), datetime__gte=datetime.now()).order_by('datetime')[0]
+        content['match'] = match
+        if match.datetime:
+            timedelta = match.datetime - timezone.now()
+            print timedelta.total_seconds()
+            if timedelta.days == 0:
+                content['starttime'] = timedelta.total_seconds()
+
     return render_to_response('home.html', content, context_instance=context)
 
 
@@ -52,10 +64,10 @@ def register(request):
             if password == password_repeat:
                 user = user_form.save()
                 user.set_password(user.password)
+                user.userextension.ip = getIP(request)
+                user.userextension.save()
+                user.userextension.participated_lans.add(getCurrentLAN())
                 user.save()
-                userExtension = UserExtension.objects.create(user=user, ip = getIP(request))
-                userExtension.save()
-                userExtension.participated_lans.add(getCurrentLAN())
                 user = authenticate(username=user.username, password=password)
                 auth_login(request, user)
                 return HttpResponseRedirect(reverse('home'))

@@ -1,5 +1,9 @@
 {% extends "base.html" %}
-{% load staticfiles %}
+{% load staticfiles thumbnail %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'flipclock/compiled/flipclock.css'%}">
+{% endblock %}
 
 {% block headline %}
     <h1>{{ lan_name.title }}</h1>
@@ -11,14 +15,42 @@
 	{% if msg %}
 		<span class="message">{{msg}}</span>
 	{% else %}
-
 		<div class="home_description">
 			{% for line in lan_name.description.splitlines %}
 				<p>{{ line }}</p>
 			{% endfor %}
 		</div>
 
+        {% if match %}
+        <div class="home-countdown">
+            <h2>Upcoming Match:</h2>
+            <a href="{% url 'match' match.game.slug match.id %}">
+                {% if match.game.icon %}
+                    <img src="{{ match.game.icon|thumbnail_url:'game_site' }}" />
+                {% else %}
+                    <h4 class="game_headline">{{ match.game.name }}</h4>
+                {% endif %}
+            </a>
+            <div class="clock"></div>
+        </div>
+        {% endif %}
 	{% endif %}
 </div>
+{% endblock %}
 
+{% block js %}
+    {% if user.is_authenticated and starttime %}
+    <script type="text/javascript" src="{% static 'flipclock/compiled/flipclock.min.js'%}"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var clock = $('.clock').FlipClock({
+                autostart: false,
+                clockFace: 'HourlyCounter',
+                countdown: true
+            });
+            clock.setTime({{ starttime }});
+            clock.start();
+        });
+    </script>
+    {% endif %}
 {% endblock %}

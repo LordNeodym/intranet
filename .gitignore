@@ -50,4 +50,5 @@ node_modules
 .idea/
 src/core/media/image_gallery/*
 src/core/media/video_gallery/*
+src/core/media/user_avatar/*
 src/core/media/software/*
