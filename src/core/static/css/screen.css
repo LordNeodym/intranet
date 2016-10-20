@@ -154,6 +154,26 @@ li.user_list {
 	padding: 5px;
 }
 
+.game-match-link {
+    position: relative;
+    top: 50px;
+    color: black;
+    padding: 20px;
+    width: 200px;
+    height: 150px;
+    text-decoration: none;
+    font-size: 2em;
+    margin: 20px 0px;
+    background: #d9d9d9;
+    border-radius: 25px;
+}
+
+.game-match-link:hover {
+    color: black;
+    text-decoration: none;
+    background: #999999;
+}
+
 .match_info {
 	margin-top: 10px;
 }
@@ -272,9 +292,14 @@ footer {
     color: green;
 }
 
-.list_rule {
+.list-rule {
     text-align: left;
+    margin-top: 20px;
     margin-bottom: 30px;
+}
+
+.single-rule {
+    margin-bottom: 50px;
 }
 
 .menu_list > h2 {

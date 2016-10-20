@@ -1,10 +1,11 @@
 TODO
 - auflistung turnier-zusammenfassung auf startseite
 - (eigene) Bilder löschen
-- Start Dump (Set LAN)
-- löschen von user = löschen von jeweiligen spielen und matches ?!
 
+- löschen von user = löschen von jeweiligen spielen und matches ?!
+- Start Dump (Set LAN)
 - teamspeak server view/api
+- dedicated game servers and api for intranet
 - polls (game vote, match type vote, ...)
 - personal user profiles (open via userlist)
 - every entry in userlist may be more detailed

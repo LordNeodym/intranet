@@ -24,18 +24,21 @@ def home(request):
     context = RequestContext(request)
     content = {}
     content['starttime'] = ""
+    content['match'] = None
     from django.utils import timezone
 
     if not request.user.is_authenticated():
         content['msg'] = "Bitte zuerst die IP des Computers setzen und dann einloggen/registrieren."
     else:
-        match = Match.objects.filter(lan=getCurrentLAN(), datetime__gte=datetime.now()).order_by('datetime')[0]
-        content['match'] = match
-        if match.datetime:
-            timedelta = match.datetime - timezone.now()
-            print timedelta.total_seconds()
-            if timedelta.days == 0:
-                content['starttime'] = timedelta.total_seconds()
+        try:
+            match = Match.objects.filter(lan=getCurrentLAN(), datetime__gte=datetime.now()).order_by('datetime')[0]
+            content['match'] = match
+            if match.datetime:
+                timedelta = match.datetime - timezone.now()
+                if timedelta.days == 0:
+                    content['starttime'] = timedelta.total_seconds()
+        except Exception:
+            pass
 
     return render_to_response('home.html', content, context_instance=context)
 
